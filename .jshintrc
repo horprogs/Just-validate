@@ -14,7 +14,7 @@
   // true: Require {} for every new block or scope
   "eqeqeq": true,
   // true: Require triple equals (===) for comparison
-  "forin": true,
+  "forin": false,
   // true: Require filtering for..in loops with obj.hasOwnProperty()
   "freeze": true,
   // true: prohibits overwriting prototypes of native objects such as Array, Date etc.
@@ -47,7 +47,7 @@
   //   true     : all variables, last function parameter
   //   "vars"   : all variables only
   //   "strict" : all variables, all function parameters
-  "strict": true,
+  "strict": false,
   // true: Requires all functions run in ES5 Strict Mode
   "maxparams": false,
   // {int} Max number of formal params allowed per function
@@ -106,7 +106,7 @@
   // true: Tolerate script-targeted URLs
   "shadow": false,
   // true: Allows re-define variables later in code e.g. `var x=1; x=2;`
-  "sub": false,
+  "sub": true,
   // true: Tolerate using `[]` notation when it can still be expressed in dot notation
   "supernew": false,
   // true: Tolerate `new function () { ... };` and `new Object;`
@@ -157,7 +157,10 @@
 
   // Custom Globals
   "globals": {
-    "ga": true
+    "ga": true,
+    "it": true,
+    "describe": true,
+    "assert": true
   }
   // additional predefined global variables
 }

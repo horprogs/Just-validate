@@ -4,7 +4,7 @@
   "description": "CONTENTS OF THIS FILE ---------------------",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+     "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +19,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3",
     "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "express": "^4.14.0"
   }
 }
