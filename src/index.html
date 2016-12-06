@@ -13,19 +13,49 @@
   <script>
     var assert = chai.assert;
   </script>
+  <style>
+    .form {
+      margin: 20px;
+    }
+
+    .form__input {
+      width: 300px;
+      height: 40px;
+      padding-left: 15px;
+      box-sizing: border-box;
+      outline: none;
+      margin: 10px 0;
+    }
+
+    .form__btn {
+      width: 300px;
+      height: 50px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      color: #FFFFFF;
+      line-height: 50px;
+      background: #6981D8;
+      border: none;
+      outline: none;
+      font-size: 22px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
 
-<form action="#" class="js-form">
+<form action="#" class="js-form form">
   <div>
-    <input type="text" data-validate-name="name" name="name" value="dk">
+    <input type="text" class="form__input" placeholder="Enter your name" data-validate-name="name" name="name" value="dk">
   </div>
   <div>
-    <input type="email" data-validate-name="email" name="email" value="asdasd">
+    <input type="email" class="form__input" placeholder="Enter your email" data-validate-name="email" name="email" value="asdasd">
   </div>
-  <input type="password" data-validate-name="password" name="password">
-  <button>SUBMIT</button>
+  <input type="password" class="form__input" placeholder="Enter your password" data-validate-name="password" name="password">
+  <button class="form__btn">SUBMIT</button>
 </form>
 
 

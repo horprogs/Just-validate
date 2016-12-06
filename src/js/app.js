@@ -5,7 +5,7 @@
         RULE_REQUIRED = 'required',
         RULE_EMAIL = 'email',
         RULE_MINLENGTH = 'minLength',
-        RULE_MAXLENGTH = 'minLength',
+        RULE_MAXLENGTH = 'maxLength',
         RULE_PASSWORD = 'password',
         RULE_ZIP = 'zip',
         RULE_PHONE = 'phone',
@@ -39,6 +39,7 @@
         this.options = options || {};
         this.rules = this.options.rules || undefined;
         this.messages = this.options.messages || undefined;
+        this.colorWrong = this.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
         this.REGEXP = {
@@ -47,7 +48,7 @@
             phone: /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
             password: /^(?=.*\d).{0,}$/
         };
-        this.DEFAULT_ERROR = 'Error';
+        this.DEFAULT_REMOTE_ERROR = 'Error';
         this.DEFAULT_REMOTE_URL = 'http://localhost:7777/check-correct';
 
         // this.val({
@@ -63,7 +64,7 @@
             email: {
                 required: true,
                 email: true,
-                remote: ['http://localhost:7777/check', 'OK']
+                remote: ['http://localhost:7777/check-correct', 'OK']
             },
             name: {
                 minLength: 3,
@@ -93,7 +94,8 @@
             required: 'Field is required',
             email: 'Not valid email',
             maxLength: 'Too much',
-            minLength: 'Too short'
+            minLength: 'Too short',
+            password: 'Password is not valid'
         },
 
         setForm: function (form) {
@@ -144,16 +146,24 @@
                     name,
                     value
                 });
+
+                item.addEventListener('keyup', (ev) => {
+                    let elem = ev.target,
+                        item = {
+                            name: elem.getAttribute('data-validate-name'),
+                            value: elem.value
+                        };
+                    delete this.result[item.name];
+                    this.validateItem(item);
+                    this.renderErrors();
+
+                });
             }
             this.validateElements();
         },
 
-        checkRemoteResponse: function (data) {
-            if (data) {
-                console.log('123')
-                return true;
-            }
-            return;
+        processResult: function () {
+
         },
 
         /**
@@ -223,18 +233,20 @@
 
         /**
          * Validate for remote check
+         * @param value
+         * @param name
          * @param {string} url
          * @param {string} answerTrue
          * @returns {boolean} True if validate is OK
          */
-        validateRemote: function (value, url, answerTrue) {
+        validateRemote: function (value, name, url, answerTrue) {
             ajax({
                 url: url,
                 method: 'GET',
                 data: value,
                 callback: (data) => {
-                    if (data === answerTrue) {
-                        this.checkRemoteResponse(true);
+                    if (data !== answerTrue) {
+                        this.generateMessage(RULE_REMOTE, name);
                     }
                 }
             });
@@ -248,12 +260,19 @@
                 ((typeof messages[name] === 'string') && messages[name]) ||
                 // (messages[name][rule]) ||
                 (this.defaultMessages[rule]) ||
-                (this.DEFAULT_ERROR);
+                (this.DEFAULT_REMOTE_ERROR);
 
             this.result[name] = {
                 message: customMessage
             };
+
         },
+
+        // clearMessage: function (rule, name) {
+        //     this.result[name] = {
+        //         message: customMessage
+        //     };
+        // },
 
         validateElements: function () {
             this.elements.forEach((item) => {
@@ -271,6 +290,7 @@
             }
             for (let rule in rules) {
                 let ruleValue = rules[rule];
+                console.log(rules)
                 switch (rule) {
                     case RULE_REQUIRED: {
                         if (!ruleValue) {
@@ -291,7 +311,7 @@
                             break;
                         }
                         this.generateMessage(RULE_EMAIL, name);
-                        break;
+                        return;
                     }
 
                     case RULE_MINLENGTH: {
@@ -302,7 +322,7 @@
                             break;
                         }
                         this.generateMessage(RULE_MINLENGTH, name);
-                        break;
+                        return;
                     }
 
                     case RULE_MAXLENGTH: {
@@ -313,7 +333,7 @@
                             break;
                         }
                         this.generateMessage(RULE_MAXLENGTH, name);
-                        break;
+                        return;
                     }
 
                     case RULE_PHONE: {
@@ -324,7 +344,7 @@
                             break;
                         }
                         this.generateMessage(RULE_PHONE, name);
-                        break;
+                        return;
                     }
 
                     case RULE_PASSWORD: {
@@ -335,7 +355,7 @@
                             break;
                         }
                         this.generateMessage(RULE_PASSWORD, name);
-                        break;
+                        return;
                     }
 
                     case RULE_ZIP: {
@@ -346,7 +366,7 @@
                             break;
                         }
                         this.generateMessage(RULE_ZIP, name);
-                        break;
+                        return;
                     }
 
                     case RULE_REMOTE: {
@@ -355,14 +375,8 @@
                         }
                         let url = ruleValue[0],
                             answerTrue = ruleValue[1];
-                        console.log(this.validateRemote(value, url, answerTrue));;
-
-                        // if (this.c) {
-                        //     console.log('val-ok')
-                        //     break;
-                        // }
-                        this.generateMessage(RULE_ZIP, name);
-                        break;
+                        this.validateRemote(value, name, url, answerTrue);
+                        return;
                     }
                 }
             }
@@ -373,21 +387,43 @@
             for (let i = 0, len = $elems.length; i < len; ++i) {
                 $elems[i].remove();
             }
+
+            $elems = document.querySelectorAll('[data-validate-error="true"]');
+            for (let i = 0, len = $elems.length; i < len; ++i) {
+                $elems[i].removeAttribute('data-validate-error');
+                $elems[i].style.border = '';
+            }
         },
 
         renderErrors: function () {
-
             this.clearErrors();
+            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
+
+            if (Object.keys(this.result).length === 0) {
+                submitBtn.style.pointerEvents = 'auto';
+                submitBtn.removeAttribute('disabled');
+                return;
+            }
+
+            submitBtn.style.pointerEvents = 'none';
+            submitBtn.style.webitFilter = 'grayscale(100%)';
+            submitBtn.style.filter = 'grayscale(100%)';
+            submitBtn.setAttribute('disabled', 'disabled');
 
             for (let item in this.result) {
                 let message = this.result[item].message;
                 let $elems = this.$form.querySelectorAll(`[data-validate-name="${item}"`);
 
                 for (let i = 0, len = $elems.length; i < len; ++i) {
-                    let div = document.createElement('div');
+                    let div = document.createElement('div'),
+                        item = $elems[i];
+
                     div.innerHTML = message;
                     div.className = 'js-validate-error';
-                    $elems[i].parentNode.insertBefore(div, $elems[i].nextSibling);
+                    div.setAttribute('style', `color: ${this.colorWrong}`);
+                    item.parentNode.insertBefore(div, item.nextSibling);
+                    item.style.border = `1px solid ${this.colorWrong}`;
+                    item.setAttribute('data-validate-error', true);
                 }
             }
         }

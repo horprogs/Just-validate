@@ -6,18 +6,18 @@ describe("validate", function () {
                 email: {
                     required: true,
                     email: true,
-                    remote: ['http://localhost:7777/check', 'OK']
+                    remote: ['http://localhost:7777/check-correct', 'OK']
                 },
                 name: {
+                    required: true,
                     minLength: 3,
-                    maxLength: 15,
-                    required: true
+                    maxLength: 15
                 },
                 password: {
+                    required: true,
                     minLength: 4,
                     maxLength: 8,
-                    password: true,
-                    required: true
+                    password: true
                 }
             },
             messages: {
