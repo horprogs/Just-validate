@@ -136,11 +136,15 @@
         },
 
         getElements: function () {
-            let elems = this.$form.querySelectorAll('[data-validate-name]');
+            let elems = this.$form.querySelectorAll('[data-validate-field]');
             for (let i = 0, len = elems.length; i < len; ++i) {
                 let item = elems[i],
-                    name = item.getAttribute('data-validate-name'),
+                    name = item.getAttribute('data-validate-field'),
                     value = item.value;
+
+                if (item.type === 'checkbox') {
+                    value = item.checked || '';
+                }
 
                 this.elements.push({
                     name,
@@ -150,7 +154,7 @@
                 item.addEventListener('keyup', (ev) => {
                     let elem = ev.target,
                         item = {
-                            name: elem.getAttribute('data-validate-name'),
+                            name: elem.getAttribute('data-validate-field'),
                             value: elem.value
                         };
                     delete this.result[item.name];
@@ -171,6 +175,7 @@
          * @returns {boolean} True if validate is OK
          */
         validateRequired: function (value) {
+
             return !this.isEmpty(value);
         },
 
@@ -257,7 +262,7 @@
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
                 ((typeof messages[name] === 'string') && messages[name]) ||
-                // (messages[name][rule]) ||
+                    // (messages[name][rule]) ||
                 (this.defaultMessages[rule]) ||
                 (this.DEFAULT_REMOTE_ERROR);
 
@@ -285,7 +290,7 @@
         },
 
         validateItem: function ({name, value}) {
-            let rules = this.rules['name'] || this.defaultRules['name'] || false;
+            let rules = this.rules[name] || this.defaultRules[name] || false;
 
             if (!rules) {
                 return;
@@ -293,7 +298,8 @@
             for (let rule in rules) {
                 let ruleValue = rules[rule];
                 switch (rule) {
-                    case RULE_REQUIRED: {
+                    case RULE_REQUIRED:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -304,7 +310,8 @@
                         return;
                     }
 
-                    case RULE_EMAIL: {
+                    case RULE_EMAIL:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -315,7 +322,8 @@
                         return;
                     }
 
-                    case RULE_MINLENGTH: {
+                    case RULE_MINLENGTH:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -326,7 +334,8 @@
                         return;
                     }
 
-                    case RULE_MAXLENGTH: {
+                    case RULE_MAXLENGTH:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -337,7 +346,8 @@
                         return;
                     }
 
-                    case RULE_PHONE: {
+                    case RULE_PHONE:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -348,7 +358,8 @@
                         return;
                     }
 
-                    case RULE_PASSWORD: {
+                    case RULE_PASSWORD:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -359,7 +370,8 @@
                         return;
                     }
 
-                    case RULE_ZIP: {
+                    case RULE_ZIP:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -370,7 +382,8 @@
                         return;
                     }
 
-                    case RULE_REMOTE: {
+                    case RULE_REMOTE:
+                    {
                         if (!ruleValue) {
                             break;
                         }
@@ -384,15 +397,16 @@
         },
 
         clearErrors: function () {
-            let $elems = document.querySelectorAll('.js-validate-error');
+            let $elems = document.querySelectorAll('.js-validate-error-label');
             for (let i = 0, len = $elems.length; i < len; ++i) {
                 $elems[i].remove();
             }
 
-            $elems = document.querySelectorAll('[data-validate-error="true"]');
+            $elems = document.querySelectorAll('.js-validate-error-field');
             for (let i = 0, len = $elems.length; i < len; ++i) {
-                $elems[i].removeAttribute('data-validate-error');
+                $elems[i].classList.remove('js-validate-error-field');
                 $elems[i].style.border = '';
+                $elems[i].style.color = '';
             }
         },
 
@@ -413,27 +427,33 @@
 
             for (let item in this.result) {
                 let message = this.result[item].message;
-                let $elems = this.$form.querySelectorAll(`[data-validate-name="${item}"`);
+                let $elems = this.$form.querySelectorAll(`[data-validate-field="${item}"`);
 
                 for (let i = 0, len = $elems.length; i < len; ++i) {
                     let div = document.createElement('div'),
                         item = $elems[i];
 
                     div.innerHTML = message;
-                    div.className = 'js-validate-error';
+                    div.className = 'js-validate-error-label';
                     div.setAttribute('style', `color: ${this.colorWrong}`);
                     item.parentNode.insertBefore(div, item.nextSibling);
                     item.style.border = `1px solid ${this.colorWrong}`;
-                    item.setAttribute('data-validate-error', true);
+                    item.style.color = `${this.colorWrong}`;
+                    item.classList.add('js-validate-error-field');
                 }
             }
         }
     };
 
     window.JSvalidation = JSvalidation;
-
-    let validate = new window.JSvalidation('.js-form');
-
 }(window));
+
+new window.JSvalidation('.js-form', {
+    rules: {
+        checkbox: {
+            required: true
+        }
+    }
+});
 
 

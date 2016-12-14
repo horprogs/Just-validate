@@ -1,73 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
-  <script>
-    mocha.setup('bdd');
-  </script>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		.form {
+			margin: 20px;
+		}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
-  <script>
-    var assert = chai.assert;
-  </script>
-  <style>
-    .form {
-      margin: 20px;
-    }
+		.form__checkbox {
+			outline: none;
+		}
 
-    .form__input {
-      width: 300px;
-      height: 40px;
-      padding-left: 15px;
-      box-sizing: border-box;
-      outline: none;
-      margin: 10px 0;
-    }
+		.form__textarea {
+			width: 300px;
+			height: 100px;
+			padding: 15px;
+			box-sizing: border-box;
+			outline: none;
+			margin: 10px 0;
+		}
 
-    .form__btn {
-      width: 300px;
-      height: 50px;
-      text-align: center;
-      text-decoration: none;
-      display: block;
-      color: #FFFFFF;
-      line-height: 50px;
-      background: #6981D8;
-      border: none;
-      outline: none;
-      font-size: 22px;
-      margin: 10px 0;
-      cursor: pointer;
-    }
-  </style>
+		.form__input {
+			width: 300px;
+			height: 40px;
+			padding-left: 15px;
+			box-sizing: border-box;
+			outline: none;
+			margin: 10px 0;
+		}
+
+		.form__btn {
+			width: 300px;
+			height: 50px;
+			text-align: center;
+			text-decoration: none;
+			display: block;
+			color: #FFFFFF;
+			line-height: 50px;
+			background: #6981D8;
+			border: none;
+			outline: none;
+			font-size: 22px;
+			margin: 10px 0;
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
 
-
 <form action="#" class="js-form form">
-  <div>
-    <input type="text" class="form__input" placeholder="Enter your name" data-validate-name="name" name="name" value="dk">
-  </div>
-  <div>
-    <input type="email" class="form__input" placeholder="Enter your email" data-validate-name="email" name="email" value="asdasd">
-  </div>
-  <input type="password" class="form__input" placeholder="Enter your password" data-validate-name="password" name="password">
-  <button class="form__btn">SUBMIT</button>
+	<div>
+		<input type="text" class="form__input" placeholder="Enter your name" data-validate-field="name" name="name" value="dk">
+	</div>
+	<div>
+		<input type="email" class="form__input" placeholder="Enter your email" data-validate-field="email" name="email" value="asdasd">
+	</div>
+	<div>
+		<input type="password" class="form__input" placeholder="Enter your password" data-validate-field="password" name="password">
+	</div>
+	<div>
+		<textarea name="msg" cols="30" rows="10" class="form__textarea" data-validate-field="text"></textarea>
+	</div>
+	<div>
+		<input type="checkbox" id="checkbox" class="form__checkbox" data-validate-field="checkbox"><label for="checkbox">I agree</label>
+	</div>
+	<button class="form__btn">SUBMIT</button>
 </form>
-
 
 <script src="js/polyfills.js"></script>
 <script src="js/app.js"></script>
 
-<!--<script src="tests/tests.js"></script>-->
-
-<div id="mocha"></div>
-
-<script>
-  mocha.run();
-</script>
 </body>
 </html>
