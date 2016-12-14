@@ -37,7 +37,7 @@
 
     const JSvalidation = function (selector, options) {
         this.options = options || {};
-        this.rules = this.options.rules || undefined;
+        this.rules = this.options.rules || {};
         this.messages = this.options.messages || undefined;
         this.colorWrong = this.colorWrong || '#B81111';
         this.result = {};
@@ -154,16 +154,15 @@
                             value: elem.value
                         };
                     delete this.result[item.name];
-                    this.validateItem(item);
+                    this.validateItem({
+                        name: item.name,
+                        value: item.value
+                    });
                     this.renderErrors();
 
                 });
             }
             this.validateElements();
-        },
-
-        processResult: function () {
-
         },
 
         /**
@@ -276,21 +275,23 @@
 
         validateElements: function () {
             this.elements.forEach((item) => {
-                this.validateItem(item);
+                this.validateItem({
+                    name: item.name,
+                    value: item.value
+                });
             });
             // this.renderErrors();
             // this.tests.result = this.result;
         },
 
         validateItem: function ({name, value}) {
-            let rules = this.rules[name] || this.defaultRules[name] || undefined;
+            let rules = this.rules['name'] || this.defaultRules['name'] || false;
 
             if (!rules) {
                 return;
             }
             for (let rule in rules) {
                 let ruleValue = rules[rule];
-                console.log(rules)
                 switch (rule) {
                     case RULE_REQUIRED: {
                         if (!ruleValue) {
@@ -430,6 +431,9 @@
     };
 
     window.JSvalidation = JSvalidation;
+
+    let validate = new window.JSvalidation('.js-form');
+
 }(window));
 
 
