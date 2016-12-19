@@ -75,54 +75,92 @@ describe('Validate rules', function () {
         });
     });
 
+    describe('Expected messages', function () {
+        it('example1', function () {
+            let options = {
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: ['http://localhost:7777/check-correct', 'OK']
+                    },
+                    name: {
+                        required: true,
+                        minLength: 3,
+                        maxLength: 15
+                    },
+                    password: {
+                        required: true,
+                        password: true,
+                        minLength: 4,
+                        maxLength: 8,
+                    }
+                },
+                messages: {
+                    name: {
+                        maxLength: 'LONG',
+                        minLength: 'SHORT'
+                    },
+                    email: {
+                        required: 'Email required',
+                        remote: 'API not check'
+                    }
+                }
+            };
+            let expected = {
+                email: {
+                    message: 'Email required'
+                },
+                name: {
+                    message: 'SHORT'
+                },
+                password: {
+                    message: 'Password is not valid'
+                },
+            };
 
-    //it('result', function () {
-    //    let options = {
-    //        rules: {
-    //            email: {
-    //                required: true,
-    //                email: true,
-    //                remote: ['http://localhost:7777/check-correct', 'OK']
-    //            },
-    //            name: {
-    //                required: true,
-    //                minLength: 3,
-    //                maxLength: 15
-    //            },
-    //            password: {
-    //                required: true,
-    //                minLength: 4,
-    //                maxLength: 8,
-    //                password: true
-    //            }
-    //        },
-    //        messages: {
-    //            name: {
-    //                maxLength: 'LONG',
-    //                minLength: 'SHORT'
-    //            },
-    //            email: {
-    //                required: 'Email required',
-    //                remote: 'API not check'
-    //            }
-    //        }
-    //    };
-    //    let expected = {
-    //        email: {
-    //            message: 'Not valid email'
-    //        },
-    //        name: {
-    //            message: 'SHORT'
-    //        },
-    //        password: {
-    //            message: 'Field is required'
-    //        },
-    //    };
-    //
-    //    let validate = new window.JSvalidation('.js-form', options);
-    //    console.log(validate.result);
-    //    assert.deepEqual(validate.result, expected);
-    //});
+            let validate = new window.JSvalidation('.js-form', options);
+            console.log(validate.result);
+            assert.deepEqual(validate.result, expected);
+        });
 
+        it('example2', function () {
+            let options = {
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: ['http://localhost:7777/check-correct', 'OK']
+                    },
+                    name: {
+                        required: true,
+                        minLength: 3,
+                        maxLength: 15
+                    },
+                    password: {
+                        required: true,
+                        password: true,
+                        minLength: 4,
+                        maxLength: 8,
+                    }
+                }
+            };
+            let expected = {
+                email: {
+                    message: 'Field is required'
+                },
+                name: {
+                    message: 'Too short'
+                },
+                password: {
+                    message: 'Password is not valid'
+                },
+            };
+
+            let validate = new window.JSvalidation('.js-form', options);
+            console.log(validate.result)
+            assert.deepEqual(validate.result, expected);
+        });
+    });
 });
 

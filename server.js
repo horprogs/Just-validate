@@ -1,5 +1,9 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -8,7 +12,11 @@ app.use(function (req, res, next) {
 });
 
 app.get('/check-correct', function (req, res) {
-    res.send('OK');
+    if (req.query.email === 'ok@test.com') {
+        res.send('OK');
+        return;
+    }
+    res.send('false');
 });
 
 app.get('/check-wrong', function (req, res) {

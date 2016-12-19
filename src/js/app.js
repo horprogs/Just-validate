@@ -11,6 +11,17 @@
         RULE_PHONE = 'phone',
         RULE_REMOTE = 'remote';
 
+    const formatParams = function (params, method) {
+        var letter = (method.toLowerCase() === 'post') ? '' : '?';
+
+        return letter + Object
+                .keys(params)
+                .map(function (key) {
+                    return key + "=" + params[key];
+                })
+                .join("&");
+    };
+
     const ajax = function (options) {
         var url = options.url,
             method = options.method,
@@ -22,8 +33,18 @@
             callback('test');
             return;
         }
+
+        var async = (options.async === false) ? false : true;
         var xhr = new XMLHttpRequest();
-        xhr.open(method, url, true);
+        var params = formatParams(data, 'get');
+        var body = null;
+
+        if (method.toLowerCase() === 'post') {
+            body = formatParams(data, 'post');
+            params = '';
+        }
+
+        xhr.open(method, url + params, async);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
@@ -32,7 +53,7 @@
                 }
             }
         };
-        xhr.send(data);
+        xhr.send(body);
     };
 
     const JSvalidation = function (selector, options) {
@@ -51,11 +72,6 @@
         this.DEFAULT_REMOTE_ERROR = 'Error';
         this.DEFAULT_REMOTE_URL = 'http://localhost:7777/check-correct';
 
-        // this.val({
-        //     name: 'password',
-        //     value: '12345'
-        // });
-
         this.setForm(document.querySelector(selector));
     };
 
@@ -64,22 +80,28 @@
             email: {
                 required: true,
                 email: true,
-                remote: ['http://localhost:7777/check-correct', 'OK']
+                remote: {
+                    url: 'http://localhost:7777/check-correct',
+                    successAnswer: 'OK',
+                    sendParam: 'email',
+                    method: 'GET'
+                }
             },
             name: {
+                required: true,
                 minLength: 3,
-                maxLength: 15,
-                required: true
+                maxLength: 15
             },
             text: {
+                required: true,
                 maxLength: 300,
-                required: true
+                minLength: 5
             },
             password: {
-                minLength: 4,
-                maxLength: 8,
+                required: true,
                 password: true,
-                required: true
+                minLength: 4,
+                maxLength: 8
             },
             zip: {
                 required: true,
@@ -103,8 +125,15 @@
             this.$form.setAttribute('novalidate', 'novalidate');
             this.$form.addEventListener('submit', (ev) => {
                 ev.preventDefault();
+                this.result = [];
+                this.getElements();
+
+                if (Object.keys(this.result).length === 0) {
+                    this._blockSubmitBtn();
+                    this.$form.submit();
+                    return;
+                }
             });
-            this.getElements();
         },
 
         isEmail: function (email) {
@@ -137,6 +166,8 @@
 
         getElements: function () {
             let elems = this.$form.querySelectorAll('[data-validate-field]');
+            this.elements = [];
+
             for (let i = 0, len = elems.length; i < len; ++i) {
                 let item = elems[i],
                     name = item.getAttribute('data-validate-field'),
@@ -144,12 +175,23 @@
 
                 if (item.type === 'checkbox') {
                     value = item.checked || '';
-                }
 
-                this.elements.push({
-                    name,
-                    value
-                });
+                    item.addEventListener('change', (ev) => {
+                        let elem = ev.target,
+                            item = {
+                                name: elem.getAttribute('data-validate-field'),
+                                value: elem.checked
+                            };
+
+                        delete this.result[item.name];
+                        this.validateItem({
+                            name: item.name,
+                            value: item.value
+                        });
+                        this.renderErrors();
+
+                    });
+                }
 
                 item.addEventListener('keyup', (ev) => {
                     let elem = ev.target,
@@ -163,9 +205,15 @@
                         value: item.value
                     });
                     this.renderErrors();
-
                 });
+
+                this.elements.push({
+                    name,
+                    value
+                });
+
             }
+
             this.validateElements();
         },
 
@@ -240,17 +288,21 @@
          * @param value
          * @param name
          * @param {string} url
-         * @param {string} answerTrue
+         * @param {string} successAnswer
          * @returns {boolean} True if validate is OK
          */
-        validateRemote: function (value, name, url, answerTrue) {
+        validateRemote: function ({value, name, url, successAnswer, sendParam, method}) {
             ajax({
                 url: url,
-                method: 'GET',
-                data: value,
+                method: method,
+                data: {
+                    [sendParam]: value
+                },
+                async: false,
                 callback: (data) => {
-                    if (data !== answerTrue) {
+                    if (data !== successAnswer) {
                         this.generateMessage(RULE_REMOTE, name);
+                        this.renderErrors();
                     }
                 }
             });
@@ -258,10 +310,12 @@
 
         generateMessage: function (rule, name) {
             let messages = this.messages || this.defaultMessages;
-
+            //console.log('MESSAGES', this.defaultMessages)
+            //console.log('RULE', rule)
+            //console.log('MSG', messages[name])
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
-                ((typeof messages[name] === 'string') && messages[name]) ||
+                (this.messages && (typeof this.messages[name] === 'string') && messages[name]) ||
                     // (messages[name][rule]) ||
                 (this.defaultMessages[rule]) ||
                 (this.DEFAULT_REMOTE_ERROR);
@@ -269,7 +323,6 @@
             this.result[name] = {
                 message: customMessage
             };
-
         },
 
         // clearMessage: function (rule, name) {
@@ -285,8 +338,8 @@
                     value: item.value
                 });
             });
-            // this.renderErrors();
-            // this.tests.result = this.result;
+
+            this.renderErrors();
         },
 
         validateItem: function ({name, value}) {
@@ -295,6 +348,7 @@
             if (!rules) {
                 return;
             }
+            //console.log('rules', rules)
             for (let rule in rules) {
                 let ruleValue = rules[rule];
                 switch (rule) {
@@ -387,10 +441,15 @@
                         if (!ruleValue) {
                             break;
                         }
-                        let url = ruleValue[0],
-                            answerTrue = ruleValue[1];
-                        this.validateRemote(value, name, url, answerTrue);
+
+                        let url = ruleValue.url,
+                            successAnswer = ruleValue.successAnswer,
+                            method = ruleValue.method,
+                            sendParam = ruleValue.sendParam;
+
+                        this.validateRemote({name, value, url, method, sendParam, successAnswer});
                         return;
+
                     }
                 }
             }
@@ -412,18 +471,13 @@
 
         renderErrors: function () {
             this.clearErrors();
-            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
 
             if (Object.keys(this.result).length === 0) {
-                submitBtn.style.pointerEvents = 'auto';
-                submitBtn.removeAttribute('disabled');
+                this._unblockSubmitBtn();
                 return;
             }
 
-            submitBtn.style.pointerEvents = 'none';
-            submitBtn.style.webitFilter = 'grayscale(100%)';
-            submitBtn.style.filter = 'grayscale(100%)';
-            submitBtn.setAttribute('disabled', 'disabled');
+            this._blockSubmitBtn();
 
             for (let item in this.result) {
                 let message = this.result[item].message;
@@ -436,12 +490,43 @@
                     div.innerHTML = message;
                     div.className = 'js-validate-error-label';
                     div.setAttribute('style', `color: ${this.colorWrong}`);
-                    item.parentNode.insertBefore(div, item.nextSibling);
                     item.style.border = `1px solid ${this.colorWrong}`;
                     item.style.color = `${this.colorWrong}`;
                     item.classList.add('js-validate-error-field');
+
+                    if (item.type === 'checkbox') {
+                        let $label = document.querySelector(`label[for="${item.getAttribute('id')}"]`);
+
+                        if (item.parentNode.tagName.toLowerCase() === 'label') {
+                            item.parentNode.parentNode.insertBefore(div, null);
+                        } else if ($label) {
+                            $label.parentNode.insertBefore(div, $label.nextSibling);
+                        } else {
+                            item.parentNode.insertBefore(div, item.nextSibling);
+                        }
+                        continue;
+                    }
+
+                    item.parentNode.insertBefore(div, item.nextSibling);
+
                 }
             }
+        },
+
+        _blockSubmitBtn: function () {
+            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
+            submitBtn.style.pointerEvents = 'none';
+            submitBtn.style.webitFilter = 'grayscale(100%)';
+            submitBtn.style.filter = 'grayscale(100%)';
+            submitBtn.setAttribute('disabled', 'disabled');
+        },
+
+        _unblockSubmitBtn: function () {
+            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
+            submitBtn.style.pointerEvents = '';
+            submitBtn.style.webitFilter = '';
+            submitBtn.style.filter = '';
+            submitBtn.removeAttribute('disabled');
         }
     };
 
@@ -452,6 +537,14 @@ new window.JSvalidation('.js-form', {
     rules: {
         checkbox: {
             required: true
+        },
+        checkbox2: {
+            required: true
+        }
+    },
+    messages: {
+        email: {
+            remote: 'Email does not exist'
         }
     }
 });
