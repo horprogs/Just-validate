@@ -19,6 +19,10 @@ app.get('/check-correct', function (req, res) {
     res.send('false');
 });
 
+app.post('/submit', function (req, res) {
+    res.send('OK');
+});
+
 app.get('/check-wrong', function (req, res) {
     res.send('false');
 });

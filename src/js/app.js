@@ -12,8 +12,18 @@
         RULE_REMOTE = 'remote';
 
     const formatParams = function (params, method) {
-        var letter = (method.toLowerCase() === 'post') ? '' : '?';
+        if (typeof params === 'string') {
+            return params;
+        }
 
+        var letter = (method.toLowerCase() === 'post') ? '' : '?';
+        if (Array.isArray(params)) {
+            return letter + params
+                    .map(function (obj) {
+                        return obj.name + "=" + obj.value;
+                    })
+                    .join("&");
+        }
         return letter + Object
                 .keys(params)
                 .map(function (key) {
@@ -60,14 +70,16 @@
         this.options = options || {};
         this.rules = this.options.rules || {};
         this.messages = this.options.messages || undefined;
-        this.colorWrong = this.colorWrong || '#B81111';
+        this.colorWrong = this.options.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
+        this.bindHandlerKeyup = this.handlerKeyup.bind(this);
+        this.submitHandler = this.options.submitHandler || undefined;
         this.REGEXP = {
             email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             zip: /^\d{5}(-\d{4})?$/,
             phone: /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
-            password: /^(?=.*\d).{0,}$/
+            password: /[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))/
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
         this.DEFAULT_REMOTE_URL = 'http://localhost:7777/check-correct';
@@ -117,7 +129,38 @@
             email: 'Not valid email',
             maxLength: 'Too much',
             minLength: 'Too short',
-            password: 'Password is not valid'
+            password: 'Password is not valid',
+            remote: 'Email already exists'
+        },
+
+        handlerKeyup: function (ev) {
+            let elem = ev.target,
+                item = {
+                    name: elem.getAttribute('data-validate-field'),
+                    value: elem.value
+                };
+            delete this.result[item.name];
+            this.validateItem({
+                name: item.name,
+                value: item.value
+            });
+            this.renderErrors();
+        },
+
+        setterEventListener: function (item, event, handler, type) {
+            if (event === 'keyup') {
+                handler = this.bindHandlerKeyup;
+            }
+            switch (type) {
+                case 'add': {
+                    item.addEventListener(event, handler);
+                    break;
+                }
+                case 'remove': {
+                    item.removeEventListener(event, handler);
+                    break;
+                }
+            }
         },
 
         setForm: function (form) {
@@ -129,7 +172,12 @@
                 this.getElements();
 
                 if (Object.keys(this.result).length === 0) {
-                    this._blockSubmitBtn();
+                    // this._blockSubmitBtn();
+                    if (this.submitHandler) {
+                        this.submitHandler(this.$form, this.elements, ajax);
+                        return;
+                    }
+
                     this.$form.submit();
                     return;
                 }
@@ -192,20 +240,9 @@
 
                     });
                 }
-
-                item.addEventListener('keyup', (ev) => {
-                    let elem = ev.target,
-                        item = {
-                            name: elem.getAttribute('data-validate-field'),
-                            value: elem.value
-                        };
-                    delete this.result[item.name];
-                    this.validateItem({
-                        name: item.name,
-                        value: item.value
-                    });
-                    this.renderErrors();
-                });
+                this.setterEventListener(item, 'keyup', this.handlerKeyup, 'add');
+                // let bindFunc = this.handlerKeyup.bind(this)
+                // item.addEventListener('keyup', bindFunc, false);
 
                 this.elements.push({
                     name,
@@ -223,7 +260,6 @@
          * @returns {boolean} True if validate is OK
          */
         validateRequired: function (value) {
-
             return !this.isEmpty(value);
         },
 
@@ -316,7 +352,7 @@
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
                 (this.messages && (typeof this.messages[name] === 'string') && messages[name]) ||
-                    // (messages[name][rule]) ||
+                // (messages[name][rule]) ||
                 (this.defaultMessages[rule]) ||
                 (this.DEFAULT_REMOTE_ERROR);
 
@@ -352,8 +388,7 @@
             for (let rule in rules) {
                 let ruleValue = rules[rule];
                 switch (rule) {
-                    case RULE_REQUIRED:
-                    {
+                    case RULE_REQUIRED: {
                         if (!ruleValue) {
                             break;
                         }
@@ -364,8 +399,7 @@
                         return;
                     }
 
-                    case RULE_EMAIL:
-                    {
+                    case RULE_EMAIL: {
                         if (!ruleValue) {
                             break;
                         }
@@ -376,8 +410,7 @@
                         return;
                     }
 
-                    case RULE_MINLENGTH:
-                    {
+                    case RULE_MINLENGTH: {
                         if (!ruleValue) {
                             break;
                         }
@@ -388,8 +421,7 @@
                         return;
                     }
 
-                    case RULE_MAXLENGTH:
-                    {
+                    case RULE_MAXLENGTH: {
                         if (!ruleValue) {
                             break;
                         }
@@ -400,8 +432,7 @@
                         return;
                     }
 
-                    case RULE_PHONE:
-                    {
+                    case RULE_PHONE: {
                         if (!ruleValue) {
                             break;
                         }
@@ -412,8 +443,7 @@
                         return;
                     }
 
-                    case RULE_PASSWORD:
-                    {
+                    case RULE_PASSWORD: {
                         if (!ruleValue) {
                             break;
                         }
@@ -424,8 +454,7 @@
                         return;
                     }
 
-                    case RULE_ZIP:
-                    {
+                    case RULE_ZIP: {
                         if (!ruleValue) {
                             break;
                         }
@@ -436,8 +465,7 @@
                         return;
                     }
 
-                    case RULE_REMOTE:
-                    {
+                    case RULE_REMOTE: {
                         if (!ruleValue) {
                             break;
                         }
@@ -447,9 +475,11 @@
                             method = ruleValue.method,
                             sendParam = ruleValue.sendParam;
 
+                        let $elem = this.$form.querySelector(`input[data-validate-field="${name}"]`);
+                        this.setterEventListener($elem, 'keyup', this.handlerKeyup, 'remove');
                         this.validateRemote({name, value, url, method, sendParam, successAnswer});
+                        // this._unblockSubmitBtn();
                         return;
-
                     }
                 }
             }
@@ -477,7 +507,7 @@
                 return;
             }
 
-            this._blockSubmitBtn();
+            // this._blockSubmitBtn();
 
             for (let item in this.result) {
                 let message = this.result[item].message;
@@ -541,12 +571,27 @@ new window.JSvalidation('.js-form', {
         checkbox2: {
             required: true
         }
+
     },
     messages: {
-        email: {
-            remote: 'Email does not exist'
+        name: {
+            minLength: 'LENGTH'
         }
-    }
+    },
+
+    submitHandler: function (form, values, ajax) {
+        console.log(form, values)
+
+        ajax({
+            url: 'http://localhost:7777/submit',
+            method: 'POST',
+            data: values,
+            async: true,
+            callback: (response) => {
+                console.log(response)
+            }
+        });
+    },
 });
 
 

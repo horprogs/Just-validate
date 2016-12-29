@@ -1,45 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<style>
-		.no-float {
-			float: none;
-		}
-		.mt30 {
-			margin-top: 30px;
-		}
-		.js-validate-error-label {
-			margin-top: 5px;
-		}
-	</style>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    .no-float {
+      float: none;
+    }
+
+    .mt30 {
+      margin-top: 30px;
+    }
+
+    .js-validate-error-label {
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body class="container">
 <div class="col-md-6 center-block no-float mt30">
-	<form action="#" class="js-form form">
-		<div class="form-group">
-			<input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" value="dkdf">
-		</div>
-		<div class="form-group">
-			<input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" value="test@test.com">
-		</div>
-		<div class="form-group">
-			<input type="password" class="form__input form-control" placeholder="Enter your password" autocomplete="off" data-validate-field="password" name="password" value="123fd">
-		</div>
-		<div class="form-group">
-			<textarea name="msg" cols="30" rows="10" class="form__textarea form-control" data-validate-field="text">sdfsfsdfsdf</textarea>
-		</div>
-		<div class="form-group">
-			<input type="checkbox" id="checkbox" class="form__checkbox" data-validate-field="checkbox"><label for="checkbox">I agree</label>
-		</div>
-		<div class="form-group">
-			<label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2">I agree</label>
-		</div>
+  <form action="#" class="js-form form">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" value="dkdf">
+      </div>
+      <div class="form-group col-md-6">
+        <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" value="ok@test.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form__input form-control" placeholder="Enter your password" autocomplete="off" data-validate-field="password" name="password" value="123fd">
+    </div>
+    <div class="form-group">
+      <textarea name="msg" cols="30" rows="10" class="form__textarea form-control" data-validate-field="text">sdfsfsdfsdf</textarea>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="checkbox" class="form__checkbox" data-validate-field="checkbox" checked><label for="checkbox">I agree</label>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2" checked>I agree</label>
+    </div>
 
-		<button class="form__btn btn btn-primary">SUBMIT</button>
-	</form>
+    <button class="form__btn btn btn-primary">SUBMIT</button>
+  </form>
 </div>
 
 <script src="js/polyfills.js"></script>
