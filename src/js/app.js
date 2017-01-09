@@ -37,7 +37,8 @@
             method = options.method,
             data = options.data,
             debug = options.debug,
-            callback = options.callback;
+            callback = options.callback,
+            error = options.error;
 
         if (debug) {
             callback('test');
@@ -60,6 +61,9 @@
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     callback(this.responseText);
+                }
+                else {
+                    error(this.responseText);
                 }
             }
         };
@@ -132,7 +136,10 @@
             password: 'Password is not valid',
             remote: 'Email already exists'
         },
-
+        /**
+         * Keyup handler
+         * @param ev
+         */
         handlerKeyup: function (ev) {
             let elem = ev.target,
                 item = {
@@ -563,34 +570,6 @@
     window.JSvalidation = JSvalidation;
 }(window));
 
-new window.JSvalidation('.js-form', {
-    rules: {
-        checkbox: {
-            required: true
-        },
-        checkbox2: {
-            required: true
-        },
-        email: {}
-    },
-    messages: {
-        name: {
-            minLength: 'LENGTH'
-        }
-    },
 
-    submitHandler: function (form, values, ajax) {
-
-        ajax({
-            url: 'http://localhost:7777/submit',
-            method: 'POST',
-            data: values,
-            async: true,
-            callback: (response) => {
-                console.log(response)
-            }
-        });
-    },
-});
 
 
