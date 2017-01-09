@@ -570,8 +570,8 @@ new window.JSvalidation('.js-form', {
         },
         checkbox2: {
             required: true
-        }
-
+        },
+        email: {}
     },
     messages: {
         name: {
@@ -580,7 +580,6 @@ new window.JSvalidation('.js-form', {
     },
 
     submitHandler: function (form, values, ajax) {
-        console.log(form, values)
 
         ajax({
             url: 'http://localhost:7777/submit',
