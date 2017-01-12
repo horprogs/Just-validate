@@ -1,4 +1,18 @@
 {
-  "name": "Just-validate",
-  "version": "1.0.0"
+  "name": "just-validate",
+  "description": "Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.",
+  "version": "1.0.1",
+  "authors": [
+    "Perepecho Georgy (Horprogs) <horprogs@gmail.com>"
+  ],
+  "license": [
+    "MIT",
+    "GPL"
+  ],
+  "keywords": [
+    "form",
+    "validation",
+    "just-validate"
+  ],
+  "homepage": "https://github.com/horprogs/Just-validate"
 }

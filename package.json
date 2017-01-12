@@ -1,13 +1,29 @@
 {
-  "name": "Just-validate",
+  "name": "just-validate",
   "version": "1.0.0",
-  "description": "CONTENTS OF THIS FILE ---------------------",
+  "description": "Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.",
   "main": "gulpfile.js",
   "scripts": {
     "start": "nodemon server.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Perepecho Georgy (Horprogs) <horprogs@gmail.com>",
+  "license": [
+    "MIT",
+    "GPL"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/horprogs/Just-validate.git"
+  },
+  "keywords": [
+    "form",
+    "validation",
+    "just-validate"
+  ],
+  "bugs": {
+    "url": "https://github.com/horprogs/Just-validate/issues"
+  },
+  "homepage": "https://github.com/horprogs/Just-validate#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.14.0",
     "browser-sync": "^2.11.2",

@@ -1,7 +1,7 @@
 describe('Validate rules', function () {
 
     describe('isEmail', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('test@test.com - correct', function () {
             assert.isTrue(validate.validateEmail('test@test.com'));
@@ -21,7 +21,7 @@ describe('Validate rules', function () {
     });
 
     describe('isZip', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('12345 - correct', function () {
             assert.isTrue(validate.validateZip('12345'));
@@ -38,7 +38,7 @@ describe('Validate rules', function () {
     });
 
     describe('isPhone', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('111-222-3333 - correct', function () {
             assert.isTrue(validate.validatePhone('111-222-3333'));
@@ -49,7 +49,7 @@ describe('Validate rules', function () {
     });
 
     describe('isPassword', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('12345f - correct', function () {
             assert.isTrue(validate.validatePassword('12345f'));
@@ -66,7 +66,7 @@ describe('Validate rules', function () {
     });
 
     describe('isMinLength', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('1111 (length 3) - correct', function () {
             assert.isTrue(validate.validateMinLength('1111', 3));
@@ -77,7 +77,7 @@ describe('Validate rules', function () {
     });
 
     describe('isMaxLength', function () {
-        let validate = new window.JSvalidation('.js-form');
+        let validate = new window.JustValidate('.js-form');
 
         it('123456 (length 8) - correct', function () {
             assert.isTrue(validate.validateMaxLength('123456', 8));

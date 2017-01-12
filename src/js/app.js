@@ -70,7 +70,7 @@
         xhr.send(body);
     };
 
-    const JSvalidation = function (selector, options) {
+    const JustValidate = function (selector, options) {
         this.options = options || {};
         this.rules = this.options.rules || {};
         this.messages = this.options.messages || undefined;
@@ -91,7 +91,7 @@
         this.setForm(document.querySelector(selector));
     };
 
-    JSvalidation.prototype = {
+    JustValidate.prototype = {
         defaultRules: {
             email: {
                 required: true,
@@ -129,8 +129,8 @@
         },
 
         defaultMessages: {
-            required: 'Field is required',
-            email: 'Not valid email',
+            required: 'The field is required',
+            email: 'Please, type a valid email',
             maxLength: 'Too much',
             minLength: 'Too short',
             password: 'Password is not valid',
@@ -567,7 +567,7 @@
         }
     };
 
-    window.JSvalidation = JSvalidation;
+    window.JustValidate = JustValidate;
 }(window));
 
 
