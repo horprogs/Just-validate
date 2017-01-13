@@ -26,7 +26,7 @@
         <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" value="dkdf">
       </div>
       <div class="form-group col-md-6">
-        <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" value="ok@test.com">
+        <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" value="ok@test.co">
       </div>
     </div>
     <div class="form-group">
@@ -78,7 +78,7 @@
         data: values,
         async: true,
         callback: (response) => {
-          alert(response)
+          console.log(response);
         }
       });
     },

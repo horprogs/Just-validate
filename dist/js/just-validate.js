@@ -201,7 +201,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.getElements();
 
                 if (Object.keys(_this.result).length === 0) {
-                    // this._blockSubmitBtn();
+                    // this.lockForm();
                     if (_this.submitHandler) {
                         _this.submitHandler(_this.$form, _this.elements, ajax);
                         return;
@@ -529,7 +529,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             var $elem = this.$form.querySelector('input[data-validate-field="' + name + '"]');
                             this.setterEventListener($elem, 'keyup', this.handlerKeyup, 'remove');
                             this.validateRemote({ name: name, value: value, url: url, method: method, sendParam: sendParam, successAnswer: successAnswer });
-                            // this._unblockSubmitBtn();
+                            // this.unlockForm();
                             return;
                         }
                 }
@@ -554,11 +554,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.clearErrors();
 
             if (Object.keys(this.result).length === 0) {
-                this._unblockSubmitBtn();
+                this.unlockForm();
                 return;
             }
 
-            // this._blockSubmitBtn();
+            // this.lockForm();
 
             for (var item in this.result) {
                 var message = this.result[item].message;
@@ -593,7 +593,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
         },
 
-        _blockSubmitBtn: function _blockSubmitBtn() {
+        lockForm: function _blockSubmitBtn() {
             var submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
             submitBtn.style.pointerEvents = 'none';
             submitBtn.style.webitFilter = 'grayscale(100%)';
@@ -601,7 +601,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             submitBtn.setAttribute('disabled', 'disabled');
         },
 
-        _unblockSubmitBtn: function _unblockSubmitBtn() {
+        unlockForm: function _unblockSubmitBtn() {
             var submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
             submitBtn.style.pointerEvents = '';
             submitBtn.style.webitFilter = '';

@@ -1,6 +1,10 @@
 (function (window) {
     'use strict';
 
+    if (!window.Promise) {
+        window.Promise = Promise;
+    }
+
     const
         RULE_REQUIRED = 'required',
         RULE_EMAIL = 'email',
@@ -79,6 +83,8 @@
         this.elements = [];
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
+        this.promiseRemote = null;
+        this.isValidationSuccess = false;
         this.REGEXP = {
             email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             zip: /^\d{5}(-\d{4})?$/,
@@ -169,6 +175,17 @@
                 }
             }
         },
+        validationSuccess: function () {
+            if (Object.keys(this.result).length === 0) {
+                // this.lockForm();
+                if (this.submitHandler) {
+                    this.submitHandler(this.$form, this.elements, ajax);
+                    return;
+                }
+
+                this.$form.submit();
+            }
+        },
 
         setForm: function (form) {
             this.$form = form;
@@ -177,16 +194,8 @@
                 ev.preventDefault();
                 this.result = [];
                 this.getElements();
-
-                if (Object.keys(this.result).length === 0) {
-                    // this._blockSubmitBtn();
-                    if (this.submitHandler) {
-                        this.submitHandler(this.$form, this.elements, ajax);
-                        return;
-                    }
-
-                    this.$form.submit();
-                    return;
+                if (this.isValidationSuccess) {
+                    this.validationSuccess();
                 }
             });
         },
@@ -248,8 +257,6 @@
                     });
                 }
                 this.setterEventListener(item, 'keyup', this.handlerKeyup, 'add');
-                // let bindFunc = this.handlerKeyup.bind(this)
-                // item.addEventListener('keyup', bindFunc, false);
 
                 this.elements.push({
                     name,
@@ -335,32 +342,35 @@
          * @returns {boolean} True if validate is OK
          */
         validateRemote: function ({value, name, url, successAnswer, sendParam, method}) {
-            ajax({
-                url: url,
-                method: method,
-                data: {
-                    [sendParam]: value
-                },
-                async: false,
-                callback: (data) => {
-                    if (data !== successAnswer) {
-                        this.generateMessage(RULE_REMOTE, name);
-                        this.renderErrors();
+            return new Promise((resolve) => {
+                ajax({
+                    url: url,
+                    method: method,
+                    data: {
+                        [sendParam]: value
+                    },
+                    async: true,
+                    callback: (data) => {
+                        if (data === successAnswer) {
+                            resolve('ok');
+                        }
+                        resolve({
+                            type: 'incorrect',
+                            name
+                        });
+                    },
+                    error: () => {
+                        resolve({
+                            type: 'error',
+                            name
+                        });
                     }
-                },
-                error: () => {
-                    alert('Server error occured. Please try later.');
-                    this.generateMessage(RULE_REMOTE, name);
-                    this.renderErrors();
-                }
+                });
             });
         },
 
         generateMessage: function (rule, name) {
             let messages = this.messages || this.defaultMessages;
-            //console.log('MESSAGES', this.defaultMessages)
-            //console.log('RULE', rule)
-            //console.log('MSG', messages[name])
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
                 (this.messages && (typeof this.messages[name] === 'string') && messages[name]) ||
@@ -373,13 +383,8 @@
             };
         },
 
-        // clearMessage: function (rule, name) {
-        //     this.result[name] = {
-        //         message: customMessage
-        //     };
-        // },
-
         validateElements: function () {
+            this.lockForm();
             this.elements.forEach((item) => {
                 this.validateItem({
                     name: item.name,
@@ -387,7 +392,22 @@
                 });
             });
 
-            this.renderErrors();
+            if (!this.promiseRemote) {
+                this.renderErrors();
+                return;
+            }
+
+            this.promiseRemote.then(result => {
+                if (result === 'ok') {
+                    this.renderErrors();
+                    return;
+                }
+                if (result.type === 'error') {
+                    alert('Server error occured. Please try later.');
+                }
+                this.generateMessage(RULE_REMOTE, result.name);
+                this.renderErrors();
+            });
         },
 
         validateItem: function ({name, value}) {
@@ -489,8 +509,8 @@
 
                         let $elem = this.$form.querySelector(`input[data-validate-field="${name}"]`);
                         this.setterEventListener($elem, 'keyup', this.handlerKeyup, 'remove');
-                        this.validateRemote({name, value, url, method, sendParam, successAnswer});
-                        // this._unblockSubmitBtn();
+                        this.promiseRemote = this.validateRemote({name, value, url, method, sendParam, successAnswer});
+                        // this.unlockForm();
                         return;
                     }
                 }
@@ -513,13 +533,14 @@
 
         renderErrors: function () {
             this.clearErrors();
+            this.unlockForm();
 
             if (Object.keys(this.result).length === 0) {
-                this._unblockSubmitBtn();
+                this.isValidationSuccess = true;
                 return;
             }
 
-            // this._blockSubmitBtn();
+            // this.lockForm();
 
             for (let item in this.result) {
                 let message = this.result[item].message;
@@ -550,25 +571,28 @@
                     }
 
                     item.parentNode.insertBefore(div, item.nextSibling);
-
                 }
             }
         },
 
-        _blockSubmitBtn: function () {
-            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
-            submitBtn.style.pointerEvents = 'none';
-            submitBtn.style.webitFilter = 'grayscale(100%)';
-            submitBtn.style.filter = 'grayscale(100%)';
-            submitBtn.setAttribute('disabled', 'disabled');
+        lockForm: function () {
+            let $elems = this.$form.querySelectorAll('input, textarea, button, select');
+            for (let i = 0, len = $elems.length; i < len; ++i) {
+                $elems[i].setAttribute('disabled', 'disabled');
+                $elems[i].style.pointerEvents = 'none';
+                $elems[i].style.webitFilter = 'grayscale(100%)';
+                $elems[i].style.filter = 'grayscale(100%)';
+            }
         },
 
-        _unblockSubmitBtn: function () {
-            let submitBtn = this.$form.querySelector('input[type="submit"]') || this.$form.querySelector('button');
-            submitBtn.style.pointerEvents = '';
-            submitBtn.style.webitFilter = '';
-            submitBtn.style.filter = '';
-            submitBtn.removeAttribute('disabled');
+        unlockForm: function () {
+            let $elems = this.$form.querySelectorAll('input, textarea, button, select');
+            for (let i = 0, len = $elems.length; i < len; ++i) {
+                $elems[i].removeAttribute('disabled');
+                $elems[i].style.pointerEvents = '';
+                $elems[i].style.webitFilter = '';
+                $elems[i].style.filter = '';
+            }
         }
     };
 
