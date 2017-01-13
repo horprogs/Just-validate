@@ -1,6 +1,8 @@
 # Just-validate
 Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.
 
+Demo: https://horprogs.github.io/Just-validate/
+
 ## How to use
 ### npm
 ```shell

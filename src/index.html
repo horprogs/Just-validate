@@ -57,23 +57,28 @@
       },
       checkbox2: {
         required: true
-      }
-    },
-    messages: {
-      name: {
-        minLength: 'LENGTH'
+      },
+      email: {
+        required: true,
+        email: true,
+        remote: {
+          url: 'https://just-validate-api.herokuapp.com/check-correct',
+          sendParam: 'email',
+          successAnswer: 'OK',
+          method: 'GET'
+        }
       }
     },
 
     submitHandler: function (form, values, ajax) {
 
       ajax({
-        url: 'http://localhost:7777/submit',
+        url: 'https://just-validate-api.herokuapp.com/submit',
         method: 'POST',
         data: values,
         async: true,
         callback: (response) => {
-          console.log(response)
+          alert(response)
         }
       });
     },

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Just-validate demo</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <style>
     .no-float {
@@ -51,6 +51,8 @@
   </form>
   <br>
   <h2>Default validation</h2>
+  <div>For success validation email must be equal ok@test.com</div>
+  <br>
   <form action="#" class="js-form-2 form">
     <div class="row">
       <div class="form-group col-md-6">
@@ -58,7 +60,7 @@
         <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" id="name-1">
       </div>
       <div class="form-group col-md-6">
-        <label for="email">Enter your email (for success validation must be equal ok@test.com)</label>
+        <label for="email">Enter your email</label>
         <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" id="email-1">
       </div>
     </div>
@@ -79,27 +81,47 @@
       },
       email: {
         required: true,
-        email: true
+        email: true,
+        remote: {
+          url: 'https://just-validate-api.herokuapp.com/check-correct',
+          sendParam: 'email',
+          successAnswer: 'OK',
+          method: 'GET'
+        }
       }
     },
 
     submitHandler: function (form, values, ajax) {
       ajax({
-        url: '/submit',
+        url: 'https://just-validate-api.herokuapp.com/submit',
         method: 'POST',
         data: values,
         async: true,
         callback: (response) => {
-          alert('AJAX submit successful! \nResponse from server:' +response)
+          alert('AJAX submit successful! \nResponse from server:' + response)
         },
         error: (response) => {
-          alert('AJAX submit successful! \nResponse from server:' + response)
+          alert('AJAX submit error! \nResponse from server:' + response)
         }
       });
     },
   });
 
-  new window.JustValidate('.js-form-2');
+  new window.JustValidate('.js-form-2', {
+            rules: {
+              email: {
+                required: true,
+                email: true,
+                remote: {
+                  url: 'https://just-validate-api.herokuapp.com/check-correct',
+                  sendParam: 'email',
+                  successAnswer: 'OK',
+                  method: 'GET'
+                }
+              }
+            }
+          }
+  );
 </script>
 
 </body>
