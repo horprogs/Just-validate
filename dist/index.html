@@ -20,6 +20,7 @@
 </head>
 <body class="container">
 <div class="col-md-6 center-block no-float mt30">
+  <h2>Classic validation</h2>
   <form action="#" class="js-form form">
     <div class="row">
       <div class="form-group col-md-6">
@@ -48,12 +49,27 @@
 
     <button class="form__btn btn btn-primary">SUBMIT</button>
   </form>
+  <br>
+  <h2>Default validation</h2>
+  <form action="#" class="js-form-2 form">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="name">Enter your name</label>
+        <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" id="name-1">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="email">Enter your email (for success validation must be equal ok@test.com)</label>
+        <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" id="email-1">
+      </div>
+    </div>
+    <button class="form__btn btn btn-primary">SUBMIT</button>
+  </form>
 </div>
 
 <script src="js/just-validate.min.js"></script>
 
 <script>
-  new window.JSvalidation('.js-form', {
+  new window.JustValidate('.js-form', {
     rules: {
       checkbox: {
         required: true
@@ -69,19 +85,21 @@
 
     submitHandler: function (form, values, ajax) {
       ajax({
-        url: 'http://localhost:7777/submit',
+        url: '/submit',
         method: 'POST',
         data: values,
         async: true,
         callback: (response) => {
-          alert('Success AJAX submit! \nResponse from server:' +response)
+          alert('AJAX submit successful! \nResponse from server:' +response)
         },
         error: (response) => {
-          alert('Error AJAX submit! \nResponse from server:' + response)
+          alert('AJAX submit successful! \nResponse from server:' + response)
         }
       });
     },
   });
+
+  new window.JustValidate('.js-form-2');
 </script>
 
 </body>

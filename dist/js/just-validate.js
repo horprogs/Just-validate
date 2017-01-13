@@ -88,7 +88,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         xhr.send(body);
     };
 
-    var JSvalidation = function JSvalidation(selector, options) {
+    var JustValidate = function JustValidate(selector, options) {
         this.options = options || {};
         this.rules = this.options.rules || {};
         this.messages = this.options.messages || undefined;
@@ -109,7 +109,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.setForm(document.querySelector(selector));
     };
 
-    JSvalidation.prototype = {
+    JustValidate.prototype = {
         defaultRules: {
             email: {
                 required: true,
@@ -147,14 +147,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
 
         defaultMessages: {
-            required: 'Field is required',
-            email: 'Not valid email',
+            required: 'The field is required',
+            email: 'Please, type a valid email',
             maxLength: 'Too much',
             minLength: 'Too short',
             password: 'Password is not valid',
             remote: 'Email already exists'
         },
-
+        /**
+         * Keyup handler
+         * @param ev
+         */
         handlerKeyup: function handlerKeyup(ev) {
             var elem = ev.target,
                 item = {
@@ -373,6 +376,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         _this3.generateMessage(RULE_REMOTE, name);
                         _this3.renderErrors();
                     }
+                },
+                error: function error() {
+                    alert('Server error occured. Please try later.');
+                    _this3.generateMessage(RULE_REMOTE, name);
+                    _this3.renderErrors();
                 }
             });
         },
@@ -602,5 +610,5 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
     };
 
-    window.JSvalidation = JSvalidation;
+    window.JustValidate = JustValidate;
 })(window);

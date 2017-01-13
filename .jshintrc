@@ -120,7 +120,7 @@
   // Browserify (node.js code in the browser)
   "couch": false,
   // CouchDB
-  "devel": false,
+  "devel": true,
   // Development/debugging (alert, confirm, etc)
   "dojo": false,
   // Dojo Toolkit

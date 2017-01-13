@@ -347,6 +347,11 @@
                         this.generateMessage(RULE_REMOTE, name);
                         this.renderErrors();
                     }
+                },
+                error: () => {
+                    alert('Server error occured. Please try later.');
+                    this.generateMessage(RULE_REMOTE, name);
+                    this.renderErrors();
                 }
             });
         },
