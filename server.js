@@ -1,7 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var port = process.env.PORT || 7777;
 
+app.set('port', port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -27,6 +29,6 @@ app.get('/check-wrong', function (req, res) {
     res.send('false');
 });
 
-app.listen(7777, function () {
+app.listen(app.get('port'), function () {
     console.log('API server on port 7777!');
 });
