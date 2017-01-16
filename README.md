@@ -142,7 +142,7 @@ new JustValidate('.js-form', {
     submitHandler: function (form, values, ajax) {
 
       ajax({
-        url: 'http://localhost:7777/submit',
+        url: 'https://just-validate-api.herokuapp.com/submit',
         method: 'POST',
         data: values,
         async: true,
@@ -174,11 +174,7 @@ You can override standard submit form, using method ``submitHandler``. It has 3 
 * ajax - function of XMLHttpRequest
 
 ## Current version stable
-**V1.0.1**
-
-## ChangeLog
-**V1.0.1**
-- Fix small bugs
+**V1.0.0-alpha**
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.

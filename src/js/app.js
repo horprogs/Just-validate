@@ -137,8 +137,8 @@
         defaultMessages: {
             required: 'The field is required',
             email: 'Please, type a valid email',
-            maxLength: 'Too much',
-            minLength: 'Too short',
+            maxLength: 'The field must contain a maximum of :value characters',
+            minLength: 'The field must contain a minimum of :value characters',
             password: 'Password is not valid',
             remote: 'Email already exists'
         },
@@ -175,15 +175,24 @@
                 }
             }
         },
+        formPristine: function () {
+            let $elems = this.$form.querySelectorAll('input, textarea');
+            for (let i = 0, len = $elems.length; i < len; ++i) {
+                $elems[i].value = '';
+            }
+        },
+
         validationSuccess: function () {
             if (Object.keys(this.result).length === 0) {
-                // this.lockForm();
+                this.isValidationSuccess = false;
                 if (this.submitHandler) {
                     this.submitHandler(this.$form, this.elements, ajax);
+                    this.formPristine();
                     return;
                 }
 
                 this.$form.submit();
+                this.formPristine();
             }
         },
 
@@ -194,9 +203,18 @@
                 ev.preventDefault();
                 this.result = [];
                 this.getElements();
-                if (this.isValidationSuccess) {
+
+                if (!this.promiseRemote && this.isValidationSuccess) {
                     this.validationSuccess();
+                    return;
                 }
+
+                this.promiseRemote.then(() => {
+                    if (this.isValidationSuccess) {
+                        this.validationSuccess();
+                    }
+                });
+
             });
         },
 
@@ -217,7 +235,12 @@
         },
 
         isEmpty: function (val) {
-            return !val;
+            let newVal = val;
+            if (val.trim) {
+                newVal = val.trim();
+            }
+
+            return !(newVal);
         },
 
         checkLengthMax: function (text, max) {
@@ -225,7 +248,7 @@
         },
 
         checkLengthMin: function (text, min) {
-            return text.length > min;
+            return text.length >= min;
         },
 
         getElements: function () {
@@ -369,7 +392,7 @@
             });
         },
 
-        generateMessage: function (rule, name) {
+        generateMessage: function (rule, name, value) {
             let messages = this.messages || this.defaultMessages;
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
@@ -378,6 +401,9 @@
                 (this.defaultMessages[rule]) ||
                 (this.DEFAULT_REMOTE_ERROR);
 
+            if (value) {
+                customMessage = customMessage.replace(':value', value.toString());
+            }
             this.result[name] = {
                 message: customMessage
             };
@@ -396,8 +422,8 @@
                 this.renderErrors();
                 return;
             }
-
             this.promiseRemote.then(result => {
+
                 if (result === 'ok') {
                     this.renderErrors();
                     return;
@@ -416,7 +442,6 @@
             if (!rules) {
                 return;
             }
-            //console.log('rules', rules)
             for (let rule in rules) {
                 let ruleValue = rules[rule];
                 switch (rule) {
@@ -449,7 +474,7 @@
                         if (this.validateMinLength(value, ruleValue)) {
                             break;
                         }
-                        this.generateMessage(RULE_MINLENGTH, name);
+                        this.generateMessage(RULE_MINLENGTH, name, ruleValue);
                         return;
                     }
 
@@ -460,7 +485,7 @@
                         if (this.validateMaxLength(value, ruleValue)) {
                             break;
                         }
-                        this.generateMessage(RULE_MAXLENGTH, name);
+                        this.generateMessage(RULE_MAXLENGTH, name, ruleValue);
                         return;
                     }
 
@@ -535,12 +560,11 @@
             this.clearErrors();
             this.unlockForm();
 
+            this.isValidationSuccess = false;
             if (Object.keys(this.result).length === 0) {
                 this.isValidationSuccess = true;
                 return;
             }
-
-            // this.lockForm();
 
             for (let item in this.result) {
                 let message = this.result[item].message;
