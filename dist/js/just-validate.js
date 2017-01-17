@@ -432,26 +432,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }
             }
         },
-        formPristine: function formPristine() {
-            var $elems = this.$form.querySelectorAll('input, textarea');
-            for (var i = 0, len = $elems.length; i < len; ++i) {
-                if ($elems[i].type !== 'submit') {
-                    $elems[i].value = '';
-                }
-            }
-        },
+        // formPristine: function () {
+        //     let $elems = this.$form.querySelectorAll('input, textarea');
+        //     for (let i = 0, len = $elems.length; i < len; ++i) {
+        //         if ($elems[i].type !== 'submit') {
+        //             $elems[i].value = '';
+        //         }
+        //     }
+        // },
 
         validationSuccess: function validationSuccess() {
             if (Object.keys(this.result).length === 0) {
                 this.isValidationSuccess = false;
                 if (this.submitHandler) {
                     this.submitHandler(this.$form, this.elements, ajax);
-                    this.formPristine();
+                    // this.formPristine();
                     return;
                 }
 
                 this.$form.submit();
-                this.formPristine();
+                // this.formPristine();
             }
         },
 

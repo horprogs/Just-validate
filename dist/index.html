@@ -97,10 +97,10 @@
         method: 'POST',
         data: values,
         async: true,
-        callback: (response) => {
+        callback: function (response) {
           alert('AJAX submit successful! \nResponse from server:' + response)
         },
-        error: (response) => {
+        error: function (response) {
           alert('AJAX submit error! \nResponse from server:' + response)
         }
       });

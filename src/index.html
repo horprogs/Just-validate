@@ -42,6 +42,13 @@
       <label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2" checked>I agree</label>
     </div>
 
+    <!--<div class="form-group">-->
+      <!--<input type="checkbox" id="radio1" class="form__checkbox" data-validate-field="checkbox" checked><label for="checkbox">Male</label>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+      <!--<label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2" checked>Female</label>-->
+    <!--</div>-->
+
     <button class="form__btn btn btn-primary">SUBMIT</button>
   </form>
 </div>
@@ -71,16 +78,16 @@
     },
 
     submitHandler: function (form, values, ajax) {
-
-      ajax({
-        url: 'https://just-validate-api.herokuapp.com/submit',
-        method: 'POST',
-        data: values,
-        async: true,
-        callback: (response) => {
-          console.log(response);
-        }
-      });
+        alert('123')
+//      ajax({
+//        url: 'https://just-validate-api.herokuapp.com/submit',
+//        method: 'POST',
+//        data: values,
+//        async: true,
+//        callback: (response) => {
+//          console.log(response);
+//        }
+//      });
     },
   });
 </script>
