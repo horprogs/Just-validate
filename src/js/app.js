@@ -578,7 +578,7 @@
 
             for (let item in this.result) {
                 let message = this.result[item].message;
-                let $elems = this.$form.querySelectorAll(`[data-validate-field="${item}"`);
+                let $elems = this.$form.querySelectorAll(`[data-validate-field="${item}"]`);
 
                 for (let i = 0, len = $elems.length; i < len; ++i) {
                     let div = document.createElement('div'),

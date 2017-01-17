@@ -851,7 +851,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             for (var item in this.result) {
                 var message = this.result[item].message;
-                var $elems = this.$form.querySelectorAll('[data-validate-field="' + item + '"');
+                var $elems = this.$form.querySelectorAll('[data-validate-field="' + item + '"]');
 
                 for (var i = 0, len = $elems.length; i < len; ++i) {
                     var div = document.createElement('div'),
