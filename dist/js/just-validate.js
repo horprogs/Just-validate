@@ -257,7 +257,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     } else if (!root.Promise) {
         root.Promise = Promise;
     }
-})(undefined);
+})(window);
 
 (function (window) {
     'use strict';
@@ -409,7 +409,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             delete this.result[item.name];
             this.validateItem({
                 name: item.name,
-                value: item.value
+                value: item.value,
+                isKeyupChange: true
             });
             this.renderErrors();
         },
@@ -434,7 +435,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         formPristine: function formPristine() {
             var $elems = this.$form.querySelectorAll('input, textarea');
             for (var i = 0, len = $elems.length; i < len; ++i) {
-                $elems[i].value = '';
+                if ($elems[i].type !== 'submit') {
+                    $elems[i].value = '';
+                }
             }
         },
 
@@ -462,12 +465,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.result = [];
                 _this.getElements();
 
-                if (!_this.promiseRemote && _this.isValidationSuccess) {
-                    _this.validationSuccess();
+                if (!_this.promiseRemote) {
+                    if (_this.isValidationSuccess) {
+                        _this.validationSuccess();
+                    }
                     return;
                 }
 
                 _this.promiseRemote.then(function () {
+                    _this.promiseRemote = null;
                     if (_this.isValidationSuccess) {
                         _this.validationSuccess();
                     }
@@ -636,7 +642,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     data: _defineProperty({}, sendParam, value),
                     async: true,
                     callback: function callback(data) {
-                        if (data === successAnswer) {
+                        if (data.toLowerCase() === successAnswer.toLowerCase()) {
                             resolve('ok');
                         }
                         resolve({
@@ -699,7 +705,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         validateItem: function validateItem(_ref2) {
             var name = _ref2.name,
-                value = _ref2.value;
+                value = _ref2.value,
+                isKeyupChange = _ref2.isKeyupChange;
 
             var rules = this.rules[name] || this.defaultRules[name] || false;
 
@@ -795,6 +802,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                     case RULE_REMOTE:
                         {
+                            if (isKeyupChange) {
+                                break;
+                            }
+
                             if (!ruleValue) {
                                 break;
                             }

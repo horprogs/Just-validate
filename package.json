@@ -1,6 +1,6 @@
 {
   "name": "just-validate",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.",
   "main": "gulpfile.js",
   "scripts": {

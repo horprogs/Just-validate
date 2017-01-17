@@ -155,7 +155,8 @@
             delete this.result[item.name];
             this.validateItem({
                 name: item.name,
-                value: item.value
+                value: item.value,
+                isKeyupChange: true
             });
             this.renderErrors();
         },
@@ -178,7 +179,9 @@
         formPristine: function () {
             let $elems = this.$form.querySelectorAll('input, textarea');
             for (let i = 0, len = $elems.length; i < len; ++i) {
-                $elems[i].value = '';
+                if ($elems[i].type !== 'submit') {
+                    $elems[i].value = '';
+                }
             }
         },
 
@@ -204,12 +207,15 @@
                 this.result = [];
                 this.getElements();
 
-                if (!this.promiseRemote && this.isValidationSuccess) {
-                    this.validationSuccess();
+                if (!this.promiseRemote) {
+                    if (this.isValidationSuccess) {
+                        this.validationSuccess();
+                    }
                     return;
                 }
 
                 this.promiseRemote.then(() => {
+                    this.promiseRemote = null;
                     if (this.isValidationSuccess) {
                         this.validationSuccess();
                     }
@@ -374,7 +380,7 @@
                     },
                     async: true,
                     callback: (data) => {
-                        if (data === successAnswer) {
+                        if (data.toLowerCase() === successAnswer.toLowerCase()) {
                             resolve('ok');
                         }
                         resolve({
@@ -436,7 +442,7 @@
             });
         },
 
-        validateItem: function ({name, value}) {
+        validateItem: function ({name, value, isKeyupChange}) {
             let rules = this.rules[name] || this.defaultRules[name] || false;
 
             if (!rules) {
@@ -523,6 +529,10 @@
                     }
 
                     case RULE_REMOTE: {
+                        if (isKeyupChange) {
+                            break;
+                        }
+
                         if (!ruleValue) {
                             break;
                         }
