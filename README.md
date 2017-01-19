@@ -111,6 +111,8 @@ remote: {
 ## Settings
 
 Initiate plugin:
+
+First argument - selector of DOM element.
 ```js
 new window.JustValidate('.js-form');
 ```

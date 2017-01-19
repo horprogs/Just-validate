@@ -92,7 +92,6 @@
             password: /[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))/
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
-        this.DEFAULT_REMOTE_URL = 'http://localhost:7777/check-correct';
 
         this.setForm(document.querySelector(selector));
     };
@@ -103,7 +102,7 @@
                 required: true,
                 email: true,
                 remote: {
-                    url: 'http://localhost:7777/check-correct',
+                    url: '/user/exists',
                     successAnswer: 'OK',
                     sendParam: 'email',
                     method: 'GET'
@@ -184,12 +183,29 @@
         //         }
         //     }
         // },
+        getElementsRealValue: function () {
+            let $elems = this.$form.querySelectorAll('*'),
+                name,
+                result = {};
+            for (let i = 0, len = $elems.length; i < len; ++i) {
+                name = $elems[i].getAttribute('name');
+                if (name) {
+                    if ($elems[i].type === 'checkbox') {
+                        result[name] = $elems[i].checked;
+                        continue;
+                    }
+                    result[name] = $elems[i].value;
+                }
+            }
+            return result;
+        },
 
         validationSuccess: function () {
             if (Object.keys(this.result).length === 0) {
                 this.isValidationSuccess = false;
                 if (this.submitHandler) {
-                    this.submitHandler(this.$form, this.elements, ajax);
+                    let realValues = this.getElementsRealValue();
+                    this.submitHandler(this.$form, realValues, ajax);
                     // this.formPristine();
                     return;
                 }
