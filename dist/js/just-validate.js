@@ -321,7 +321,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 if (this.status === 200) {
                     callback(this.responseText);
                 } else {
-                    error(this.responseText);
+                    error && error(this.responseText);
                 }
             }
         };
@@ -354,13 +354,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         defaultRules: {
             email: {
                 required: true,
-                email: true,
-                remote: {
-                    url: '/user/exists',
-                    successAnswer: 'OK',
-                    sendParam: 'email',
-                    method: 'GET'
-                }
+                email: true
             },
             name: {
                 required: true,

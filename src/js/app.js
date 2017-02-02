@@ -67,7 +67,7 @@
                     callback(this.responseText);
                 }
                 else {
-                    error(this.responseText);
+                    error && error(this.responseText);
                 }
             }
         };
@@ -100,13 +100,7 @@
         defaultRules: {
             email: {
                 required: true,
-                email: true,
-                remote: {
-                    url: '/user/exists',
-                    successAnswer: 'OK',
-                    sendParam: 'email',
-                    method: 'GET'
-                }
+                email: true
             },
             name: {
                 required: true,
