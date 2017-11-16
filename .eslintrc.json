@@ -3,11 +3,11 @@
     "standard",
     "promise"
   ],
+  "extends": "eslint:recommended",
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true,
       "experimentalObjectRestSpread": true
     }
   },
@@ -26,28 +26,15 @@
         "SwitchCase": 1
       }
     ],
-    "linebreak-style": [
-      "off"
-    ],
+    "no-tabs": 0,
+    "no-var": "error",
+    "no-confusing-arrow": 0,
+    "comma-dangle": 0,
+    "arrow-parens": 0,
     "max-len": [
-      "warn",
-      140
-    ],
-    "no-confusing-arrow": [
-      "off"
-    ],
-    "no-use-before-define": [
       "error",
-      {
-        "functions": false,
-        "classes": true
-      }
+      120
     ],
-    "no-underscore-dangle": [
-      "off"
-    ],
-    "no-nested-ternary": [
-      "off"
-    ]
+    "linebreak-style": 0
   }
 }

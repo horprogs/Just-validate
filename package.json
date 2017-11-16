@@ -1,6 +1,6 @@
 {
   "name": "just-validate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.",
   "main": "gulpfile.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.14.0",
     "browser-sync": "^2.11.2",
-    "eslint": "^3.6.1",
+    "eslint": "3.19.0",
     "eslint-plugin-promise": "^2.0.1",
     "eslint-plugin-standard": "^2.0.1",
     "gulp": "^3.9.1",

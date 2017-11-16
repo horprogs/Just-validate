@@ -182,7 +182,7 @@ You can override standard submit form, using method ``submitHandler``. It has 3 
 * ajax - function of XMLHttpRequest
 
 ## Current version stable
-**V1.0.0**
+**V1.0.1**
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
