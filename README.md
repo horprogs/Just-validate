@@ -1,5 +1,5 @@
 # Just-validate
-Lightweight form validation in Javascript Vanilla, without dependencies, with custom rules (including remote validation) and custom messages.
+Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
 Demo: https://horprogs.github.io/Just-validate/
 
@@ -91,9 +91,9 @@ You can create your own fields, e.g. ``data-validate-field="myField"``.
 * password - At least 1 letter and 1 digit
 * zip - 4-5 digits
 * phone - Format 111-222-3333
-* remote
+* remote - validate value via remote api
  
-More about ``remote`` rule: <br>
+More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
 ```js
 remote: {
@@ -115,7 +115,7 @@ new window.JustValidate(element, options);
 
 * element - string, selector of DOM element
 * options - object
- 
+
 Initiate plugin:
 
 First argument - selector of DOM element.
@@ -144,7 +144,7 @@ new JustValidate('.js-form', {
       name: {
         minLength: 'My custom message about only minLength rule'
       },
-      email: 'My custom message about error (one error message for all rules)' 
+      email: 'My custom message about error (one error message for all rules)'
     },
 
     submitHandler: function (form, values, ajax) {
@@ -164,6 +164,27 @@ new JustValidate('.js-form', {
 
 You can override custom message for once rule or for all at once rules.
 
+### Submit form
+You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
+* form - DOM link to form
+* values - object of fields values
+* ajax - function of XMLHttpRequest
+
+Function ajax helps you to send XMLHTTPRequest.
+
+Format:
+```
+ajax({
+    url: 'https://just-validate-api.herokuapp.com/submit',
+    method: 'POST',
+    data: values,
+    async: true,
+    callback: function(response)  {
+      console.log(response)
+    }
+});
+```
+
 ### Styling
 
 You can customize style color of error, using property ``colorWrong``, for example: <br>
@@ -175,14 +196,77 @@ new window.JustValidate('.js-form', {
 
 Error fields and messages have classes: ``js-validate-error-label`` and  ``js-validate-error-field``
 
-### Submit form
-You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
-* form - DOM link to form
-* values - object of fields values
-* ajax - function of XMLHttpRequest
+### Examples
+#### Validate multiple remote values with custom messages
+
+```
+new window.JustValidate('.js-form-1', {
+    rules: {
+        email: {
+            email: true,
+            remote: {
+                url: 'https://just-validate-api.herokuapp.com/check-correct',
+                sendParam: 'email',
+                successAnswer: 'OK',
+                method: 'GET'
+            }
+        },
+        login: {
+            remote: {
+                url: 'https://just-validate-api.herokuapp.com/check-correct',
+                sendParam: 'login',
+                successAnswer: 'OK',
+                method: 'GET'
+            }
+        }
+    },
+    messages: {
+        email: {
+            remote: 'Email already exist',
+            email: 'Email not valid!'
+        },
+        login: {
+            remote: 'Login already exist',
+            required: 'Login is required!'
+        }
+    },
+});
+```
+#### Classic validation with custom submit form and ajax helper
+```
+new window.JustValidate('.js-form', {
+    rules: {
+        checkbox: {
+            required: true
+        },
+        checkbox2: {
+            required: true
+        },
+        email: {
+            required: true,
+            email: true,
+        }
+    },
+
+    submitHandler: function (form, values, ajax) {
+        ajax({
+            url: 'https://just-validate-api.herokuapp.com/submit',
+            method: 'POST',
+            data: values,
+            async: true,
+            callback: function (response) {
+                alert('AJAX submit successful! \nResponse from server:' + response)
+            },
+            error: function (response) {
+                alert('AJAX submit error! \nResponse from server:' + response)
+            }
+        });
+    },
+});
+```
 
 ## Current version stable
-**V1.0.1**
+**V1.0.3**
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.

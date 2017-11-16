@@ -478,6 +478,10 @@
             }
             for (let rule in rules) {
                 let ruleValue = rules[rule];
+
+                if (rule !== RULE_REQUIRED && value == '') {
+                    return;
+                }
                 switch (rule) {
                     case RULE_REQUIRED: {
                         if (!ruleValue) {

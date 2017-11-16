@@ -259,6 +259,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 })(window);
 
+/* global Promise */
 (function (window) {
     'use strict';
 
@@ -283,12 +284,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var letter = method.toLowerCase() === 'post' ? '' : '?';
         if (Array.isArray(params)) {
             return letter + params.map(function (obj) {
-                return obj.name + "=" + obj.value;
-            }).join("&");
+                return obj.name + '=' + obj.value;
+            }).join('&');
         }
         return letter + Object.keys(params).map(function (key) {
-            return key + "=" + params[key];
-        }).join("&");
+            return key + '=' + params[key];
+        }).join('&');
     };
 
     var ajax = function ajax(options) {
@@ -337,9 +338,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.elements = [];
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
-        this.promiseRemote = null;
+        this.promisesRemote = [];
         this.isValidationSuccess = false;
         this.REGEXP = {
+            // eslint-disable-next-line max-len
             email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             zip: /^\d{5}(-\d{4})?$/,
             phone: /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
@@ -425,14 +427,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }
             }
         },
-        // formPristine: function () {
-        //     let $elems = this.$form.querySelectorAll('input, textarea');
-        //     for (let i = 0, len = $elems.length; i < len; ++i) {
-        //         if ($elems[i].type !== 'submit') {
-        //             $elems[i].value = '';
-        //         }
-        //     }
-        // },
+
         getElementsRealValue: function getElementsRealValue() {
             var $elems = this.$form.querySelectorAll('*'),
                 name = void 0,
@@ -456,12 +451,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 if (this.submitHandler) {
                     var realValues = this.getElementsRealValue();
                     this.submitHandler(this.$form, realValues, ajax);
-                    // this.formPristine();
                     return;
                 }
 
                 this.$form.submit();
-                // this.formPristine();
             }
         },
 
@@ -475,15 +468,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.result = [];
                 _this.getElements();
 
-                if (!_this.promiseRemote) {
+                if (!_this.promisesRemote.length) {
                     if (_this.isValidationSuccess) {
                         _this.validationSuccess();
                     }
                     return;
                 }
 
-                _this.promiseRemote.then(function () {
-                    _this.promiseRemote = null;
+                Promise.all(_this.promisesRemote).then(function () {
+                    _this.promisesRemote = [];
+
                     if (_this.isValidationSuccess) {
                         _this.validationSuccess();
                     }
@@ -695,21 +689,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
             });
 
-            if (!this.promiseRemote) {
+            if (!this.promisesRemote.length) {
                 this.renderErrors();
                 return;
             }
-            this.promiseRemote.then(function (result) {
 
-                if (result === 'ok') {
+            Promise.all(this.promisesRemote).then(function (resp) {
+                resp.forEach(function (result) {
+                    if (result === 'ok') {
+                        _this3.renderErrors();
+                        return;
+                    }
+                    if (result.type === 'error') {
+                        alert('Server error occured. Please try later.');
+                    }
+                    _this3.generateMessage(RULE_REMOTE, result.name);
                     _this3.renderErrors();
-                    return;
-                }
-                if (result.type === 'error') {
-                    alert('Server error occured. Please try later.');
-                }
-                _this3.generateMessage(RULE_REMOTE, result.name);
-                _this3.renderErrors();
+                });
             });
         },
 
@@ -725,6 +721,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
             for (var rule in rules) {
                 var ruleValue = rules[rule];
+
+                if (rule !== RULE_REQUIRED && value == '') {
+                    return;
+                }
                 switch (rule) {
                     case RULE_REQUIRED:
                         {
@@ -827,8 +827,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                             var $elem = this.$form.querySelector('input[data-validate-field="' + name + '"]');
                             this.setterEventListener($elem, 'keyup', this.handlerKeyup, 'remove');
-                            this.promiseRemote = this.validateRemote({ name: name, value: value, url: url, method: method, sendParam: sendParam, successAnswer: successAnswer });
-                            // this.unlockForm();
+
+                            this.promisesRemote.push(this.validateRemote({
+                                name: name,
+                                value: value,
+                                url: url,
+                                method: method,
+                                sendParam: sendParam,
+                                successAnswer: successAnswer
+                            }));
                             return;
                         }
                 }
