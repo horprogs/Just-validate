@@ -14,6 +14,11 @@ app.use(function (req, res, next) {
 });
 
 app.get('/check-correct', function (req, res) {
+    if (req.query.login === 'testLogin') {
+        res.send('OK');
+        return;
+    }
+
     if (req.query.email === 'ok@test.com') {
         res.send('OK');
         return;

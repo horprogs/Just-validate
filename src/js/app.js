@@ -90,7 +90,7 @@
         this.elements = [];
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
-        this.promiseRemote = null;
+        this.promisesRemote = [];
         this.isValidationSuccess = false;
         this.REGEXP = {
             // eslint-disable-next-line max-len
@@ -177,14 +177,7 @@
                 }
             }
         },
-        // formPristine: function () {
-        //     let $elems = this.$form.querySelectorAll('input, textarea');
-        //     for (let i = 0, len = $elems.length; i < len; ++i) {
-        //         if ($elems[i].type !== 'submit') {
-        //             $elems[i].value = '';
-        //         }
-        //     }
-        // },
+
         getElementsRealValue: function() {
             let $elems = this.$form.querySelectorAll('*'),
                 name,
@@ -208,12 +201,10 @@
                 if (this.submitHandler) {
                     let realValues = this.getElementsRealValue();
                     this.submitHandler(this.$form, realValues, ajax);
-                    // this.formPristine();
                     return;
                 }
 
                 this.$form.submit();
-                // this.formPristine();
             }
         },
 
@@ -225,15 +216,16 @@
                 this.result = [];
                 this.getElements();
 
-                if (!this.promiseRemote) {
+                if (!this.promisesRemote.length) {
                     if (this.isValidationSuccess) {
                         this.validationSuccess();
                     }
                     return;
                 }
 
-                this.promiseRemote.then(() => {
-                    this.promiseRemote = null;
+                Promise.all(this.promisesRemote).then(() => {
+                    this.promisesRemote = [];
+
                     if (this.isValidationSuccess) {
                         this.validationSuccess();
                     }
@@ -458,20 +450,23 @@
                 });
             });
 
-            if (!this.promiseRemote) {
+            if (!this.promisesRemote.length) {
                 this.renderErrors();
                 return;
             }
-            this.promiseRemote.then(result => {
-                if (result === 'ok') {
+
+            Promise.all(this.promisesRemote).then(resp => {
+                resp.forEach(result => {
+                    if (result === 'ok') {
+                        this.renderErrors();
+                        return;
+                    }
+                    if (result.type === 'error') {
+                        alert('Server error occured. Please try later.');
+                    }
+                    this.generateMessage(RULE_REMOTE, result.name);
                     this.renderErrors();
-                    return;
-                }
-                if (result.type === 'error') {
-                    alert('Server error occured. Please try later.');
-                }
-                this.generateMessage(RULE_REMOTE, result.name);
-                this.renderErrors();
+                });
             });
         },
 
@@ -584,15 +579,17 @@
                             this.handlerKeyup,
                             'remove'
                         );
-                        this.promiseRemote = this.validateRemote({
-                            name,
-                            value,
-                            url,
-                            method,
-                            sendParam,
-                            successAnswer,
-                        });
-                        // this.unlockForm();
+
+                        this.promisesRemote.push(
+                            this.validateRemote({
+                                name,
+                                value,
+                                url,
+                                method,
+                                sendParam,
+                                successAnswer,
+                            })
+                        );
                         return;
                     }
                 }
