@@ -87,7 +87,12 @@
                     successAnswer: 'OK',
                     method: 'GET'
                 }
-            }
+            },
+            password: {
+                strength: {
+                    custom: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]',
+                },
+            },
         },
         messages: {
             login: {

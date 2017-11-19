@@ -92,7 +92,8 @@ You can create your own fields, e.g. ``data-validate-field="myField"``.
 * zip - 4-5 digits
 * phone - Format 111-222-3333
 * remote - validate value via remote api
- 
+* strength - validate field for default or custom regexp
+
 More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
 ```js
@@ -108,6 +109,20 @@ remote: {
 * sendParam - parameter to be sent to server
 * method - GET or POST
 
+**Strength rule format:**
+Default (at least one uppercase letter, one lowercase letter and one number):
+```js
+strength: {
+    default: true
+}
+```
+
+Custom (use your own regexp for check):
+```js
+strength: {
+    custom: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]'
+}
+```
 ## Settings
 ```js
 new window.JustValidate(element, options);
@@ -138,7 +153,11 @@ new JustValidate('.js-form', {
       email: {
         required: false,
         email: true
-      }
+      },
+      password: {
+        strength: {
+          default: true,
+        }
     },
     messages: {
       name: {
@@ -266,7 +285,11 @@ new window.JustValidate('.js-form', {
 ```
 
 ## Current version stable
-**V1.0.3**
+**V1.1.0**
+
+## Changelog
+### 1.1.0
+Added rule for check strength of password  (default and custom)
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
