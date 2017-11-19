@@ -9,9 +9,9 @@ Demo: https://horprogs.github.io/Just-validate/
 npm install just-validate --save
 ```
 
-### bower
+### yarn
 ```shell
-bower install just-validate --save
+yarn add just-validate
 ```
 
 Include the script of the Just-validate on your page
