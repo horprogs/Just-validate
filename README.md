@@ -2,7 +2,7 @@
 Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
 Demo: <br>
-Classic validation https://horprogs.github.io/Just-validate/
+Classic validation https://horprogs.github.io/Just-validate/ <br>
 Classic validation with tooltips https://horprogs.github.io/Just-validate/tooltip.html
 
 ## How to use
