@@ -1,7 +1,7 @@
 {
   "name": "just-validate",
   "description": "Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "authors": [
     "Perepecho Georgy (Horprogs) <horprogs@gmail.com>"
   ],

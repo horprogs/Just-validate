@@ -1,7 +1,9 @@
 # Just-validate
 Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
-Demo: https://horprogs.github.io/Just-validate/
+Demo: <br>
+Classic validation https://horprogs.github.io/Just-validate/
+Classic validation with tooltips https://horprogs.github.io/Just-validate/tooltip.html
 
 ## How to use
 ### npm
@@ -204,6 +206,47 @@ ajax({
 });
 ```
 
+### Tooltip
+
+You can show errors in the form of tooltips. <br>
+
+To do this, connect the file styles ``dist/css/tooltip.min.css`` on page. <br>
+```
+<link rel="stylesheet" href="./path/to/tooltip.min.css">
+```
+
+For a container inside of which input, add a class ``tooltip-container`` or add our class
+
+```
+ <div class="form-group col-md-6">
+    <label for="name">Enter your name</label>
+    <div class="tooltip-container">
+        <input type="text" class="form__input form-control" placeholder="Enter your name" data-validate-field="name">
+    </div>
+ </div>
+```
+
+You can customize time show of error, using property ``tooltipHideTime``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    tooltipHideTime: 4000 // default value - 5000
+});
+```
+
+You can customize class hide of tooltip, using property ``tooltipHideClass``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    tooltipHideClass: 'hide' // default value - tooltip-hide
+});
+```
+
+You can customize class inside of which input, using property ``selectorTooltipWrap``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    selectorTooltipWrap: '.tooltip-wrapper' // default value - .tooltip-container
+});
+```
+
 ### Styling
 
 You can customize style color of error, using property ``colorWrong``, for example: <br>
@@ -285,11 +328,13 @@ new window.JustValidate('.js-form', {
 ```
 
 ## Current version stable
-**V1.1.0**
+**V1.2.0**
 
 ## Changelog
 ### 1.1.0
 Added rule for check strength of password  (default and custom)
+### 1.2.0
+Added tooltip style error
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.

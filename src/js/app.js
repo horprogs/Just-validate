@@ -89,6 +89,11 @@
         this.colorWrong = this.options.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
+        this.tooltipHideTime = this.options.tooltipHideTime || 5000;
+        this.tooltipHideClass = this.options.tooltipHideClass || 'tooltip-hide';
+        this.selectorTooltipWrap = document.querySelectorAll(this.options.selectorTooltipWrap).length ?
+            document.querySelectorAll(this.options.selectorTooltipWrap) :
+            document.querySelectorAll('.tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -102,6 +107,9 @@
             strengthPass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/,
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
+        this.state = {
+            timer: null,
+        };
 
         this.setForm(document.querySelector(selector));
     };
@@ -713,6 +721,24 @@
                     item.parentNode.insertBefore(div, item.nextSibling);
                 }
             }
+
+            if(!this.selectorTooltipWrap.length) {
+                return;
+            }
+
+            this.state.timer = setTimeout(() => {
+                this.hideTooltips();
+            }, this.tooltipHideTime);
+        },
+
+        hideTooltips: function () {
+            let $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
+
+            $elemsErrorLabel.forEach(item => {
+                item.classList.add(this.tooltipHideClass);
+            });
+
+            this.state.timer = null;
         },
 
         lockForm: function() {

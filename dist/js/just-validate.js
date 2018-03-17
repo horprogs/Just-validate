@@ -274,7 +274,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         RULE_PASSWORD = 'password',
         RULE_ZIP = 'zip',
         RULE_PHONE = 'phone',
-        RULE_REMOTE = 'remote';
+        RULE_REMOTE = 'remote',
+        RULE_STRENGTH = 'strength';
 
     var formatParams = function formatParams(params, method) {
         if (typeof params === 'string') {
@@ -336,6 +337,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.colorWrong = this.options.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
+        this.tooltipHideTime = this.options.tooltipHideTime || 5000;
+        this.tooltipHideClass = this.options.tooltipHideClass || 'tooltip-hide';
+        this.selectorTooltipWrap = document.querySelectorAll(this.options.selectorTooltipWrap).length ? document.querySelectorAll(this.options.selectorTooltipWrap) : document.querySelectorAll('.tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -345,9 +349,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             zip: /^\d{5}(-\d{4})?$/,
             phone: /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
-            password: /[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))/
+            password: /[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))/,
+            strengthPass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
+        this.state = {
+            timer: null
+        };
 
         this.setForm(document.querySelector(selector));
     };
@@ -389,7 +397,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             maxLength: 'The field must contain a maximum of :value characters',
             minLength: 'The field must contain a minimum of :value characters',
             password: 'Password is not valid',
-            remote: 'Email already exists'
+            remote: 'Email already exists',
+            strength: 'Password must contents at least one uppercase letter, one lowercase letter and one number'
         },
         /**
          * Keyup handler
@@ -518,6 +527,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             return text.length >= min;
         },
 
+        checkStrengthPass: function checkStrengthPass(password) {
+            return this.REGEXP.strengthPass.test(password);
+        },
+
         getElements: function getElements() {
             var _this2 = this;
 
@@ -603,6 +616,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
          */
         validateMaxLength: function validateMaxLength(value, max) {
             return this.checkLengthMax(value, max);
+        },
+
+        /**
+         * Validate field for strength password
+         * @param {string} password Value for validate
+         * @returns {boolean} True if validate is OK
+         */
+        validateStrengthPass: function validateStrengthPass(password) {
+            return this.checkStrengthPass(password);
         },
 
         /**
@@ -798,6 +820,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             return;
                         }
 
+                    case RULE_STRENGTH:
+                        {
+                            if (!ruleValue || (typeof ruleValue === 'undefined' ? 'undefined' : _typeof(ruleValue)) !== 'object') {
+                                break;
+                            }
+
+                            if (ruleValue.default && this.validateStrengthPass(value)) {
+                                break;
+                            }
+
+                            if (ruleValue.custom) {
+                                var regexp = void 0;
+
+                                try {
+                                    regexp = new RegExp(ruleValue.custom);
+                                } catch (e) {
+                                    regexp = this.REGEXP.strengthPass;
+
+                                    // eslint-disable-next-line no-console
+                                    console.error('Custom regexp for strength rule is not valid. Default regexp was used.');
+                                }
+
+                                if (regexp.test(value)) {
+                                    break;
+                                }
+                            }
+                            this.generateMessage(RULE_STRENGTH, name);
+                            return;
+                        }
+
                     case RULE_ZIP:
                         {
                             if (!ruleValue) {
@@ -857,6 +909,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
 
         renderErrors: function renderErrors() {
+            var _this4 = this;
+
             this.clearErrors();
             this.unlockForm();
 
@@ -897,6 +951,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     _item.parentNode.insertBefore(div, _item.nextSibling);
                 }
             }
+
+            if (!this.selectorTooltipWrap.length) {
+                return;
+            }
+
+            this.state.timer = setTimeout(function () {
+                _this4.hideTooltips();
+            }, this.tooltipHideTime);
+        },
+
+        hideTooltips: function hideTooltips() {
+            var _this5 = this;
+
+            var $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
+
+            $elemsErrorLabel.forEach(function (item) {
+                item.classList.add(_this5.tooltipHideClass);
+            });
+
+            this.state.timer = null;
         },
 
         lockForm: function lockForm() {
