@@ -4,10 +4,10 @@
   to {
     opacity: 0; } }
 
-.tooltip-container {
+.just-validate-tooltip-container {
   position: relative; }
 
-.tooltip-hide {
+.just-validate-tooltip-hide {
   animation: fadeOut .4s linear;
   opacity: 0; }
 

@@ -337,9 +337,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.colorWrong = this.options.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
-        this.tooltipHideTime = this.options.tooltipHideTime || 5000;
-        this.tooltipHideClass = this.options.tooltipHideClass || 'tooltip-hide';
-        this.selectorTooltipWrap = document.querySelectorAll(this.options.selectorTooltipWrap).length ? document.querySelectorAll(this.options.selectorTooltipWrap) : document.querySelectorAll('.tooltip-container');
+        this.tooltip = this.options.tooltip || {};
+        this.tooltipFadeOutTime = this.tooltip.fadeOutTime || 5000;
+        this.tooltipFadeOutClass = this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
+        this.tooltipSelectorWrap = document.querySelectorAll(this.tooltip.selectorWrap).length ? document.querySelectorAll(this.tooltip.selectorWrap) : document.querySelectorAll('.just-validate-tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -952,13 +953,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }
             }
 
-            if (!this.selectorTooltipWrap.length) {
+            if (!this.tooltipSelectorWrap.length) {
                 return;
             }
 
             this.state.timer = setTimeout(function () {
                 _this4.hideTooltips();
-            }, this.tooltipHideTime);
+            }, this.tooltipFadeOutTime);
         },
 
         hideTooltips: function hideTooltips() {
@@ -967,7 +968,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
 
             $elemsErrorLabel.forEach(function (item) {
-                item.classList.add(_this5.tooltipHideClass);
+                item.classList.add(_this5.tooltipFadeOutClass);
             });
 
             this.state.timer = null;

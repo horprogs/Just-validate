@@ -210,40 +210,47 @@ ajax({
 
 You can show errors in the form of tooltips. <br>
 
-To do this, connect the file styles ``dist/css/tooltip.min.css`` on page. <br>
+To do this, connect the file styles ``dist/css/justValidateTooltip.css`` or
+ ``dist/css/justValidateTooltip.min.css`` on page. <br>
 ```
-<link rel="stylesheet" href="./path/to/tooltip.min.css">
+<link rel="stylesheet" href="./path/to/justValidateTooltip.min.css">
 ```
 
-For a container inside of which input, add a class ``tooltip-container`` or add our class
+For a container inside of which input, add a class ``just-validate-tooltip-container`` or add our class
 
 ```
  <div class="form-group col-md-6">
     <label for="name">Enter your name</label>
-    <div class="tooltip-container">
+    <div class="just-validate-tooltip-container">
         <input type="text" class="form__input form-control" placeholder="Enter your name" data-validate-field="name">
     </div>
  </div>
 ```
 
-You can customize time show of error, using property ``tooltipHideTime``, for example: <br>
+You can customize time show of error, using property ``fadeOutTime``, for example: <br>
 ```js
 new window.JustValidate('.js-form', {
-    tooltipHideTime: 4000 // default value - 5000
+    tooltip: {
+        fadeOutTime: 4000 // default value - 5000 
+    }
 });
 ```
 
-You can customize class hide of tooltip, using property ``tooltipHideClass``, for example: <br>
+You can customize class hide of tooltip, using property ``fadeOutClass``, for example: <br>
 ```js
 new window.JustValidate('.js-form', {
-    tooltipHideClass: 'hide' // default value - tooltip-hide
+    tooltip: {
+        fadeOutClass: '.hide' // default value - just-validate-tooltip-hide
+    }
 });
 ```
 
-You can customize class inside of which input, using property ``selectorTooltipWrap``, for example: <br>
+You can customize class inside of which input, using property ``selectorWrap``, for example: <br>
 ```js
 new window.JustValidate('.js-form', {
-    selectorTooltipWrap: '.tooltip-wrapper' // default value - .tooltip-container
+    tooltip: {
+        selectorWrap: '.tooltip-wrapper' // default value - just-validate-tooltip-container
+    }
 });
 ```
 
