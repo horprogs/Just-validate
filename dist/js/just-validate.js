@@ -355,7 +355,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
         this.state = {
-            timer: null
+            tooltipsTimer: null
         };
 
         this.setForm(document.querySelector(selector));
@@ -957,7 +957,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 return;
             }
 
-            this.state.timer = setTimeout(function () {
+            this.state.tooltipsTimer = setTimeout(function () {
                 _this4.hideTooltips();
             }, this.tooltipFadeOutTime);
         },
@@ -971,7 +971,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 item.classList.add(_this5.tooltipFadeOutClass);
             });
 
-            this.state.timer = null;
+            this.state.tooltipsTimer = null;
         },
 
         lockForm: function lockForm() {

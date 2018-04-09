@@ -109,7 +109,7 @@
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
         this.state = {
-            timer: null,
+            tooltipsTimer: null,
         };
 
         this.setForm(document.querySelector(selector));
@@ -727,7 +727,7 @@
                 return;
             }
 
-            this.state.timer = setTimeout(() => {
+            this.state.tooltipsTimer = setTimeout(() => {
                 this.hideTooltips();
             }, this.tooltipFadeOutTime);
         },
@@ -739,7 +739,7 @@
                 item.classList.add(this.tooltipFadeOutClass);
             });
 
-            this.state.timer = null;
+            this.state.tooltipsTimer = null;
         },
 
         lockForm: function() {
