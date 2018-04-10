@@ -89,6 +89,12 @@
         this.colorWrong = this.options.colorWrong || '#B81111';
         this.result = {};
         this.elements = [];
+        this.tooltip = this.options.tooltip || {};
+        this.tooltipFadeOutTime = this.tooltip.fadeOutTime || 5000;
+        this.tooltipFadeOutClass = this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
+        this.tooltipSelectorWrap = document.querySelectorAll(this.tooltip.selectorWrap).length ?
+                                   document.querySelectorAll(this.tooltip.selectorWrap) :
+                                   document.querySelectorAll('.just-validate-tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -102,6 +108,9 @@
             strengthPass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/,
         };
         this.DEFAULT_REMOTE_ERROR = 'Error';
+        this.state = {
+            tooltipsTimer: null,
+        };
 
         this.setForm(document.querySelector(selector));
     };
@@ -713,6 +722,24 @@
                     item.parentNode.insertBefore(div, item.nextSibling);
                 }
             }
+
+            if(!this.tooltipSelectorWrap.length) {
+                return;
+            }
+
+            this.state.tooltipsTimer = setTimeout(() => {
+                this.hideTooltips();
+            }, this.tooltipFadeOutTime);
+        },
+
+        hideTooltips: function () {
+            let $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
+
+            $elemsErrorLabel.forEach(item => {
+                item.classList.add(this.tooltipFadeOutClass);
+            });
+
+            this.state.tooltipsTimer = null;
         },
 
         lockForm: function() {
