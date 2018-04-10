@@ -1,7 +1,9 @@
 # Just-validate
 Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
-Demo: https://horprogs.github.io/Just-validate/
+Demo: <br>
+Classic validation https://horprogs.github.io/Just-validate/ <br>
+Classic validation with tooltips https://horprogs.github.io/Just-validate/tooltip.html
 
 ## How to use
 ### npm
@@ -204,6 +206,54 @@ ajax({
 });
 ```
 
+### Tooltip
+
+You can show errors in the form of tooltips. <br>
+
+To do this, connect the file styles ``dist/css/justValidateTooltip.css`` or
+ ``dist/css/justValidateTooltip.min.css`` on page. <br>
+```
+<link rel="stylesheet" href="./path/to/justValidateTooltip.min.css">
+```
+
+For a container inside of which input, add a class ``just-validate-tooltip-container`` or add our class
+
+```
+ <div class="form-group col-md-6">
+    <label for="name">Enter your name</label>
+    <div class="just-validate-tooltip-container">
+        <input type="text" class="form__input form-control" placeholder="Enter your name" data-validate-field="name">
+    </div>
+ </div>
+```
+
+You can customize time show of error, using property ``fadeOutTime``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    tooltip: {
+        fadeOutTime: 4000 // default value - 5000 
+    }
+});
+```
+
+You can customize class hide of tooltip, using property ``fadeOutClass``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    tooltip: {
+        fadeOutClass: '.hide' // default value - just-validate-tooltip-hide
+    }
+});
+```
+
+You can customize class inside of which input, using property ``selectorWrap``, for example: <br>
+```js
+new window.JustValidate('.js-form', {
+    tooltip: {
+        selectorWrap: '.tooltip-wrapper' // default value - just-validate-tooltip-container
+    }
+});
+```
+
 ### Styling
 
 You can customize style color of error, using property ``colorWrong``, for example: <br>
@@ -285,11 +335,13 @@ new window.JustValidate('.js-form', {
 ```
 
 ## Current version stable
-**V1.1.0**
+**V1.2.0**
 
 ## Changelog
 ### 1.1.0
 Added rule for check strength of password  (default and custom)
+### 1.2.0
+Added tooltip style error
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
