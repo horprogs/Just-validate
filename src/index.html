@@ -16,6 +16,10 @@
     .js-validate-error-label {
       margin-top: 5px;
     }
+
+    .form__radio, .form__checkbox {
+      margin-right: 7px !important;
+    }
   </style>
 </head>
 <body class="container">
@@ -48,7 +52,11 @@
     <div class="form-group">
       <label><input type="checkbox" name="check2" class="form__checkbox" data-validate-field="checkbox2" checked>I agree</label>
     </div>
-
+    <div class="form-group">
+      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Male</label>
+      <br>
+      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Female</label>
+    </div>
     <button class="form__btn btn btn-primary">SUBMIT</button>
   </form>
 </div>
@@ -60,6 +68,9 @@
     new window.JustValidate('.js-form', {
         rules: {
             checkbox2: {
+                required: true
+            },
+            radio: {
                 required: true
             },
             email: {
