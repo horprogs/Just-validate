@@ -1,6 +1,5 @@
 const gulp = require('gulp'),
     browserSync = require('browser-sync').create(),
-    runSequence = require('run-sequence'),
     sass = require('gulp-sass'),
     prefix = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
@@ -71,14 +70,12 @@ gulp.task('browserSync:prod', function () {
     });
 });
 
-gulp.task('default', ['browserSync', 'watch']);
+gulp.task('default', gulp.parallel('browserSync', 'watch'));
 
-gulp.task('prod', ['browserSync:prod']);
+gulp.task('prod', gulp.parallel('browserSync:prod'));
 
 
 // ------------ BEGIN: PRODUCTION TASKS ---------------
 
-gulp.task('build', function () {
-    runSequence('compressCSS', 'buildJS', 'compressJS');
-});
+gulp.task('build', gulp.series('compressCSS', 'buildJS', 'compressJS'));
 // ------------ END:   PRODUCTION TASKS ---------------

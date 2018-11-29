@@ -415,6 +415,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.validateItem({
                 name: item.name,
                 value: item.value,
+                group: [],
                 isKeyupChange: true
             });
             this.renderErrors();
@@ -538,13 +539,45 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var elems = this.$form.querySelectorAll('[data-validate-field]');
             this.elements = [];
 
-            for (var i = 0, len = elems.length; i < len; ++i) {
+            var _loop = function _loop(i, len) {
                 var item = elems[i],
                     name = item.getAttribute('data-validate-field'),
-                    value = item.value;
+                    value = item.value,
+                    isElemInGroup = false,
+                    group = [];
 
                 if (item.type === 'checkbox') {
                     value = item.checked || '';
+                    item.addEventListener('change', function (ev) {
+                        var elem = ev.target,
+                            item = {
+                            name: elem.getAttribute('data-validate-field'),
+                            value: elem.checked
+                        };
+
+                        delete _this2.result[item.name];
+                        _this2.validateItem({
+                            name: item.name,
+                            value: item.value,
+                            group: []
+                        });
+                        _this2.renderErrors();
+                    });
+                }
+
+                if (item.type === 'radio') {
+                    var findElem = _this2.elements.filter(function (item) {
+                        if (item.name === name) {
+                            return item;
+                        }
+                    })[0];
+
+                    if (findElem) {
+                        findElem.group.push(item.checked);
+                        isElemInGroup = true;
+                    } else {
+                        group.push(item.checked);
+                    }
 
                     item.addEventListener('change', function (ev) {
                         var elem = ev.target,
@@ -556,17 +589,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         delete _this2.result[item.name];
                         _this2.validateItem({
                             name: item.name,
-                            value: item.value
+                            value: item.value,
+                            group: []
                         });
                         _this2.renderErrors();
                     });
                 }
-                this.setterEventListener(item, 'keyup', this.handlerKeyup, 'add');
 
-                this.elements.push({
-                    name: name,
-                    value: value
-                });
+                _this2.setterEventListener(item, 'keyup', _this2.handlerKeyup, 'add');
+
+                if (!isElemInGroup) {
+                    _this2.elements.push({
+                        name: name,
+                        value: value,
+                        group: group
+                    });
+                }
+            };
+
+            for (var i = 0, len = elems.length; i < len; ++i) {
+                _loop(i, len);
             }
 
             this.validateElements();
@@ -708,7 +750,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.elements.forEach(function (item) {
                 _this3.validateItem({
                     name: item.name,
-                    value: item.value
+                    value: item.value,
+                    group: item.group
                 });
             });
 
@@ -733,7 +776,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
 
         validateItem: function validateItem(_ref2) {
+            var _this4 = this;
+
             var name = _ref2.name,
+                group = _ref2.group,
                 value = _ref2.value,
                 isKeyupChange = _ref2.isKeyupChange;
 
@@ -754,9 +800,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             if (!ruleValue) {
                                 break;
                             }
-                            if (this.validateRequired(value)) {
-                                break;
+
+                            if (group.length) {
+                                var isSuccessValidateGroup = false;
+
+                                // At least one item in group
+                                group.forEach(function (item) {
+                                    if (_this4.validateRequired(item)) {
+                                        isSuccessValidateGroup = true;
+                                    }
+                                });
+
+                                if (isSuccessValidateGroup) {
+                                    break;
+                                }
+                            } else {
+                                if (this.validateRequired(value)) {
+                                    break;
+                                }
                             }
+
                             this.generateMessage(RULE_REQUIRED, name);
                             return;
                         }
@@ -910,7 +973,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
 
         renderErrors: function renderErrors() {
-            var _this4 = this;
+            var _this5 = this;
 
             this.clearErrors();
             this.unlockForm();
@@ -921,35 +984,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 return;
             }
 
-            for (var item in this.result) {
-                var message = this.result[item].message;
-                var $elems = this.$form.querySelectorAll('[data-validate-field="' + item + '"]');
+            for (var _item in this.result) {
+                var message = this.result[_item].message;
+                var $elems = this.$form.querySelectorAll('[data-validate-field="' + _item + '"]');
 
-                for (var i = 0, len = $elems.length; i < len; ++i) {
-                    var div = document.createElement('div'),
-                        _item = $elems[i];
+                var $elem = $elems[$elems.length - 1];
 
-                    div.innerHTML = message;
-                    div.className = 'js-validate-error-label';
-                    div.setAttribute('style', 'color: ' + this.colorWrong);
-                    _item.style.border = '1px solid ' + this.colorWrong;
-                    _item.style.color = '' + this.colorWrong;
-                    _item.classList.add('js-validate-error-field');
+                var div = document.createElement('div');
 
-                    if (_item.type === 'checkbox') {
-                        var $label = document.querySelector('label[for="' + _item.getAttribute('id') + '"]');
+                div.innerHTML = message;
+                div.className = 'js-validate-error-label';
+                div.setAttribute('style', 'color: ' + this.colorWrong);
+                $elem.style.border = '1px solid ' + this.colorWrong;
+                $elem.style.color = '' + this.colorWrong;
+                $elem.classList.add('js-validate-error-field');
 
-                        if (_item.parentNode.tagName.toLowerCase() === 'label') {
-                            _item.parentNode.parentNode.insertBefore(div, null);
-                        } else if ($label) {
-                            $label.parentNode.insertBefore(div, $label.nextSibling);
-                        } else {
-                            _item.parentNode.insertBefore(div, _item.nextSibling);
-                        }
-                        continue;
+                if ($elem.type === 'checkbox' || $elem.type === 'radio') {
+                    var $label = document.querySelector('label[for="' + $elem.getAttribute('id') + '"]');
+
+                    if ($elem.parentNode.tagName.toLowerCase() === 'label') {
+                        $elem.parentNode.parentNode.insertBefore(div, null);
+                    } else if ($label) {
+                        $label.parentNode.insertBefore(div, $label.nextSibling);
+                    } else {
+                        $elem.parentNode.insertBefore(div, $elem.nextSibling);
                     }
-
-                    _item.parentNode.insertBefore(div, _item.nextSibling);
+                } else {
+                    $elem.parentNode.insertBefore(div, $elem.nextSibling);
                 }
             }
 
@@ -958,17 +1019,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
 
             this.state.tooltipsTimer = setTimeout(function () {
-                _this4.hideTooltips();
+                _this5.hideTooltips();
             }, this.tooltipFadeOutTime);
         },
 
         hideTooltips: function hideTooltips() {
-            var _this5 = this;
+            var _this6 = this;
 
             var $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
 
             $elemsErrorLabel.forEach(function (item) {
-                item.classList.add(_this5.tooltipFadeOutClass);
+                item.classList.add(_this6.tooltipFadeOutClass);
             });
 
             this.state.tooltipsTimer = null;
@@ -993,6 +1054,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $elems[i].style.filter = '';
             }
         }
+
     };
 
     window.JustValidate = JustValidate;

@@ -170,6 +170,7 @@
             this.validateItem({
                 name: item.name,
                 value: item.value,
+                group: [],
                 isKeyupChange: true,
             });
             this.renderErrors();
@@ -307,11 +308,11 @@
                         this.validateItem({
                             name: item.name,
                             value: item.value,
+                            group: [],
                         });
                         this.renderErrors();
                     });
                 }
-
 
 
                 if (item.type === 'radio') {
@@ -328,20 +329,21 @@
                         group.push(item.checked);
                     }
 
-                    // item.addEventListener('change', ev => {
-                    //     let elem = ev.target,
-                    //         item = {
-                    //             name: elem.getAttribute('data-validate-field'),
-                    //             value: elem.checked,
-                    //         };
-                    //
-                    //     delete this.result[item.name];
-                    //     this.validateItem({
-                    //         name: item.name,
-                    //         value: item.value,
-                    //     });
-                    //     this.renderErrors();
-                    // });
+                    item.addEventListener('change', ev => {
+                        let elem = ev.target,
+                            item = {
+                                name: elem.getAttribute('data-validate-field'),
+                                value: elem.checked,
+                            };
+
+                        delete this.result[item.name];
+                        this.validateItem({
+                            name: item.name,
+                            value: item.value,
+                            group: [],
+                        });
+                        this.renderErrors();
+                    });
                 }
 
                 this.setterEventListener(
@@ -359,8 +361,6 @@
                     });
                 }
             }
-
-            console.log(this.elements)
 
             this.validateElements();
         },
@@ -555,11 +555,12 @@
                         }
 
                         if (group.length) {
-                            let isSuccessValidateGroup = true;
+                            let isSuccessValidateGroup = false;
 
+                            // At least one item in group
                             group.forEach(item => {
-                                if (!this.validateRequired(item)) {
-                                    isSuccessValidateGroup = false;
+                                if (this.validateRequired(item)) {
+                                    isSuccessValidateGroup = true;
                                 }
                             })
 
@@ -746,38 +747,37 @@
                     `[data-validate-field="${item}"]`
                 );
 
-                for (let i = 0, len = $elems.length; i < len; ++i) {
-                    let div = document.createElement('div'),
-                        item = $elems[i];
+                let $elem = $elems[$elems.length - 1];
 
-                    div.innerHTML = message;
-                    div.className = 'js-validate-error-label';
-                    div.setAttribute('style', `color: ${this.colorWrong}`);
-                    item.style.border = `1px solid ${this.colorWrong}`;
-                    item.style.color = `${this.colorWrong}`;
-                    item.classList.add('js-validate-error-field');
+                let div = document.createElement('div');
 
-                    if (item.type === 'checkbox' || item.type === 'radio') {
-                        let $label = document.querySelector(
-                            `label[for="${item.getAttribute('id')}"]`
+                div.innerHTML = message;
+                div.className = 'js-validate-error-label';
+                div.setAttribute('style', `color: ${this.colorWrong}`);
+                $elem.style.border = `1px solid ${this.colorWrong}`;
+                $elem.style.color = `${this.colorWrong}`;
+                $elem.classList.add('js-validate-error-field');
+
+                if ($elem.type === 'checkbox' || $elem.type === 'radio') {
+                    let $label = document.querySelector(
+                        `label[for="${$elem.getAttribute('id')}"]`
+                    );
+
+                    if ($elem.parentNode.tagName.toLowerCase() === 'label') {
+                        $elem.parentNode.parentNode.insertBefore(div, null);
+                    } else if ($label) {
+                        $label.parentNode.insertBefore(
+                            div,
+                            $label.nextSibling
                         );
-
-                        if (item.parentNode.tagName.toLowerCase() === 'label') {
-                            item.parentNode.parentNode.insertBefore(div, null);
-                        } else if ($label) {
-                            $label.parentNode.insertBefore(
-                                div,
-                                $label.nextSibling
-                            );
-                        } else {
-                            item.parentNode.insertBefore(div, item.nextSibling);
-                        }
-                        continue;
+                    } else {
+                        $elem.parentNode.insertBefore(div, $elem.nextSibling);
                     }
-
-                    item.parentNode.insertBefore(div, item.nextSibling);
+                } else {
+                    $elem.parentNode.insertBefore(div, $elem.nextSibling);
                 }
             }
+
 
             if (!this.tooltipSelectorWrap.length) {
                 return;
@@ -788,6 +788,7 @@
             }, this.tooltipFadeOutTime);
         },
 
+
         hideTooltips: function () {
             let $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
 
@@ -796,7 +797,8 @@
             });
 
             this.state.tooltipsTimer = null;
-        },
+        }
+        ,
 
         lockForm: function () {
             let $elems = this.$form.querySelectorAll(
@@ -808,7 +810,8 @@
                 $elems[i].style.webitFilter = 'grayscale(100%)';
                 $elems[i].style.filter = 'grayscale(100%)';
             }
-        },
+        }
+        ,
 
         unlockForm: function () {
             let $elems = this.$form.querySelectorAll(
@@ -820,7 +823,8 @@
                 $elems[i].style.webitFilter = '';
                 $elems[i].style.filter = '';
             }
-        },
+        }
+        ,
     };
 
     window.JustValidate = JustValidate;
