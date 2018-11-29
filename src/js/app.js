@@ -1,5 +1,5 @@
 /* global Promise */
-(function (window) {
+(function(window) {
     'use strict';
 
     if (!window.Promise) {
@@ -16,7 +16,7 @@
         RULE_REMOTE = 'remote',
         RULE_STRENGTH = 'strength';
 
-    const formatParams = function (params, method) {
+    const formatParams = function(params, method) {
         if (typeof params === 'string') {
             return params;
         }
@@ -26,7 +26,7 @@
             return (
                 letter +
                 params
-                    .map(function (obj) {
+                    .map(function(obj) {
                         return obj.name + '=' + obj.value;
                     })
                     .join('&')
@@ -35,14 +35,14 @@
         return (
             letter +
             Object.keys(params)
-                .map(function (key) {
+                .map(function(key) {
                     return key + '=' + params[key];
                 })
                 .join('&')
         );
     };
 
-    const ajax = function (options) {
+    const ajax = function(options) {
         const url = options.url,
             method = options.method,
             data = options.data,
@@ -70,7 +70,7 @@
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        xhr.onreadystatechange = function () {
+        xhr.onreadystatechange = function() {
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     callback(this.responseText);
@@ -82,7 +82,7 @@
         xhr.send(body);
     };
 
-    const JustValidate = function (selector, options) {
+    const JustValidate = function(selector, options) {
         this.options = options || {};
         this.rules = this.options.rules || {};
         this.messages = this.options.messages || undefined;
@@ -91,10 +91,13 @@
         this.elements = [];
         this.tooltip = this.options.tooltip || {};
         this.tooltipFadeOutTime = this.tooltip.fadeOutTime || 5000;
-        this.tooltipFadeOutClass = this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
-        this.tooltipSelectorWrap = document.querySelectorAll(this.tooltip.selectorWrap).length ?
-            document.querySelectorAll(this.tooltip.selectorWrap) :
-            document.querySelectorAll('.just-validate-tooltip-container');
+        this.tooltipFadeOutClass =
+            this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
+        this.tooltipSelectorWrap = document.querySelectorAll(
+            this.tooltip.selectorWrap
+        ).length
+            ? document.querySelectorAll(this.tooltip.selectorWrap)
+            : document.querySelectorAll('.just-validate-tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -160,7 +163,7 @@
          * Keyup handler
          * @param ev
          */
-        handlerKeyup: function (ev) {
+        handlerKeyup: function(ev) {
             let elem = ev.target,
                 item = {
                     name: elem.getAttribute('data-validate-field'),
@@ -176,7 +179,7 @@
             this.renderErrors();
         },
 
-        setterEventListener: function (item, event, handler, type) {
+        setterEventListener: function(item, event, handler, type) {
             if (event === 'keyup') {
                 handler = this.bindHandlerKeyup;
             }
@@ -192,7 +195,7 @@
             }
         },
 
-        getElementsRealValue: function () {
+        getElementsRealValue: function() {
             let $elems = this.$form.querySelectorAll('*'),
                 name,
                 result = {};
@@ -209,7 +212,7 @@
             return result;
         },
 
-        validationSuccess: function () {
+        validationSuccess: function() {
             if (Object.keys(this.result).length === 0) {
                 this.isValidationSuccess = false;
                 if (this.submitHandler) {
@@ -222,10 +225,10 @@
             }
         },
 
-        setForm: function (form) {
+        setForm: function(form) {
             this.$form = form;
             this.$form.setAttribute('novalidate', 'novalidate');
-            this.$form.addEventListener('submit', ev => {
+            this.$form.addEventListener('submit', (ev) => {
                 ev.preventDefault();
                 this.result = [];
                 this.getElements();
@@ -247,23 +250,23 @@
             });
         },
 
-        isEmail: function (email) {
+        isEmail: function(email) {
             return this.REGEXP.email.test(email);
         },
 
-        isZip: function (zip) {
+        isZip: function(zip) {
             return this.REGEXP.zip.test(zip);
         },
 
-        isPhone: function (phone) {
+        isPhone: function(phone) {
             return this.REGEXP.phone.test(phone);
         },
 
-        isPassword: function (password) {
+        isPassword: function(password) {
             return this.REGEXP.password.test(password);
         },
 
-        isEmpty: function (val) {
+        isEmpty: function(val) {
             let newVal = val;
             if (val.trim) {
                 newVal = val.trim();
@@ -272,19 +275,19 @@
             return !newVal;
         },
 
-        checkLengthMax: function (text, max) {
+        checkLengthMax: function(text, max) {
             return text.length <= max;
         },
 
-        checkLengthMin: function (text, min) {
+        checkLengthMin: function(text, min) {
             return text.length >= min;
         },
 
-        checkStrengthPass: function (password) {
+        checkStrengthPass: function(password) {
             return this.REGEXP.strengthPass.test(password);
         },
 
-        getElements: function () {
+        getElements: function() {
             let elems = this.$form.querySelectorAll('[data-validate-field]');
             this.elements = [];
 
@@ -297,7 +300,7 @@
 
                 if (item.type === 'checkbox') {
                     value = item.checked || '';
-                    item.addEventListener('change', ev => {
+                    item.addEventListener('change', (ev) => {
                         let elem = ev.target,
                             item = {
                                 name: elem.getAttribute('data-validate-field'),
@@ -314,11 +317,10 @@
                     });
                 }
 
-
                 if (item.type === 'radio') {
-                    const findElem = this.elements.filter(item => {
+                    const findElem = this.elements.filter((item) => {
                         if (item.name === name) {
-                            return item
+                            return item;
                         }
                     })[0];
 
@@ -329,7 +331,7 @@
                         group.push(item.checked);
                     }
 
-                    item.addEventListener('change', ev => {
+                    item.addEventListener('change', (ev) => {
                         let elem = ev.target,
                             item = {
                                 name: elem.getAttribute('data-validate-field'),
@@ -370,7 +372,7 @@
          * @param {string} value Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validateRequired: function (value) {
+        validateRequired: function(value) {
             return !this.isEmpty(value);
         },
 
@@ -379,7 +381,7 @@
          * @param {string} value Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validateEmail: function (value) {
+        validateEmail: function(value) {
             return this.isEmail(value);
         },
 
@@ -388,7 +390,7 @@
          * @param {string} value Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validatePhone: function (value) {
+        validatePhone: function(value) {
             return this.isPhone(value);
         },
 
@@ -398,7 +400,7 @@
          * @param {integer} min
          * @returns {boolean} True if validate is OK
          */
-        validateMinLength: function (value, min) {
+        validateMinLength: function(value, min) {
             return this.checkLengthMin(value, min);
         },
 
@@ -408,7 +410,7 @@
          * @param {integer} max
          * @returns {boolean} True if validate is OK
          */
-        validateMaxLength: function (value, max) {
+        validateMaxLength: function(value, max) {
             return this.checkLengthMax(value, max);
         },
 
@@ -417,7 +419,7 @@
          * @param {string} password Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validateStrengthPass: function (password) {
+        validateStrengthPass: function(password) {
             return this.checkStrengthPass(password);
         },
 
@@ -426,7 +428,7 @@
          * @param {string} value Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validatePassword: function (value) {
+        validatePassword: function(value) {
             return this.isPassword(value);
         },
 
@@ -435,7 +437,7 @@
          * @param {string} value Value for validate
          * @returns {boolean} True if validate is OK
          */
-        validateZip: function (value) {
+        validateZip: function(value) {
             return this.isZip(value);
         },
 
@@ -447,15 +449,15 @@
          * @param {string} successAnswer
          * @returns {boolean} True if validate is OK
          */
-        validateRemote: function ({
-                                      value,
-                                      name,
-                                      url,
-                                      successAnswer,
-                                      sendParam,
-                                      method,
-                                  }) {
-            return new Promise(resolve => {
+        validateRemote: function({
+            value,
+            name,
+            url,
+            successAnswer,
+            sendParam,
+            method,
+        }) {
+            return new Promise((resolve) => {
                 ajax({
                     url: url,
                     method: method,
@@ -463,7 +465,7 @@
                         [sendParam]: value,
                     },
                     async: true,
-                    callback: data => {
+                    callback: (data) => {
                         if (
                             data.toLowerCase() === successAnswer.toLowerCase()
                         ) {
@@ -484,7 +486,7 @@
             });
         },
 
-        generateMessage: function (rule, name, value) {
+        generateMessage: function(rule, name, value) {
             let messages = this.messages || this.defaultMessages;
             let customMessage =
                 (messages[name] && messages[name][rule]) ||
@@ -506,9 +508,9 @@
             };
         },
 
-        validateElements: function () {
+        validateElements: function() {
             this.lockForm();
-            this.elements.forEach(item => {
+            this.elements.forEach((item) => {
                 this.validateItem({
                     name: item.name,
                     value: item.value,
@@ -521,8 +523,8 @@
                 return;
             }
 
-            Promise.all(this.promisesRemote).then(resp => {
-                resp.forEach(result => {
+            Promise.all(this.promisesRemote).then((resp) => {
+                resp.forEach((result) => {
                     if (result === 'ok') {
                         this.renderErrors();
                         return;
@@ -536,7 +538,7 @@
             });
         },
 
-        validateItem: function ({ name, group, value, isKeyupChange }) {
+        validateItem: function({ name, group, value, isKeyupChange }) {
             let rules = this.rules[name] || this.defaultRules[name] || false;
 
             if (!rules) {
@@ -558,11 +560,11 @@
                             let isSuccessValidateGroup = false;
 
                             // At least one item in group
-                            group.forEach(item => {
+                            group.forEach((item) => {
                                 if (this.validateRequired(item)) {
                                     isSuccessValidateGroup = true;
                                 }
-                            })
+                            });
 
                             if (isSuccessValidateGroup) {
                                 break;
@@ -717,7 +719,7 @@
             }
         },
 
-        clearErrors: function () {
+        clearErrors: function() {
             let $elems = document.querySelectorAll('.js-validate-error-label');
             for (let i = 0, len = $elems.length; i < len; ++i) {
                 $elems[i].remove();
@@ -731,7 +733,7 @@
             }
         },
 
-        renderErrors: function () {
+        renderErrors: function() {
             this.clearErrors();
             this.unlockForm();
 
@@ -766,10 +768,7 @@
                     if ($elem.parentNode.tagName.toLowerCase() === 'label') {
                         $elem.parentNode.parentNode.insertBefore(div, null);
                     } else if ($label) {
-                        $label.parentNode.insertBefore(
-                            div,
-                            $label.nextSibling
-                        );
+                        $label.parentNode.insertBefore(div, $label.nextSibling);
                     } else {
                         $elem.parentNode.insertBefore(div, $elem.nextSibling);
                     }
@@ -777,7 +776,6 @@
                     $elem.parentNode.insertBefore(div, $elem.nextSibling);
                 }
             }
-
 
             if (!this.tooltipSelectorWrap.length) {
                 return;
@@ -788,19 +786,19 @@
             }, this.tooltipFadeOutTime);
         },
 
+        hideTooltips: function() {
+            let $elemsErrorLabel = document.querySelectorAll(
+                '.js-validate-error-label'
+            );
 
-        hideTooltips: function () {
-            let $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
-
-            $elemsErrorLabel.forEach(item => {
+            $elemsErrorLabel.forEach((item) => {
                 item.classList.add(this.tooltipFadeOutClass);
             });
 
             this.state.tooltipsTimer = null;
-        }
-        ,
+        },
 
-        lockForm: function () {
+        lockForm: function() {
             let $elems = this.$form.querySelectorAll(
                 'input, textarea, button, select'
             );
@@ -810,10 +808,9 @@
                 $elems[i].style.webitFilter = 'grayscale(100%)';
                 $elems[i].style.filter = 'grayscale(100%)';
             }
-        }
-        ,
+        },
 
-        unlockForm: function () {
+        unlockForm: function() {
             let $elems = this.$form.querySelectorAll(
                 'input, textarea, button, select'
             );
@@ -823,8 +820,7 @@
                 $elems[i].style.webitFilter = '';
                 $elems[i].style.filter = '';
             }
-        }
-        ,
+        },
     };
 
     window.JustValidate = JustValidate;
