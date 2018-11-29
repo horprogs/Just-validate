@@ -91,10 +91,13 @@
         this.elements = [];
         this.tooltip = this.options.tooltip || {};
         this.tooltipFadeOutTime = this.tooltip.fadeOutTime || 5000;
-        this.tooltipFadeOutClass = this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
-        this.tooltipSelectorWrap = document.querySelectorAll(this.tooltip.selectorWrap).length ?
-                                   document.querySelectorAll(this.tooltip.selectorWrap) :
-                                   document.querySelectorAll('.just-validate-tooltip-container');
+        this.tooltipFadeOutClass =
+            this.tooltip.fadeOutClass || 'just-validate-tooltip-hide';
+        this.tooltipSelectorWrap = document.querySelectorAll(
+            this.tooltip.selectorWrap
+        ).length
+            ? document.querySelectorAll(this.tooltip.selectorWrap)
+            : document.querySelectorAll('.just-validate-tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
         this.promisesRemote = [];
@@ -170,6 +173,7 @@
             this.validateItem({
                 name: item.name,
                 value: item.value,
+                group: [],
                 isKeyupChange: true,
             });
             this.renderErrors();
@@ -224,7 +228,7 @@
         setForm: function(form) {
             this.$form = form;
             this.$form.setAttribute('novalidate', 'novalidate');
-            this.$form.addEventListener('submit', ev => {
+            this.$form.addEventListener('submit', (ev) => {
                 ev.preventDefault();
                 this.result = [];
                 this.getElements();
@@ -290,12 +294,13 @@
             for (let i = 0, len = elems.length; i < len; ++i) {
                 let item = elems[i],
                     name = item.getAttribute('data-validate-field'),
-                    value = item.value;
+                    value = item.value,
+                    isElemInGroup = false,
+                    group = [];
 
                 if (item.type === 'checkbox') {
                     value = item.checked || '';
-
-                    item.addEventListener('change', ev => {
+                    item.addEventListener('change', (ev) => {
                         let elem = ev.target,
                             item = {
                                 name: elem.getAttribute('data-validate-field'),
@@ -306,10 +311,43 @@
                         this.validateItem({
                             name: item.name,
                             value: item.value,
+                            group: [],
                         });
                         this.renderErrors();
                     });
                 }
+
+                if (item.type === 'radio') {
+                    const findElem = this.elements.filter((item) => {
+                        if (item.name === name) {
+                            return item;
+                        }
+                    })[0];
+
+                    if (findElem) {
+                        findElem.group.push(item.checked);
+                        isElemInGroup = true;
+                    } else {
+                        group.push(item.checked);
+                    }
+
+                    item.addEventListener('change', (ev) => {
+                        let elem = ev.target,
+                            item = {
+                                name: elem.getAttribute('data-validate-field'),
+                                value: elem.checked,
+                            };
+
+                        delete this.result[item.name];
+                        this.validateItem({
+                            name: item.name,
+                            value: item.value,
+                            group: [],
+                        });
+                        this.renderErrors();
+                    });
+                }
+
                 this.setterEventListener(
                     item,
                     'keyup',
@@ -317,10 +355,13 @@
                     'add'
                 );
 
-                this.elements.push({
-                    name,
-                    value,
-                });
+                if (!isElemInGroup) {
+                    this.elements.push({
+                        name,
+                        value,
+                        group,
+                    });
+                }
             }
 
             this.validateElements();
@@ -416,7 +457,7 @@
             sendParam,
             method,
         }) {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 ajax({
                     url: url,
                     method: method,
@@ -424,7 +465,7 @@
                         [sendParam]: value,
                     },
                     async: true,
-                    callback: data => {
+                    callback: (data) => {
                         if (
                             data.toLowerCase() === successAnswer.toLowerCase()
                         ) {
@@ -469,10 +510,11 @@
 
         validateElements: function() {
             this.lockForm();
-            this.elements.forEach(item => {
+            this.elements.forEach((item) => {
                 this.validateItem({
                     name: item.name,
                     value: item.value,
+                    group: item.group,
                 });
             });
 
@@ -481,8 +523,8 @@
                 return;
             }
 
-            Promise.all(this.promisesRemote).then(resp => {
-                resp.forEach(result => {
+            Promise.all(this.promisesRemote).then((resp) => {
+                resp.forEach((result) => {
                     if (result === 'ok') {
                         this.renderErrors();
                         return;
@@ -496,7 +538,7 @@
             });
         },
 
-        validateItem: function({ name, value, isKeyupChange }) {
+        validateItem: function({ name, group, value, isKeyupChange }) {
             let rules = this.rules[name] || this.defaultRules[name] || false;
 
             if (!rules) {
@@ -513,9 +555,26 @@
                         if (!ruleValue) {
                             break;
                         }
-                        if (this.validateRequired(value)) {
-                            break;
+
+                        if (group.length) {
+                            let isSuccessValidateGroup = false;
+
+                            // At least one item in group
+                            group.forEach((item) => {
+                                if (this.validateRequired(item)) {
+                                    isSuccessValidateGroup = true;
+                                }
+                            });
+
+                            if (isSuccessValidateGroup) {
+                                break;
+                            }
+                        } else {
+                            if (this.validateRequired(value)) {
+                                break;
+                            }
                         }
+
                         this.generateMessage(RULE_REQUIRED, name);
                         return;
                     }
@@ -690,40 +749,35 @@
                     `[data-validate-field="${item}"]`
                 );
 
-                for (let i = 0, len = $elems.length; i < len; ++i) {
-                    let div = document.createElement('div'),
-                        item = $elems[i];
+                let $elem = $elems[$elems.length - 1];
 
-                    div.innerHTML = message;
-                    div.className = 'js-validate-error-label';
-                    div.setAttribute('style', `color: ${this.colorWrong}`);
-                    item.style.border = `1px solid ${this.colorWrong}`;
-                    item.style.color = `${this.colorWrong}`;
-                    item.classList.add('js-validate-error-field');
+                let div = document.createElement('div');
 
-                    if (item.type === 'checkbox') {
-                        let $label = document.querySelector(
-                            `label[for="${item.getAttribute('id')}"]`
-                        );
+                div.innerHTML = message;
+                div.className = 'js-validate-error-label';
+                div.setAttribute('style', `color: ${this.colorWrong}`);
+                $elem.style.border = `1px solid ${this.colorWrong}`;
+                $elem.style.color = `${this.colorWrong}`;
+                $elem.classList.add('js-validate-error-field');
 
-                        if (item.parentNode.tagName.toLowerCase() === 'label') {
-                            item.parentNode.parentNode.insertBefore(div, null);
-                        } else if ($label) {
-                            $label.parentNode.insertBefore(
-                                div,
-                                $label.nextSibling
-                            );
-                        } else {
-                            item.parentNode.insertBefore(div, item.nextSibling);
-                        }
-                        continue;
+                if ($elem.type === 'checkbox' || $elem.type === 'radio') {
+                    let $label = document.querySelector(
+                        `label[for="${$elem.getAttribute('id')}"]`
+                    );
+
+                    if ($elem.parentNode.tagName.toLowerCase() === 'label') {
+                        $elem.parentNode.parentNode.insertBefore(div, null);
+                    } else if ($label) {
+                        $label.parentNode.insertBefore(div, $label.nextSibling);
+                    } else {
+                        $elem.parentNode.insertBefore(div, $elem.nextSibling);
                     }
-
-                    item.parentNode.insertBefore(div, item.nextSibling);
+                } else {
+                    $elem.parentNode.insertBefore(div, $elem.nextSibling);
                 }
             }
 
-            if(!this.tooltipSelectorWrap.length) {
+            if (!this.tooltipSelectorWrap.length) {
                 return;
             }
 
@@ -732,10 +786,12 @@
             }, this.tooltipFadeOutTime);
         },
 
-        hideTooltips: function () {
-            let $elemsErrorLabel = document.querySelectorAll('.js-validate-error-label');
+        hideTooltips: function() {
+            let $elemsErrorLabel = document.querySelectorAll(
+                '.js-validate-error-label'
+            );
 
-            $elemsErrorLabel.forEach(item => {
+            $elemsErrorLabel.forEach((item) => {
                 item.classList.add(this.tooltipFadeOutClass);
             });
 

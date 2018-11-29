@@ -29,5 +29,4 @@
   padding: 4px 8px;
   font-size: 10px;
   pointer-events: none;
-  -webkit-transition: all .4s linear;
   transition: all .4s linear; }

@@ -1,5 +1,5 @@
 # Just-validate
-Lightweight form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
+Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
 Demo: <br>
 Classic validation https://horprogs.github.io/Just-validate/ <br>
@@ -50,7 +50,11 @@ Include the script of the Just-validate on your page
     <div class="form-group">
       <label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2" checked>I agree</label>
     </div>
-
+    <div class="form-group">
+      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Male</label>
+      <br>
+      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Female</label>
+    </div>
     <button class="form__btn btn btn-primary">SUBMIT</button>
   </form>
 ```
@@ -184,6 +188,8 @@ new JustValidate('.js-form', {
 ```
 
 You can override custom message for once rule or for all at once rules.
+
+Also, you can validate for required radiobuttons. For this, you need to create ``input[type="radio"]`` fields with identical ``data-validate-field`` (it's important).
 
 ### Submit form
 You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
@@ -334,14 +340,13 @@ new window.JustValidate('.js-form', {
 });
 ```
 
-## Current version stable
-**V1.2.0**
-
 ## Changelog
 ### 1.1.0
 Added rule for check strength of password  (default and custom)
 ### 1.2.0
 Added tooltip style error
+### 1.3.0
+Added feature for check required radio buttons
 
 ## Contributing
 - Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
