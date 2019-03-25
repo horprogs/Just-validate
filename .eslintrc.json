@@ -16,7 +16,10 @@
     "node": true
   },
   "globals": {
-    "fetch": true
+    "fetch": true,
+    "describe": true,
+    "it": true,
+    "assert": true
   },
   "rules": {
     "indent": [

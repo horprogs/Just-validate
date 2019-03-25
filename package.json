@@ -4,14 +4,10 @@
   "description": "Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.",
   "main": "gulpfile.js",
   "scripts": {
-    "start": "nodemon server.js",
     "build": "gulp build"
   },
   "author": "Perepecho Georgy (Horprogs) <horprogs@gmail.com>",
-  "license": [
-    "MIT",
-    "GPL"
-  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/horprogs/Just-validate.git"
@@ -46,8 +42,6 @@
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
     "promise-polyfill": "^6.0.2"
   }
 }
