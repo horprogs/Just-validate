@@ -2,8 +2,8 @@
 Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
 Demo: <br>
-Classic validation https://horprogs.github.io/Just-validate/ <br>
-Classic validation with tooltips https://horprogs.github.io/Just-validate/tooltip.html
+Classic validation <https://horprogs.github.io/Just-validate/> <br>
+Classic validation with tooltips <https://horprogs.github.io/Just-validate/tooltip.html>
 
 ## How to use
 ### npm
@@ -64,27 +64,38 @@ Include the script of the Just-validate on your page
 
 Plugin has default fields, which already have rules.
 
-* **Field: email** 
+**Field: email** 
+
 	* required
-  * email
+	* email
 	* remote
-* **Field: name** 
+
+**Field: name** 
+
 	* required
 	* minLength: 3
 	* maxLength: 15
-* **Field: text** 
-  * required
+
+**Field: text** 
+
+	* required
 	* minLength: 5
 	* maxLength: 300
-* **Field: password** 
+
+**Field: password** 
+
 	* required
 	* password (at least 1 digit and 1 letter)
 	* minLength: 4
 	* maxLength: 8
-* **Field: zip** 
+
+**Field: zip** 
+
 	* required
 	* zip (4-5 digits)
-* **Field: phone** 
+
+**Field: phone** 
+
 	* phone (format 111-222-3333)
     
 You can create your own fields, e.g. ``data-validate-field="myField"``.
@@ -111,10 +122,10 @@ remote: {
     method: 'GET'
 }
 ```
-* url - remote server api url
-* successAnswer - expected response from server, if value is correct
-* sendParam - parameter to be sent to server
-* method - GET or POST
+	* url - remote server api url
+	* successAnswer - expected response from server, if value is correct
+	* sendParam - parameter to be sent to server
+	* method - GET or POST
 
 **Strength rule format:**
 Default (at least one uppercase letter, one lowercase letter and one number):
@@ -135,8 +146,8 @@ strength: {
 new window.JustValidate(element, options);
 ```
 
-* element - string, selector of DOM element
-* options - object
+	* element - string, selector of DOM element
+	* options - object
 
 Initiate plugin:
 
@@ -194,9 +205,10 @@ Also, you can validate for required radiobuttons. For this, you need to create `
 
 ### Submit form
 You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
-* form - DOM link to form
-* values - object of fields values
-* ajax - function of XMLHttpRequest
+	
+	* form - DOM link to form
+	* values - object of fields values
+	* ajax - function of XMLHttpRequest
 
 Function ajax helps you to send XMLHTTPRequest.
 

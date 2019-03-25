@@ -4,7 +4,13 @@
   "description": "Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.",
   "main": "gulpfile.js",
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "lint-md": "remark ."
+  },
+  "remarkConfig": {
+    "plugins": [
+      "remark-preset-lint-recommended"
+    ]
   },
   "author": "Perepecho Georgy (Horprogs) <horprogs@gmail.com>",
   "license": "MIT",
@@ -39,6 +45,8 @@
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^1.5.3",
     "prettier": "^1.15.2",
+    "remark-cli": "^6.0.1",
+    "remark-preset-lint-recommended": "^3.0.2",
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
