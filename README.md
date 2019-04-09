@@ -66,51 +66,51 @@ Plugin has default fields, which already have rules.
 
 **Field: email** 
 
-	* required
-	* email
-	* remote
+*   required
+*   email
+*   remote
 
 **Field: name** 
 
-	* required
-	* minLength: 3
-	* maxLength: 15
+*   required
+*   minLength: 3
+*   maxLength: 15
 
 **Field: text** 
 
-	* required
-	* minLength: 5
-	* maxLength: 300
+*   required
+*   minLength: 5
+*   maxLength: 300
 
 **Field: password** 
 
-	* required
-	* password (at least 1 digit and 1 letter)
-	* minLength: 4
-	* maxLength: 8
+*   required
+*   password (at least 1 digit and 1 letter)
+*   minLength: 4
+*   maxLength: 8
 
 **Field: zip** 
 
-	* required
-	* zip (4-5 digits)
+*   required
+*   zip (4-5 digits)
 
 **Field: phone** 
 
-	* phone (format 111-222-3333)
+*   phone (format 111-222-3333)
     
 You can create your own fields, e.g. ``data-validate-field="myField"``.
 
 ## Rules
 
-	* required -  Required field, not empty
-	* email - Check a valid email address
-	* minLength - Limit the minimum value
-	* maxLength - Limit the maximum value
-	* password - At least 1 letter and 1 digit
-	* zip - 4-5 digits
-	* phone - Format 111-222-3333
-	* remote - validate value via remote api
-	* strength - validate field for default or custom regexp
+*   required -  Required field, not empty
+*   email - Check a valid email address
+*   minLength - Limit the minimum value
+*   maxLength - Limit the maximum value
+*   password - At least 1 letter and 1 digit
+*   zip - 4-5 digits
+*   phone - Format 111-222-3333
+*   remote - validate value via remote api
+*   strength - validate field for default or custom regexp
 
 More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
@@ -122,10 +122,10 @@ remote: {
     method: 'GET'
 }
 ```
-	* url - remote server api url
-	* successAnswer - expected response from server, if value is correct
-	* sendParam - parameter to be sent to server
-	* method - GET or POST
+*   url - remote server api url
+*   successAnswer - expected response from server, if value is correct
+*   sendParam - parameter to be sent to server
+*   method - GET or POST
 
 **Strength rule format:**
 Default (at least one uppercase letter, one lowercase letter and one number):
@@ -146,8 +146,8 @@ strength: {
 new window.JustValidate(element, options);
 ```
 
-	* element - string, selector of DOM element
-	* options - object
+*   element - string, selector of DOM element
+*   options - object
 
 Initiate plugin:
 
@@ -206,9 +206,9 @@ Also, you can validate for required radiobuttons. For this, you need to create `
 ### Submit form
 You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
 	
-	* form - DOM link to form
-	* values - object of fields values
-	* ajax - function of XMLHttpRequest
+*   form - DOM link to form
+*   values - object of fields values
+*   ajax - function of XMLHttpRequest
 
 Function ajax helps you to send XMLHTTPRequest.
 
