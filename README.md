@@ -2,8 +2,8 @@
 Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
 Demo: <br>
-Classic validation https://horprogs.github.io/Just-validate/ <br>
-Classic validation with tooltips https://horprogs.github.io/Just-validate/tooltip.html
+Classic validation <https://horprogs.github.io/Just-validate/> <br>
+Classic validation with tooltips <https://horprogs.github.io/Just-validate/tooltip.html>
 
 ## How to use
 ### npm
@@ -64,41 +64,53 @@ Include the script of the Just-validate on your page
 
 Plugin has default fields, which already have rules.
 
-* **Field: email** 
-    * required
-    * email
-    * remote
-* **Field: name** 
-    * required
-    * minLength: 3
-    * maxLength: 15
-* **Field: text** 
-    * required
-    * minLength: 5
-    * maxLength: 300
-* **Field: password** 
-    * required
-    * password (at least 1 digit and 1 letter)
-    * minLength: 4
-    * maxLength: 8
-* **Field: zip** 
-    * required
-    * zip (4-5 digits)
-* **Field: phone** 
-    * phone (format 111-222-3333)
+**Field: email** 
+
+	* required
+	* email
+	* remote
+
+**Field: name** 
+
+	* required
+	* minLength: 3
+	* maxLength: 15
+
+**Field: text** 
+
+	* required
+	* minLength: 5
+	* maxLength: 300
+
+**Field: password** 
+
+	* required
+	* password (at least 1 digit and 1 letter)
+	* minLength: 4
+	* maxLength: 8
+
+**Field: zip** 
+
+	* required
+	* zip (4-5 digits)
+
+**Field: phone** 
+
+	* phone (format 111-222-3333)
     
 You can create your own fields, e.g. ``data-validate-field="myField"``.
 
 ## Rules
-* required -  Required field, not empty
-* email - Check a valid email address
-* minLength - Limit the minimum value
-* maxLength - Limit the maximum value
-* password - At least 1 letter and 1 digit
-* zip - 4-5 digits
-* phone - Format 111-222-3333
-* remote - validate value via remote api
-* strength - validate field for default or custom regexp
+
+	* required -  Required field, not empty
+	* email - Check a valid email address
+	* minLength - Limit the minimum value
+	* maxLength - Limit the maximum value
+	* password - At least 1 letter and 1 digit
+	* zip - 4-5 digits
+	* phone - Format 111-222-3333
+	* remote - validate value via remote api
+	* strength - validate field for default or custom regexp
 
 More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
@@ -110,10 +122,10 @@ remote: {
     method: 'GET'
 }
 ```
-* url - remote server api url
-* successAnswer - expected response from server, if value is correct
-* sendParam - parameter to be sent to server
-* method - GET or POST
+	* url - remote server api url
+	* successAnswer - expected response from server, if value is correct
+	* sendParam - parameter to be sent to server
+	* method - GET or POST
 
 **Strength rule format:**
 Default (at least one uppercase letter, one lowercase letter and one number):
@@ -134,8 +146,8 @@ strength: {
 new window.JustValidate(element, options);
 ```
 
-* element - string, selector of DOM element
-* options - object
+	* element - string, selector of DOM element
+	* options - object
 
 Initiate plugin:
 
@@ -193,14 +205,15 @@ Also, you can validate for required radiobuttons. For this, you need to create `
 
 ### Submit form
 You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
-* form - DOM link to form
-* values - object of fields values
-* ajax - function of XMLHttpRequest
+	
+	* form - DOM link to form
+	* values - object of fields values
+	* ajax - function of XMLHttpRequest
 
 Function ajax helps you to send XMLHTTPRequest.
 
 Format:
-```
+```js
 ajax({
     url: 'https://just-validate-api.herokuapp.com/submit',
     method: 'POST',
@@ -218,13 +231,13 @@ You can show errors in the form of tooltips. <br>
 
 To do this, connect the file styles ``dist/css/justValidateTooltip.css`` or
  ``dist/css/justValidateTooltip.min.css`` on page. <br>
-```
+```html
 <link rel="stylesheet" href="./path/to/justValidateTooltip.min.css">
 ```
 
 For a container inside of which input, add a class ``just-validate-tooltip-container`` or add our class
 
-```
+```html
  <div class="form-group col-md-6">
     <label for="name">Enter your name</label>
     <div class="just-validate-tooltip-container">
@@ -274,7 +287,7 @@ Error fields and messages have classes: ``js-validate-error-label`` and  ``js-va
 ### Examples
 #### Validate multiple remote values with custom messages
 
-```
+```js
 new window.JustValidate('.js-form-1', {
     rules: {
         email: {
@@ -308,7 +321,7 @@ new window.JustValidate('.js-form-1', {
 });
 ```
 #### Classic validation with custom submit form and ajax helper
-```
+```js
 new window.JustValidate('.js-form', {
     rules: {
         checkbox: {
@@ -349,9 +362,9 @@ Added tooltip style error
 Added feature for check required radio buttons
 
 ## Contributing
-- Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
-- Fork repository, make changes, add your name and link in the authors session readme.md
-- Send a pull request
+	* Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
+	* Fork repository, make changes, add your name and link in the authors session readme.md
+	* Send a pull request
 
 **Thank you**
 
