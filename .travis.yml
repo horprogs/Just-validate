@@ -5,11 +5,3 @@ install: yarn install
 script:
   - yarn build
 
-jobs:
-  include:
-  - stage: release
-    deploy:
-      provider: script
-      skip_cleanup: true
-      script:
-      - npx semantic-release
