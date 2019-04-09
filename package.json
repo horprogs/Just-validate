@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "build": "gulp build",
-    "lint-md": "remark ."
+    "lint-md": "remark .",
+    "semantic-release": "semantic-release"
   },
   "remarkConfig": {
     "plugins": [
@@ -16,7 +17,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/horprogs/Just-validate.git"
+    "url": "https://github.com/horprogs/Just-validate.git"
   },
   "keywords": [
     "form",
@@ -47,7 +48,8 @@
     "prettier": "^1.15.2",
     "remark-cli": "^6.0.1",
     "remark-preset-lint-recommended": "^3.0.2",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "semantic-release": "^15.13.3"
   },
   "dependencies": {
     "promise-polyfill": "^6.0.2"
