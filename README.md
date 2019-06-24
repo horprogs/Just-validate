@@ -132,8 +132,8 @@ remote: {
 More about `function` rule:
 Provide a function which takes two arguments `name` and `value` and returns true or false
 
-- name - the name of the element
-- value - the value of the element
+*   name - the name of the element
+*   value - the value of the element
 
 The following example will only validate input of a field if it is "hi"
 
