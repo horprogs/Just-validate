@@ -98,6 +98,7 @@ Plugin has default fields, which already have rules.
 
 *   phone (format 111-222-3333)
     
+
 You can create your own fields, e.g. ``data-validate-field="myField"``.
 
 ## Rules
@@ -111,6 +112,7 @@ You can create your own fields, e.g. ``data-validate-field="myField"``.
 *   phone - Format 111-222-3333
 *   remote - validate value via remote api
 *   strength - validate field for default or custom regexp
+*   function - provide your own validation function
 
 More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
