@@ -549,7 +549,7 @@
             for (let rule in rules) {
                 let ruleValue = rules[rule];
 
-                if (rule !== RULE_REQUIRED && value == '') {
+                if (rule !== RULE_REQUIRED && rule !== RULE_FUNCTION && value == '') {
                     return;
                 }
                 switch (rule) {
