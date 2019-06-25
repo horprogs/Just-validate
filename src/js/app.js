@@ -555,7 +555,6 @@
                 switch (rule) {
                     case RULE_FUNCTION:{
                         if (typeof ruleValue !== 'function'){
-                            console.warn('Function rule must be a function');
                             break;
                         }
                         if (ruleValue(name, value)){
