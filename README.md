@@ -98,6 +98,7 @@ Plugin has default fields, which already have rules.
 
 *   phone (format 111-222-3333)
     
+
 You can create your own fields, e.g. ``data-validate-field="myField"``.
 
 ## Rules
@@ -111,6 +112,7 @@ You can create your own fields, e.g. ``data-validate-field="myField"``.
 *   phone - Format 111-222-3333
 *   remote - validate value via remote api
 *   strength - validate field for default or custom regexp
+*   function - provide your own validation function
 
 More about ``remote`` rule:
 Rule check remote server api for correct answer. For example:
@@ -126,6 +128,24 @@ remote: {
 *   successAnswer - expected response from server, if value is correct
 *   sendParam - parameter to be sent to server
 *   method - GET or POST
+
+More about `function` rule:
+Provide a function which takes two arguments `name` and `value` and returns true or false
+
+*   name - the name of the element
+*   value - the value of the element
+
+The following example will only validate input of a field if it is "hi"
+
+```js
+function: (name, value) => {
+    if(name == 'hi'){
+        return true;
+    }else{
+        return false;
+    };
+}
+```
 
 **Strength rule format:**
 Default (at least one uppercase letter, one lowercase letter and one number):

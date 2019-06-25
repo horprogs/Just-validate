@@ -14,7 +14,8 @@
         RULE_ZIP = 'zip',
         RULE_PHONE = 'phone',
         RULE_REMOTE = 'remote',
-        RULE_STRENGTH = 'strength';
+        RULE_STRENGTH = 'strength',
+        RULE_FUNCTION = 'function';
 
     const formatParams = function(params, method) {
         if (typeof params === 'string') {
@@ -158,6 +159,7 @@
             remote: 'Email already exists',
             strength:
                 'Password must contents at least one uppercase letter, one lowercase letter and one number',
+            function: 'Function returned false'
         },
         /**
          * Keyup handler
@@ -547,10 +549,20 @@
             for (let rule in rules) {
                 let ruleValue = rules[rule];
 
-                if (rule !== RULE_REQUIRED && value == '') {
+                if (rule !== RULE_REQUIRED && rule !== RULE_FUNCTION && value == '') {
                     return;
                 }
                 switch (rule) {
+                    case RULE_FUNCTION:{
+                        if (typeof ruleValue !== 'function'){
+                            break;
+                        }
+                        if (ruleValue(name, value)){
+                            break;
+                        }
+                        this.generateMessage(RULE_FUNCTION, name, ruleValue);
+                        return;
+                    }
                     case RULE_REQUIRED: {
                         if (!ruleValue) {
                             break;
