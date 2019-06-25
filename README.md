@@ -139,9 +139,9 @@ The following example will only validate input of a field if it is "hi"
 
 ```js
 function: (name, value) => {
-    if(name == 'hi'){
+    if (name === 'hi') {
         return true;
-    }else{
+    } else {
         return false;
     };
 }
@@ -380,6 +380,8 @@ Added rule for check strength of password  (default and custom)
 Added tooltip style error
 ### 1.3.0
 Added feature for check required radio buttons
+### 1.4.0
+Added feature to allow the user to provide their own validation function
 
 ## Contributing
 	* Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
