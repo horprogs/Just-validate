@@ -138,12 +138,12 @@ Provide a function which takes two arguments `name` and `value` and returns true
 The following example will only validate input of a field if it is "hi"
 
 ```js
-function: (name, value)=>{
+function: (name, value) => {
     if(name == 'hi'){
-        return true
+        return true;
     }else{
-        return false
-    }
+        return false;
+    };
 }
 ```
 
