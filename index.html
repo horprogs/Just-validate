@@ -104,6 +104,8 @@
             }
         },
 
+        focusWrongField: true,
+
         submitHandler: function (form, values, ajax) {
             ajax({
                 url: 'https://just-validate-api.herokuapp.com/submit',
@@ -117,6 +119,10 @@
                     alert('AJAX submit error! \nResponse from server:' + response)
                 }
             });
+        },
+        
+        invalidFormCallback: function (errors) {
+            console.log(errors);
         },
     });
 
