@@ -103,6 +103,7 @@
                 remote: 'Login already exists'
             }
         },
+        focusWrongField: true,
         submitHandler: function (form, values, ajax) {
             console.log(values)
             ajax({
@@ -114,6 +115,9 @@
                     console.log(response);
                 }
             });
+        },
+        invalidFormCallback: function (errors) {
+            console.log(errors);
         },
     });
 </script>

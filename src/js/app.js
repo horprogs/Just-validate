@@ -101,8 +101,11 @@
             : document.querySelectorAll('.just-validate-tooltip-container');
         this.bindHandlerKeyup = this.handlerKeyup.bind(this);
         this.submitHandler = this.options.submitHandler || undefined;
+        this.invalidFormCallback =
+            this.options.invalidFormCallback || undefined;
         this.promisesRemote = [];
         this.isValidationSuccess = false;
+        this.focusWrongField = this.options.focusWrongField || false;
         this.REGEXP = {
             // eslint-disable-next-line max-len
             email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -159,8 +162,9 @@
             remote: 'Email already exists',
             strength:
                 'Password must contents at least one uppercase letter, one lowercase letter and one number',
-            function: 'Function returned false'
+            function: 'Function returned false',
         },
+
         /**
          * Keyup handler
          * @param ev
@@ -214,6 +218,24 @@
             return result;
         },
 
+        validationFailed: function() {
+            if (this.invalidFormCallback) {
+                this.invalidFormCallback(this.result);
+            }
+
+            const $firstErrorField = document.querySelector(
+                '.js-validate-error-field'
+            );
+
+            if (
+                this.focusWrongField &&
+                $firstErrorField &&
+                $firstErrorField.focus
+            ) {
+                $firstErrorField.focus();
+            }
+        },
+
         validationSuccess: function() {
             if (Object.keys(this.result).length === 0) {
                 this.isValidationSuccess = false;
@@ -238,6 +260,8 @@
                 if (!this.promisesRemote.length) {
                     if (this.isValidationSuccess) {
                         this.validationSuccess();
+                    } else {
+                        this.validationFailed();
                     }
                     return;
                 }
@@ -247,6 +271,8 @@
 
                     if (this.isValidationSuccess) {
                         this.validationSuccess();
+                    } else {
+                        this.validationFailed();
                     }
                 });
             });
@@ -549,15 +575,19 @@
             for (let rule in rules) {
                 let ruleValue = rules[rule];
 
-                if (rule !== RULE_REQUIRED && rule !== RULE_FUNCTION && value == '') {
+                if (
+                    rule !== RULE_REQUIRED &&
+                    rule !== RULE_FUNCTION &&
+                    value == ''
+                ) {
                     return;
                 }
                 switch (rule) {
-                    case RULE_FUNCTION:{
-                        if (typeof ruleValue !== 'function'){
+                    case RULE_FUNCTION: {
+                        if (typeof ruleValue !== 'function') {
                             break;
                         }
-                        if (ruleValue(name, value)){
+                        if (ruleValue(name, value)) {
                             break;
                         }
                         this.generateMessage(RULE_FUNCTION, name, ruleValue);

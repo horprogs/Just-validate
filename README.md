@@ -245,6 +245,10 @@ ajax({
 });
 ```
 
+There is a property `focusWrongField` (default false), which turns on focusing on the first incorrect input after submit.
+ 
+There is a method `invalidFormCallback`, which runs when validation failed. It takes one argument: object with errors messages.
+
 ### Tooltip
 
 You can show errors in the form of tooltips. <br>
@@ -355,6 +359,8 @@ new window.JustValidate('.js-form', {
             email: true,
         }
     },
+    
+    focusWrongField: true,
 
     submitHandler: function (form, values, ajax) {
         ajax({
@@ -370,6 +376,10 @@ new window.JustValidate('.js-form', {
             }
         });
     },
+    
+    invalidFormCallback: function (errors) {
+    		console.log(errors);
+    },
 });
 ```
 
@@ -382,6 +392,9 @@ Added tooltip style error
 Added feature for check required radio buttons
 ### 1.4.0
 Added feature to allow the user to provide their own validation function
+### 1.5.0
+Added feature for focus incorrect field after validation
+Added callback, when validation failed
 
 ## Contributing
 	* Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.

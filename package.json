@@ -1,9 +1,10 @@
 {
   "name": "just-validate",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.",
   "main": "gulpfile.js",
   "scripts": {
+    "watch": "gulp",
     "build": "gulp build",
     "lint-md": "remark .",
     "semantic-release": "semantic-release"
