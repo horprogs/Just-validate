@@ -139,11 +139,7 @@ The following example will only validate input of a field if it is "hi"
 
 ```js
 function: (name, value) => {
-    if (name === 'hi') {
-        return true;
-    } else {
-        return false;
-    };
+    return (name === 'hi');
 }
 ```
 
