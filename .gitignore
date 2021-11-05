@@ -2,5 +2,4 @@ node_modules
 .idea
 .tmp
 app.yaml
-package-lock.json
-yarn.lock
+yarn-error.log

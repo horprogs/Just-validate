@@ -86,6 +86,8 @@
 
 <script src="dist/js/just-validate.min.js"></script>
 
+<div id="app"></div>
+
 <script>
     new window.JustValidate('.js-form', {
         rules: {
@@ -120,7 +122,7 @@
                 }
             });
         },
-        
+
         invalidFormCallback: function (errors) {
             console.log(errors);
         },

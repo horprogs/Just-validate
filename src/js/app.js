@@ -1,4 +1,3 @@
-/* global Promise */
 (function(window) {
     'use strict';
 
@@ -295,12 +294,12 @@
         },
 
         isEmpty: function(val) {
-            let newVal = val;
-            if (val.trim) {
-                newVal = val.trim();
-            }
-
-            return !newVal;
+            // let newVal = val;
+            // if (val.trim) {
+            //     newVal = val.trim();
+            // }
+            //
+            // return !newVal;
         },
 
         checkLengthMax: function(text, max) {
