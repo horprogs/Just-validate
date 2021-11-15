@@ -28,12 +28,12 @@ export interface FieldRuleInterface {
   value?: number | string;
 }
 
-export type FieldConfigInterface = GlobalConfigInterface;
+export interface FieldConfigInterface extends Partial<GlobalConfigInterface> {}
 
 export interface StateValueInterface {
   rules: FieldRuleInterface[];
   value?: string;
-  elem: Element;
+  elem: HTMLElement;
   isValid?: boolean;
   isDirty: boolean;
   errorMessage?: string;

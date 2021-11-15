@@ -21,12 +21,12 @@ import { getDefaultMessage } from './messages';
 
 const defaultGlobalConfig: GlobalConfigInterface = {
   errorFieldStyle: {
-    color: '#B81111',
+    color: '#b81111',
     border: '1px solid #B81111',
   },
   errorFieldCssClass: 'js-validate-error-field',
   errorLabelStyle: {
-    color: '#B81111',
+    color: '#b81111',
   },
   errorLabelCssClass: 'js-validate-error-label',
 };
@@ -41,10 +41,11 @@ class JustValidate {
   } = {};
   isValid = false;
   globalConfig: GlobalConfigInterface;
+  $errorLabels: HTMLDivElement[] = [];
 
   constructor(
     form: string | Element,
-    globalConfig: GlobalConfigInterface = defaultGlobalConfig
+    globalConfig?: Partial<GlobalConfigInterface>
   ) {
     if (typeof form === 'string') {
       const elem = document.querySelector(form);
@@ -63,7 +64,7 @@ class JustValidate {
       );
     }
 
-    this.globalConfig = globalConfig;
+    this.globalConfig = { ...defaultGlobalConfig, ...globalConfig };
   }
 
   getErrorMessage(fieldRule: FieldRuleInterface) {
@@ -78,13 +79,18 @@ class JustValidate {
     this.fields[field].errorMessage = this.getErrorMessage(fieldRule);
   }
 
+  setValid(field: string) {
+    this.fields[field].isValid = true;
+  }
+
   validateRule(field: string, elem: Element, fieldRule: FieldRuleInterface) {
     const ruleValue = fieldRule.value;
-    console.log(field, elem.value, ruleValue);
     switch (fieldRule.rule) {
       case Rules.Required: {
         if (isEmpty(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -92,6 +98,8 @@ class JustValidate {
       case Rules.Email: {
         if (!isEmail(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -106,6 +114,8 @@ class JustValidate {
 
         if (isMaxLength(elem.value, ruleValue)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -120,6 +130,8 @@ class JustValidate {
 
         if (isMinLength(elem.value, ruleValue)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -127,6 +139,8 @@ class JustValidate {
       case Rules.Password: {
         if (!isPassword(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -134,6 +148,8 @@ class JustValidate {
       case Rules.StrongPassword: {
         if (!isStrongPassword(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -141,6 +157,8 @@ class JustValidate {
       case Rules.Number: {
         if (!isNumber(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -166,6 +184,8 @@ class JustValidate {
 
         if (Number.isNaN(num) || isMaxNumber(num, numValue)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -191,6 +211,8 @@ class JustValidate {
 
         if (Number.isNaN(num) || isMinNumber(num, numValue)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
         break;
       }
@@ -223,6 +245,8 @@ class JustValidate {
 
         if (!regexp.test(elem.value)) {
           this.setInvalid(field, fieldRule);
+        } else {
+          this.setValid(field);
         }
 
         break;
@@ -254,23 +278,25 @@ class JustValidate {
         if (!result) {
           this.setInvalid(field, fieldRule);
           break;
+        } else {
+          this.setValid(field);
         }
       }
     }
   }
 
-  validateItem(field: string, elem: Element, item: StateValueInterface) {
-    item.rules.forEach((rule) => {
-      this.validateRule(field, elem, rule);
+  validateField(fieldName: string, field: StateValueInterface) {
+    field.rules.forEach((rule) => {
+      this.validateRule(fieldName, field.elem, rule);
     });
   }
 
   validate() {
-    Object.keys(this.fields).forEach((field) => {
-      const item = this.fields[field];
-
-      this.validateItem(field, item.elem, item);
+    Object.keys(this.fields).forEach((fieldName) => {
+      const field = this.fields[fieldName];
+      this.validateField(fieldName, field);
     });
+    this.renderErrors();
   }
 
   setForm(form: Element) {
@@ -282,16 +308,26 @@ class JustValidate {
     });
   }
 
-  handlerKeyup(ev: Event) {
+  handlerKeyup = (ev: Event) => {
     const { value } = ev.target;
-  }
+
+    for (const fieldName in this.fields) {
+      const field = this.fields[fieldName];
+
+      if (field.elem === ev.target) {
+        this.validateField(fieldName, field);
+        this.renderErrors();
+        break;
+      }
+    }
+  };
 
   addListener(elem: Element) {
-    elem.addEventListener('keyup', this.handlerKeyup);
+    elem.addEventListener('change', this.handlerKeyup);
   }
 
   removeListener(elem: Element) {
-    elem.removeEventListener('keyup', this.handlerKeyup);
+    elem.removeEventListener('change', this.handlerKeyup);
   }
 
   addField(
@@ -358,16 +394,21 @@ class JustValidate {
   }
 
   clearErrors() {
-    let $elems = document.querySelectorAll('.js-validate-error-label');
-    for (let i = 0, len = $elems.length; i < len; ++i) {
-      $elems[i].remove();
-    }
+    this.$errorLabels.forEach((item) => item.remove());
 
-    $elems = document.querySelectorAll('.js-validate-error-field');
-    for (let i = 0, len = $elems.length; i < len; ++i) {
-      $elems[i].classList.remove('js-validate-error-field');
-      $elems[i].style.border = '';
-      $elems[i].style.color = '';
+    for (const fieldName in this.fields) {
+      const field = this.fields[fieldName];
+
+      if (!field.isValid) {
+        continue;
+      }
+
+      const style =
+        field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
+
+      Object.keys(style).forEach((key) => {
+        field.elem.style[key] = '';
+      });
     }
   }
 
@@ -400,10 +441,10 @@ class JustValidate {
     this.unlockForm();
 
     this.isValid = false;
-    if (Object.keys(this.errors).length === 0) {
-      this.isValid = true;
-      return;
-    }
+    // if (Object.keys(this.errors).length === 0) {
+    //   this.isValid = true;
+    //   return;
+    // }
 
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
@@ -412,8 +453,12 @@ class JustValidate {
         continue;
       }
 
-      field.elem.style =
-        field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
+      Object.assign(
+        field.elem.style,
+        field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle
+      );
+
+      console.log(field.elem, this.globalConfig);
 
       field.elem.classList.add(
         field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
@@ -421,12 +466,17 @@ class JustValidate {
 
       const $errorLabel = document.createElement('div');
       $errorLabel.innerHTML = field.errorMessage!;
-      $errorLabel.style =
-        field.config?.errorLabelStyle || this.globalConfig.errorLabelStyle;
+
+      Object.assign(
+        $errorLabel.style,
+        field.config?.errorLabelStyle || this.globalConfig.errorLabelStyle
+      );
 
       $errorLabel.classList.add(
         field.config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
       );
+
+      this.$errorLabels.push($errorLabel);
 
       if (field.elem.type === 'checkbox' || field.elem.type === 'radio') {
         const $label = document.querySelector(

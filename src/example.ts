@@ -2,11 +2,7 @@ import JustValidate from './main';
 import { Rules } from './interfaces';
 
 const validation = new JustValidate('#form', {
-  errorStyle: {
-    color: 'red',
-    fontSize: 14,
-  },
-  errorCssClass: 'class-error',
+  errorFieldCssClass: 'class-error',
 });
 
 const fetch = () =>
@@ -33,25 +29,29 @@ validation
     '#email',
     [
       {
-        rule: 'required',
+        rule: 'required' as Rules,
         errorMessage: 'Field is required!',
       },
       {
-        rule: 'email',
+        rule: 'email' as Rules,
         errorMessage: 'Email is wrong!',
       },
     ],
     {
-      errorStyle: {
-        color: 'blue',
-        fontWeight: 700,
+      errorLabelStyle: {
+        color: 'red',
+        fontWeight: '700',
       },
-      errorCssClass: 'custom-class-error',
+      errorLabelCssClass: 'label-custom-class-error',
+      errorFieldStyle: {
+        border: '1px solid red',
+      },
+      errorFieldCssClass: 'field-custom-class-error',
     }
   )
   .addField('#password', [
     {
-      rule: 'required',
+      rule: 'required' as Rules,
     },
     {
       validator: (value, context) => {
