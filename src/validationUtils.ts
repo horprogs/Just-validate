@@ -5,7 +5,7 @@ const PASSWORD_REGEXP = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const STRONG_PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-export const isEmpty = (value: string) => {
+export const isEmpty = (value: string | boolean) => {
   let newVal = value;
 
   if (typeof value === 'string') {

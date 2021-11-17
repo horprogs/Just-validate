@@ -1,71 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <style>
-    .no-float {
-      float: none;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <style>
+      .no-float {
+        float: none;
+      }
 
-    .mt30 {
-      margin-top: 30px;
-    }
+      .mt30 {
+        margin-top: 30px;
+      }
 
-    .js-validate-error-label {
-      margin-top: 5px;
-    }
+      .js-validate-error-label {
+        margin-top: 5px;
+      }
 
-    .form__radio, .form__checkbox {
-      margin-right: 7px !important;
-    }
-  </style>
-</head>
-<body class="container">
+      .form__radio,
+      .form__checkbox {
+        margin-right: 7px !important;
+      }
+    </style>
+  </head>
+  <body class="container">
+    <form action="#" class="js-form" id="form" autocomplete="off">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="name">Enter your name</label>
+          <input
+            type="text"
+            class="form__input form-control"
+            placeholder="Enter your name"
+            autocomplete="off"
+            name="name"
+            id="name"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="email">Enter your email</label>
+          <input
+            type="email"
+            class="form__input form-control"
+            placeholder="Enter your email"
+            autocomplete="off"
+            name="email"
+            id="email"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Enter your password</label>
+        <input
+          type="password"
+          class="form__input form-control"
+          placeholder="Enter your password"
+          autocomplete="off"
+          name="password"
+          id="password"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Repeat your password</label>
+        <input
+          type="password"
+          class="form__input form-control"
+          placeholder="Repeat your password"
+          autocomplete="off"
+          name="repeat-password"
+          id="repeat-password"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Enter your text</label>
+        <textarea
+          name="msg"
+          cols="30"
+          rows="10"
+          class="form__textarea form-control"
+          id="text"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <input
+          type="checkbox"
+          id="checkbox"
+          class="form__checkbox"
+          checked
+        /><label for="checkbox">I agree</label>
+      </div>
+      <div class="form-group" id="checkbox-group">
+        <label
+          ><input
+            type="checkbox"
+            name="checkbox-group-fruit"
+            id="checkbox1"
+            class="form__checkbox"
+            checked
+          />Apple</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            name="checkbox-group-fruit"
+            id="checkbox2"
+            class="form__checkbox"
+            checked
+          />Banana</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            name="checkbox-group-fruit"
+            id="checkbox3"
+            class="form__checkbox"
+            checked
+          />Orange</label
+        >
+      </div>
+      <div class="form-group" id="radio-group">
+        <label
+          ><input type="radio" name="radio" class="form__radio" />Male</label
+        >
+        <br />
+        <label
+          ><input type="radio" name="radio" class="form__radio" />Female</label
+        >
+      </div>
+      <button class="form__btn btn btn-primary">SUBMIT</button>
+    </form>
 
-<form action="#" class="js-form" id="form" autocomplete="off">
-  <div class="row">
-    <div class="form-group col-md-6">
-      <label for="name">Enter your name</label>
-      <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" name="name" id="name">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="email">Enter your email</label>
-      <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" name="email" id="email">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="password">Enter your password</label>
-    <input type="password" class="form__input form-control" placeholder="Enter your password" autocomplete="off" name="password" id="password">
-  </div>
-  <div class="form-group">
-    <label for="password">Repeat your password</label>
-    <input type="password" class="form__input form-control" placeholder="Repeat your password" autocomplete="off" name="repeat-password" id="repeat-password">
-  </div>
-  <div class="form-group">
-    <label for="password">Enter your text</label>
-    <textarea name="msg" cols="30" rows="10" class="form__textarea form-control" id="text"></textarea>
-  </div>
-  <div class="form-group">
-    <input type="checkbox" id="checkbox" class="form__checkbox" checked><label for="checkbox">I agree</label>
-  </div>
-  <div class="form-group">
-    <label><input type="checkbox" id="checkbox1" class="form__checkbox" checked>I agree</label>
-  </div>
-  <div class="form-group" id="radio-group">
-    <label><input type="radio" name="radio" class="form__radio">Male</label>
-    <br>
-    <label><input type="radio" name="radio" class="form__radio">Female</label>
-  </div>
-  <button class="form__btn btn btn-primary">SUBMIT</button>
-</form>
-
-
-<script type="module" src="main.ts"></script>
-<script type="module" src="example.ts"></script>
-
-
-</body>
+    <script type="module" src="main.ts"></script>
+    <script type="module" src="example.ts"></script>
+  </body>
 </html>
-

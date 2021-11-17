@@ -55,6 +55,10 @@ validation
     },
     {
       validator: (value, context) => {
+        if (typeof value !== 'string') {
+          return false;
+        }
+
         if (value.length > 12 && value[0] === '!') {
           return true;
         }
@@ -62,4 +66,11 @@ validation
         return false;
       },
     },
-  ]);
+  ])
+  .addField('#checkbox', [
+    {
+      rule: 'required' as Rules,
+    },
+  ])
+  .addRequiredGroup('#checkbox-group', 'REQUIRED GROUP')
+  .addRequiredGroup('#radio-group');
