@@ -1,15 +1,41 @@
 import JustValidate from './main';
 import { Rules } from './interfaces';
 
-const validation = new JustValidate('#form', {
-  errorFieldCssClass: 'class-error',
+let currentLang = 'en';
+
+document.querySelector('#change-lang-btn')?.addEventListener('click', () => {
+  currentLang = currentLang === 'en' ? 'ru' : 'en';
+  validation.refresh();
+  validation.setCurrentLocale(currentLang);
 });
 
-const fetch = () =>
+const validation = new JustValidate(
+  '#form',
+  {
+    errorFieldCssClass: 'class-error',
+  },
+  [
+    {
+      key: 'Name is too short',
+      dict: {
+        ru: 'Имя слишком короткое',
+      },
+    },
+    {
+      key: 'Field is required',
+      dict: {
+        ru: 'Обязательное поле',
+      },
+    },
+  ]
+);
+
+const fetch = (time = 1000, func?: () => boolean) =>
   new Promise<boolean>((resolve) => {
     setTimeout(() => {
-      resolve(true);
-    }, 1000);
+      console.log('Fetch returns response');
+      resolve(func?.() || false);
+    }, time);
   });
 
 validation
@@ -21,7 +47,6 @@ validation
     },
     {
       rule: Rules.MaxLength,
-      errorMessage: 'Name is too long',
       value: 15,
     },
   ])
@@ -30,7 +55,7 @@ validation
     [
       {
         rule: 'required' as Rules,
-        errorMessage: 'Field is required!',
+        errorMessage: 'Field is required',
       },
       {
         rule: 'email' as Rules,
@@ -67,7 +92,22 @@ validation
       },
     },
   ])
+  .addField('#text', [
+    {
+      validator: (value) => {
+        return () => fetch(0, () => !!value);
+      },
+    },
+  ])
   .addField('#checkbox', [
+    {
+      rule: 'required' as Rules,
+      validator: (value) => {
+        return () => fetch(0, () => !!value);
+      },
+    },
+  ])
+  .addField('#pet-select', [
     {
       rule: 'required' as Rules,
     },

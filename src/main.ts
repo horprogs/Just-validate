@@ -22,8 +22,10 @@ import {
   Rules,
   FieldInterface,
   FieldsInterface,
+  LocaleInterface,
 } from './interfaces';
 import { getDefaultFieldMessage, getDefaultGroupMessage } from './messages';
+import { isPromise } from './helperUtils';
 
 const defaultGlobalConfig: GlobalConfigInterface = {
   errorFieldStyle: {
@@ -35,10 +37,11 @@ const defaultGlobalConfig: GlobalConfigInterface = {
     color: '#b81111',
   },
   errorLabelCssClass: 'js-validate-error-label',
+  showTooltips: true,
 };
 
 class JustValidate {
-  $form: Element | null = null;
+  form: Element | null = null;
   fields: FieldsInterface = {};
   groupFields: GroupFieldsInterface = {};
   errors: {
@@ -48,14 +51,33 @@ class JustValidate {
   } = {};
   isValid = false;
   isSubmitted = false;
-  globalConfig: GlobalConfigInterface;
-  $errorLabels: HTMLDivElement[] = [];
+  globalConfig: GlobalConfigInterface = defaultGlobalConfig;
+  errorLabels: HTMLDivElement[] = [];
   eventListeners: EventListenerInterface[] = [];
+  dictLocale: LocaleInterface[] = [];
+  currentLocale?: string;
 
   constructor(
     form: string | Element,
-    globalConfig?: Partial<GlobalConfigInterface>
+    globalConfig: Partial<GlobalConfigInterface>,
+    dictLocale: LocaleInterface[]
   ) {
+    this.initialize(form, globalConfig, dictLocale);
+  }
+
+  initialize(
+    form: string | Element,
+    globalConfig?: Partial<GlobalConfigInterface>,
+    dictLocale?: LocaleInterface[]
+  ) {
+    this.form = null;
+    this.errors = {};
+    this.isValid = false;
+    this.isSubmitted = false;
+    this.globalConfig = defaultGlobalConfig;
+    this.errorLabels = [];
+    this.eventListeners = [];
+
     if (typeof form === 'string') {
       const elem = document.querySelector(form);
 
@@ -74,26 +96,41 @@ class JustValidate {
     }
 
     this.globalConfig = { ...defaultGlobalConfig, ...globalConfig };
+
+    if (dictLocale) {
+      this.dictLocale = dictLocale;
+    }
+  }
+
+  getLocalisedString(str?: string) {
+    if (!this.currentLocale || !this.dictLocale.length) {
+      return str;
+    }
+
+    const localisedStr = this.dictLocale.find((item) => item.key === str)?.dict[
+      this.currentLocale
+    ];
+
+    return localisedStr || str;
   }
 
   getFieldErrorMessage(fieldRule: FieldRuleInterface) {
     return (
-      fieldRule.errorMessage ||
+      this.getLocalisedString(fieldRule.errorMessage) ||
       getDefaultFieldMessage(fieldRule.rule, fieldRule.value)
     );
   }
 
   getGroupErrorMessage(groupRule: GroupRuleInterface) {
-    return groupRule.errorMessage || getDefaultGroupMessage(groupRule.rule);
+    return (
+      this.getLocalisedString(groupRule.errorMessage) ||
+      getDefaultGroupMessage(groupRule.rule)
+    );
   }
 
   setFieldInvalid(field: string, fieldRule: FieldRuleInterface) {
     this.fields[field].isValid = false;
     this.fields[field].errorMessage = this.getFieldErrorMessage(fieldRule);
-  }
-
-  setFieldValid(field: string) {
-    this.fields[field].isValid = true;
   }
 
   setGroupInvalid(groupName: string, groupRule: GroupRuleInterface) {
@@ -121,7 +158,7 @@ class JustValidate {
     type: GroupFieldType,
     elems: HTMLInputElement[],
     groupRule: GroupRuleInterface
-  ) {
+  ): Promise<any> | void {
     switch (groupRule.rule) {
       case GroupRules.Required: {
         if (type === 'radio' || type === 'checkbox') {
@@ -138,8 +175,9 @@ class JustValidate {
   validateFieldRule(
     field: string,
     elem: HTMLInputElement,
-    fieldRule: FieldRuleInterface
-  ) {
+    fieldRule: FieldRuleInterface,
+    afterInputChanged = false
+  ): Promise<any> | void {
     const ruleValue = fieldRule.value;
     const elemValue = this.getElemValue(elem);
 
@@ -147,8 +185,6 @@ class JustValidate {
       case Rules.Required: {
         if (isEmpty(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -161,8 +197,6 @@ class JustValidate {
 
         if (!isEmail(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -187,10 +221,10 @@ class JustValidate {
           break;
         }
 
+        console.log(elemValue, ruleValue, isMaxLength(elemValue, ruleValue));
+
         if (isMaxLength(elemValue, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -217,8 +251,6 @@ class JustValidate {
 
         if (isMinLength(elemValue, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -231,8 +263,6 @@ class JustValidate {
 
         if (!isPassword(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -245,8 +275,6 @@ class JustValidate {
 
         if (!isStrongPassword(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -259,8 +287,6 @@ class JustValidate {
 
         if (!isNumber(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -289,8 +315,6 @@ class JustValidate {
 
         if (Number.isNaN(num) || isMaxNumber(num, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -319,8 +343,6 @@ class JustValidate {
 
         if (Number.isNaN(num) || isMinNumber(num, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
         break;
       }
@@ -358,8 +380,6 @@ class JustValidate {
 
         if (!regexp.test(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
-        } else {
-          this.setFieldValid(field);
         }
 
         break;
@@ -382,52 +402,121 @@ class JustValidate {
 
         const result = fieldRule.validator(elemValue, this.fields);
 
-        if (typeof result !== 'boolean') {
+        if (typeof result !== 'boolean' && typeof result !== 'function') {
           console.error(
-            `Validator return value for [${field}] field should be boolean. It will be cast to boolean.`
+            `Validator return value for [${field}] field should be boolean or function. It will be cast to boolean.`
           );
+        }
+
+        // we should not call async custom validator on every input change
+        if (typeof result === 'function' && !afterInputChanged) {
+          const promise = result();
+
+          if (!isPromise(promise)) {
+            console.error(
+              `Validator function for custom rule for [${field}] field should return a Promise. Validation will be skipped for this rule.`
+            );
+            return;
+          }
+
+          return promise
+            .then((resp) => {
+              if (!resp) {
+                this.setFieldInvalid(field, fieldRule);
+              }
+            })
+            .catch(() => {
+              this.setFieldInvalid(field, fieldRule);
+            });
         }
 
         if (!result) {
           this.setFieldInvalid(field, fieldRule);
-          break;
-        } else {
-          this.setFieldValid(field);
         }
       }
     }
   }
 
-  validateField(fieldName: string, field: FieldInterface) {
-    field.rules.forEach((rule) => {
-      this.validateFieldRule(fieldName, field.elem, rule);
+  validateField(
+    fieldName: string,
+    field: FieldInterface,
+    afterInputChanged = false
+  ): Promise<any> | void {
+    field.isValid = true;
+    const promises: Promise<any>[] = [];
+    [...field.rules].reverse().forEach((rule) => {
+      const res = this.validateFieldRule(
+        fieldName,
+        field.elem,
+        rule,
+        afterInputChanged
+      );
+
+      if (isPromise(res)) {
+        promises.push(res as Promise<any>);
+      }
     });
+
+    return Promise.allSettled(promises);
   }
 
-  validateGroup(groupName: string, group: GroupFieldInterface) {
-    group.rules.forEach((rule) => {
-      this.validateGroupRule(groupName, group.type, group.elems, rule);
+  validateGroup(
+    groupName: string,
+    group: GroupFieldInterface
+  ): Promise<any> | void {
+    const promises: Promise<any>[] = [];
+    [...group.rules].reverse().forEach((rule) => {
+      const res = this.validateGroupRule(
+        groupName,
+        group.type,
+        group.elems,
+        rule
+      );
+
+      if (isPromise(res)) {
+        promises.push(res as Promise<any>);
+      }
     });
+
+    return Promise.allSettled(promises);
   }
 
-  validate() {
+  validate(): Promise<any> | void {
+    const promises: Promise<any>[] = [];
+
     Object.keys(this.fields).forEach((fieldName) => {
       const field = this.fields[fieldName];
-      this.validateField(fieldName, field);
+      const promise = this.validateField(fieldName, field);
+
+      if (isPromise(promise)) {
+        promises.push(promise as Promise<any>);
+      }
     });
 
     Object.keys(this.groupFields).forEach((groupName) => {
       const group = this.groupFields[groupName];
-      this.validateGroup(groupName, group);
+      const promise = this.validateGroup(groupName, group);
+
+      if (isPromise(promise)) {
+        promises.push(promise as Promise<any>);
+      }
     });
 
-    this.renderErrors();
+    console.log(promises.length);
+
+    if (promises.length) {
+      Promise.allSettled(promises).then(() => {
+        this.renderErrors();
+      });
+    } else {
+      this.renderErrors();
+    }
   }
 
   setForm(form: Element) {
-    this.$form = form;
-    this.$form.setAttribute('novalidate', 'novalidate');
-    this.$form.addEventListener('submit', (ev) => {
+    this.form = form;
+    this.form.setAttribute('novalidate', 'novalidate');
+    this.form.addEventListener('submit', (ev) => {
       ev.preventDefault();
       this.isSubmitted = true;
       this.validate();
@@ -452,7 +541,7 @@ class JustValidate {
       return;
     }
 
-    this.validateField(currentFieldName, currentField);
+    this.validateField(currentFieldName, currentField, true);
   };
 
   handleGroupChange = (target: HTMLInputElement) => {
@@ -557,16 +646,12 @@ class JustValidate {
       );
     }
 
-    const $inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll(
-      'input'
-    );
+    const inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll('input');
 
-    const isRadio = Array.from($inputs).every(
-      ($input) => $input.type === 'radio'
-    );
+    const isRadio = Array.from(inputs).every((input) => input.type === 'radio');
 
-    const isCheckbox = Array.from($inputs).every(
-      ($input) => $input.type === 'checkbox'
+    const isCheckbox = Array.from(inputs).every(
+      (input) => input.type === 'checkbox'
     );
 
     if (!isRadio && !isCheckbox) {
@@ -581,14 +666,14 @@ class JustValidate {
         },
       ],
       groupElem: elem,
-      elems: Array.from($inputs),
+      elems: Array.from(inputs),
       type: isRadio ? 'radio' : 'checkbox',
       isDirty: false,
       isValid: undefined,
       config,
     };
 
-    $inputs.forEach((input) => {
+    inputs.forEach((input) => {
       this.setListeners(input);
     });
 
@@ -597,11 +682,8 @@ class JustValidate {
 
   setListeners(elem: HTMLInputElement) {
     switch (elem.type) {
-      case 'checkbox': {
-        this.addListener('change', elem);
-        break;
-      }
-
+      case 'checkbox':
+      case 'select-one':
       case 'radio': {
         this.addListener('change', elem);
         break;
@@ -630,14 +712,10 @@ class JustValidate {
   }
 
   clearErrors() {
-    this.$errorLabels.forEach((item) => item.remove());
+    this.errorLabels.forEach((item) => item.remove());
 
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
-
-      if (!field.isValid) {
-        continue;
-      }
 
       const style =
         field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
@@ -649,10 +727,6 @@ class JustValidate {
 
     for (const groupName in this.groupFields) {
       const group = this.groupFields[groupName];
-
-      if (!group.isValid) {
-        continue;
-      }
 
       const style =
         group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
@@ -666,26 +740,26 @@ class JustValidate {
   }
 
   lockForm() {
-    const $elems: NodeListOf<HTMLInputElement> = this.$form!.querySelectorAll(
+    const elems: NodeListOf<HTMLInputElement> = this.form!.querySelectorAll(
       'input, textarea, button, select'
     );
-    for (let i = 0, len = $elems.length; i < len; ++i) {
-      $elems[i].setAttribute('disabled', 'disabled');
-      $elems[i].style.pointerEvents = 'none';
-      $elems[i].style.webkitFilter = 'grayscale(100%)';
-      $elems[i].style.filter = 'grayscale(100%)';
+    for (let i = 0, len = elems.length; i < len; ++i) {
+      elems[i].setAttribute('disabled', 'disabled');
+      elems[i].style.pointerEvents = 'none';
+      elems[i].style.webkitFilter = 'grayscale(100%)';
+      elems[i].style.filter = 'grayscale(100%)';
     }
   }
 
   unlockForm() {
-    const $elems: NodeListOf<HTMLInputElement> = this.$form!.querySelectorAll(
+    const elems: NodeListOf<HTMLInputElement> = this.form!.querySelectorAll(
       'input, textarea, button, select'
     );
-    for (let i = 0, len = $elems.length; i < len; ++i) {
-      $elems[i].removeAttribute('disabled');
-      $elems[i].style.pointerEvents = '';
-      $elems[i].style.webkitFilter = '';
-      $elems[i].style.filter = '';
+    for (let i = 0, len = elems.length; i < len; ++i) {
+      elems[i].removeAttribute('disabled');
+      elems[i].style.pointerEvents = '';
+      elems[i].style.webkitFilter = '';
+      elems[i].style.filter = '';
     }
   }
 
@@ -697,10 +771,6 @@ class JustValidate {
     this.unlockForm();
 
     this.isValid = false;
-    // if (Object.keys(this.errors).length === 0) {
-    //   this.isValid = true;
-    //   return;
-    // }
 
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
@@ -718,41 +788,41 @@ class JustValidate {
         field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
       );
 
-      const $errorLabel = document.createElement('div');
-      $errorLabel.innerHTML = field.errorMessage!;
+      const errorLabel = document.createElement('div');
+      errorLabel.innerHTML = field.errorMessage!;
 
       Object.assign(
-        $errorLabel.style,
+        errorLabel.style,
         field.config?.errorLabelStyle || this.globalConfig.errorLabelStyle
       );
 
-      $errorLabel.classList.add(
+      errorLabel.classList.add(
         field.config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
       );
 
-      this.$errorLabels.push($errorLabel);
+      this.errorLabels.push(errorLabel);
 
       if (field.elem.type === 'checkbox' || field.elem.type === 'radio') {
-        const $label = document.querySelector(
+        const label = document.querySelector(
           `label[for="${field.elem.getAttribute('id')}"]`
         );
 
         if (field.elem.parentElement?.tagName?.toLowerCase() === 'label') {
           field.elem.parentElement?.parentElement?.insertBefore(
-            $errorLabel,
+            errorLabel,
             null
           );
-        } else if ($label) {
-          $label.parentElement?.insertBefore($errorLabel, $label.nextSibling);
+        } else if (label) {
+          label.parentElement?.insertBefore(errorLabel, label.nextSibling);
         } else {
           field.elem.parentElement?.insertBefore(
-            $errorLabel,
+            errorLabel,
             field.elem.nextSibling
           );
         }
       } else {
         field.elem.parentElement?.insertBefore(
-          $errorLabel,
+          errorLabel,
           field.elem.nextSibling
         );
       }
@@ -776,22 +846,22 @@ class JustValidate {
         );
       });
 
-      const $errorLabel = document.createElement('div');
-      $errorLabel.innerHTML = group.errorMessage!;
+      const errorLabel = document.createElement('div');
+      errorLabel.innerHTML = group.errorMessage!;
 
       Object.assign(
-        $errorLabel.style,
+        errorLabel.style,
         group.config?.errorLabelStyle || this.globalConfig.errorLabelStyle
       );
 
-      $errorLabel.classList.add(
+      errorLabel.classList.add(
         group.config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
       );
 
-      this.$errorLabels.push($errorLabel);
+      this.errorLabels.push(errorLabel);
 
       group.groupElem.parentElement?.insertBefore(
-        $errorLabel,
+        errorLabel,
         group.groupElem.nextSibling
       );
     }
@@ -809,6 +879,33 @@ class JustValidate {
     this.eventListeners.forEach((event) => {
       event.elem.removeEventListener(event.type, event.func);
     });
+  }
+
+  refresh() {
+    this.clearErrors();
+    this.unlockForm();
+    this.destroy();
+
+    if (!this.form) {
+      console.error('Cannot initialize the library! Form is not defined');
+    } else {
+      this.initialize(this.form, this.globalConfig);
+
+      Object.keys(this.fields).forEach((key) => {
+        this.addField(key, [...this.fields[key].rules], {
+          ...this.fields[key].config,
+        });
+      });
+    }
+  }
+
+  setCurrentLocale(locale: string) {
+    if (typeof locale !== 'string') {
+      console.error('Current locale should be a string');
+      return;
+    }
+
+    this.currentLocale = locale;
   }
 }
 

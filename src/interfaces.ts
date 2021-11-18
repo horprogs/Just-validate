@@ -3,6 +3,7 @@ export interface GlobalConfigInterface {
   errorFieldCssClass: string;
   errorLabelStyle: Partial<CSSStyleDeclaration>;
   errorLabelCssClass: string;
+  showTooltips: boolean;
 }
 
 export enum Rules {
@@ -22,13 +23,15 @@ export enum GroupRules {
   Required = 'required',
 }
 
+type ValidatorReturn = boolean | (() => Promise<boolean>);
+
 export interface FieldRuleInterface {
   rule?: Rules;
   errorMessage?: string;
   validator?: (
     value: string | boolean,
     context: FieldsInterface
-  ) => boolean | Promise<boolean>;
+  ) => ValidatorReturn;
   value?: number | string;
 }
 
@@ -74,4 +77,13 @@ export interface EventListenerInterface {
   type: string;
   elem: HTMLInputElement;
   func: (ev: Event) => void;
+}
+
+export interface LocaleDictInterface {
+  [localeKey: string]: string;
+}
+
+export interface LocaleInterface {
+  key: string;
+  dict: LocaleDictInterface;
 }

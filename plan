@@ -1,30 +1,29 @@
 Form validation
 
-1. Easiest way to use with ready HTML layout
-(attributes, selectors)
++ 1. Easiest way to use with ready HTML layout
+  (attributes, selectors)
 
 2. Use as a module and globally
 
-3. Validate fields by plenty rules
-Chaining when addField
-Matching passwords
++ 3. Validate fields by plenty rules
+  Chaining when addField
 
-4. Revalidate on every change (text input, select change)
++ 4. Revalidate on every change (text input, select change)
 
-5. Checkbox group
++ 5. Checkbox group
 
-6. Something wrong with select https://github.com/horprogs/Just-validate/issues/24
++ 6. Something wrong with select https://github.com/horprogs/Just-validate/issues/24
 
-7. Validation considering globalization
-(currency, date, translation)
++ 7. Validation considering globalization
+  (translation)
 
-8. Custom styles, classes for validation error
++ 8. Custom styles, classes for validation error
 
-9. Remove ajax handler (?)
++ 9. Remove ajax handler (?)
 
-10. User-friendly config
++ 10. User-friendly config
 
-11. Easily customizable and be able to define own vaidation function
++ 11. Easily customizable and be able to define own vaidation function
 
 12. Add external interface
 Methods: validate, reset, submit, refresh, focus
@@ -33,13 +32,14 @@ Properties: rules, state
 
 13. Good test coverage
 
-14. Warning in the console if user doing something wrong
++ 14. Warning in the console if user doing something wrong
 
-15. TypeScript
++ 15. TypeScript
 
-16. Global and local settings for fields
++ 16. Global and local settings for fields
 
 17. Tooltips
 
 18. Docs, examples
 Regexp examples https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+Example with custom validation - the same passwords

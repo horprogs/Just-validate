@@ -197,7 +197,7 @@
     },
 
     getElementsRealValue: function() {
-      let $elems = this.$form.querySelectorAll('*'),
+      let $elems = this.form.querySelectorAll('*'),
         name,
         result = {};
       for (let i = 0, len = $elems.length; i < len; ++i) {
@@ -232,18 +232,18 @@
         this.isValidationSuccess = false;
         if (this.submitHandler) {
           let realValues = this.getElementsRealValue();
-          this.submitHandler(this.$form, realValues, ajax);
+          this.submitHandler(this.form, realValues, ajax);
           return;
         }
 
-        this.$form.submit();
+        this.form.submit();
       }
     },
 
     setForm: function(form) {
       this.$form = form;
-      this.$form.setAttribute('novalidate', 'novalidate');
-      this.$form.addEventListener('submit', (ev) => {
+      this.form.setAttribute('novalidate', 'novalidate');
+      this.form.addEventListener('submit', (ev) => {
         ev.preventDefault();
         this.result = [];
         this.getElements();
@@ -307,7 +307,7 @@
     },
 
     getElements: function() {
-      let elems = this.$form.querySelectorAll('[data-validate-field]');
+      let elems = this.form.querySelectorAll('[data-validate-field]');
       this.elements = [];
 
       for (let i = 0, len = elems.length; i < len; ++i) {
@@ -709,7 +709,7 @@
               method = ruleValue.method,
               sendParam = ruleValue.sendParam;
 
-            let $elem = this.$form.querySelector(
+            let $elem = this.form.querySelector(
               `input[data-validate-field="${name}"]`
             );
             this.setterEventListener(
@@ -761,7 +761,7 @@
 
       for (let item in this.result) {
         let message = this.result[item].message;
-        let $elems = this.$form.querySelectorAll(
+        let $elems = this.form.querySelectorAll(
           `[data-validate-field="${item}"]`
         );
 
@@ -815,7 +815,7 @@
     },
 
     lockForm: function() {
-      let $elems = this.$form.querySelectorAll(
+      let $elems = this.form.querySelectorAll(
         'input, textarea, button, select'
       );
       for (let i = 0, len = $elems.length; i < len; ++i) {
@@ -827,7 +827,7 @@
     },
 
     unlockForm: function() {
-      let $elems = this.$form.querySelectorAll(
+      let $elems = this.form.querySelectorAll(
         'input, textarea, button, select'
       );
       for (let i = 0, len = $elems.length; i < len; ++i) {
