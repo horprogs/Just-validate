@@ -3,7 +3,8 @@ export interface GlobalConfigInterface {
   errorFieldCssClass: string;
   errorLabelStyle: Partial<CSSStyleDeclaration>;
   errorLabelCssClass: string;
-  showTooltips: boolean;
+  focusInvalidField?: boolean;
+  tooltip?: TooltipConfigInterface;
 }
 
 export enum Rules {
@@ -17,6 +18,12 @@ export enum Rules {
   MinNumber = 'minNumber',
   StrongPassword = 'strongPassword',
   CustomRegexp = 'customRegexp',
+}
+
+export type TooltipPositionType = 'left' | 'top' | 'right' | 'bottom';
+
+export interface TooltipConfigInterface {
+  position: TooltipPositionType;
 }
 
 export enum GroupRules {
@@ -40,7 +47,17 @@ export interface GroupRuleInterface {
   errorMessage?: string;
 }
 
-export interface FieldConfigInterface extends Partial<GlobalConfigInterface> {}
+export interface FieldConfigInterface
+  extends Partial<
+    Pick<
+      GlobalConfigInterface,
+      | 'errorFieldStyle'
+      | 'errorFieldCssClass'
+      | 'errorLabelStyle'
+      | 'errorLabelCssClass'
+      | 'tooltip'
+    >
+  > {}
 
 export interface FieldInterface {
   rules: FieldRuleInterface[];
@@ -75,7 +92,7 @@ export interface GroupFieldsInterface {
 
 export interface EventListenerInterface {
   type: string;
-  elem: HTMLInputElement;
+  elem: HTMLInputElement | Document;
   func: (ev: Event) => void;
 }
 
@@ -86,4 +103,15 @@ export interface LocaleDictInterface {
 export interface LocaleInterface {
   key: string;
   dict: LocaleDictInterface;
+}
+
+export interface TooltipConfigInterface {
+  class?: string;
+  style?: Partial<CSSStyleDeclaration>;
+  fadeOutTime?: number;
+}
+
+export enum CustomStyleTagIds {
+  Label = 'label',
+  LabelArrow = 'labelArrow',
 }

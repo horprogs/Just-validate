@@ -341,41 +341,42 @@ new window.JustValidate('.js-form-1', {
 });
 ```
 #### Classic validation with custom submit form and ajax helper
+
 ```js
 new window.JustValidate('.js-form', {
-    rules: {
-        checkbox: {
-            required: true
-        },
-        checkbox2: {
-            required: true
-        },
-        email: {
-            required: true,
-            email: true,
-        }
-    },
-    
-    focusWrongField: true,
+ rules: {
+  checkbox: {
+   required: true
+  },
+  checkbox2: {
+   required: true
+  },
+  email: {
+   required: true,
+   email: true,
+  }
+ },
 
-    submitHandler: function (form, values, ajax) {
-        ajax({
-            url: 'https://just-validate-api.herokuapp.com/submit',
-            method: 'POST',
-            data: values,
-            async: true,
-            callback: function (response) {
-                alert('AJAX submit successful! \nResponse from server:' + response)
-            },
-            error: function (response) {
-                alert('AJAX submit error! \nResponse from server:' + response)
-            }
-        });
-    },
-    
-    invalidFormCallback: function (errors) {
-    		console.log(errors);
-    },
+ focusInvalidField: true,
+
+ submitHandler: function(form, values, ajax) {
+  ajax({
+   url: 'https://just-validate-api.herokuapp.com/submit',
+   method: 'POST',
+   data: values,
+   async: true,
+   callback: function(response) {
+    alert('AJAX submit successful! \nResponse from server:' + response)
+   },
+   error: function(response) {
+    alert('AJAX submit error! \nResponse from server:' + response)
+   }
+  });
+ },
+
+ invalidFormCallback: function(errors) {
+  console.log(errors);
+ },
 });
 ```
 

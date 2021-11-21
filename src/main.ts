@@ -23,9 +23,13 @@ import {
   FieldInterface,
   FieldsInterface,
   LocaleInterface,
+  CustomStyleTagIds,
+  TooltipPositionType,
 } from './interfaces';
 import { getDefaultFieldMessage, getDefaultGroupMessage } from './messages';
 import { isPromise } from './helperUtils';
+import { errorLabelCss } from './inlineStyles';
+import { TOOLTIP_ARROW_HEIGHT } from './const';
 
 const defaultGlobalConfig: GlobalConfigInterface = {
   errorFieldStyle: {
@@ -37,7 +41,6 @@ const defaultGlobalConfig: GlobalConfigInterface = {
     color: '#b81111',
   },
   errorLabelCssClass: 'js-validate-error-label',
-  showTooltips: true,
 };
 
 class JustValidate {
@@ -56,6 +59,7 @@ class JustValidate {
   eventListeners: EventListenerInterface[] = [];
   dictLocale: LocaleInterface[] = [];
   currentLocale?: string;
+  customStyleTags: { [id: string]: HTMLStyleElement } = {};
 
   constructor(
     form: string | Element,
@@ -77,6 +81,7 @@ class JustValidate {
     this.globalConfig = defaultGlobalConfig;
     this.errorLabels = [];
     this.eventListeners = [];
+    this.customStyleTags = {};
 
     if (typeof form === 'string') {
       const elem = document.querySelector(form);
@@ -100,7 +105,27 @@ class JustValidate {
     if (dictLocale) {
       this.dictLocale = dictLocale;
     }
+
+    if (this.isTooltip()) {
+      const styleTag = document.createElement('style');
+      styleTag.textContent = errorLabelCss;
+
+      this.customStyleTags[CustomStyleTagIds.Label] = document.head.appendChild(
+        styleTag
+      );
+
+      document.addEventListener('click', this.handlerDocumentClick);
+      this.eventListeners.push({
+        type: 'click',
+        elem: document,
+        func: this.handlerDocumentClick,
+      });
+    }
   }
+
+  handlerDocumentClick = () => {
+    this.clearErrors();
+  };
 
   getLocalisedString(str?: string) {
     if (!this.currentLocale || !this.dictLocale.length) {
@@ -481,6 +506,16 @@ class JustValidate {
     return Promise.allSettled(promises);
   }
 
+  focusInvalidField() {
+    for (const fieldName in this.fields) {
+      const field = this.fields[fieldName];
+      if (this.globalConfig.focusInvalidField && !field.isValid) {
+        field.elem.focus();
+        break;
+      }
+    }
+  }
+
   validate(): Promise<any> | void {
     const promises: Promise<any>[] = [];
 
@@ -502,14 +537,14 @@ class JustValidate {
       }
     });
 
-    console.log(promises.length);
-
     if (promises.length) {
       Promise.allSettled(promises).then(() => {
         this.renderErrors();
+        this.focusInvalidField();
       });
     } else {
       this.renderErrors();
+      this.focusInvalidField();
     }
   }
 
@@ -573,7 +608,9 @@ class JustValidate {
     this.handleFieldChange(ev.target as HTMLInputElement);
     this.handleGroupChange(ev.target as HTMLInputElement);
 
-    this.renderErrors();
+    if (!this.isTooltip()) {
+      this.renderErrors();
+    }
   };
 
   addListener(type: string, elem: HTMLInputElement) {
@@ -739,6 +776,10 @@ class JustValidate {
     }
   }
 
+  isTooltip() {
+    return !!this.globalConfig.tooltip;
+  }
+
   lockForm() {
     const elems: NodeListOf<HTMLInputElement> = this.form!.querySelectorAll(
       'input, textarea, button, select'
@@ -763,6 +804,77 @@ class JustValidate {
     }
   }
 
+  renderTooltip(
+    elem: HTMLElement,
+    errorLabel: HTMLDivElement,
+    position?: TooltipPositionType
+  ) {
+    const { top, left, width, height } = elem.getBoundingClientRect();
+    const errorLabelRect = errorLabel.getBoundingClientRect();
+
+    const pos = position || this.globalConfig.tooltip?.position;
+
+    switch (pos) {
+      case 'left': {
+        errorLabel.style.top = `${top +
+          height / 2 -
+          errorLabelRect.height / 2}px`;
+        errorLabel.style.left = `${left -
+          errorLabelRect.width -
+          TOOLTIP_ARROW_HEIGHT}px`;
+        break;
+      }
+
+      case 'top': {
+        errorLabel.style.top = `${top -
+          errorLabelRect.height -
+          TOOLTIP_ARROW_HEIGHT}px`;
+        errorLabel.style.left = `${left +
+          width / 2 -
+          errorLabelRect.width / 2}px`;
+        break;
+      }
+
+      case 'right': {
+        errorLabel.style.top = `${top +
+          height / 2 -
+          errorLabelRect.height / 2}px`;
+        errorLabel.style.left = `${left + width + TOOLTIP_ARROW_HEIGHT}px`;
+        break;
+      }
+
+      case 'bottom': {
+        errorLabel.style.top = `${top + height + TOOLTIP_ARROW_HEIGHT}px`;
+        errorLabel.style.left = `${left +
+          width / 2 -
+          errorLabelRect.width / 2}px`;
+        break;
+      }
+    }
+
+    errorLabel.dataset.direction = pos;
+  }
+
+  createErrorLabelElem(errorMessage: string, config?: FieldConfigInterface) {
+    const errorLabel = document.createElement('div');
+    errorLabel.innerHTML = errorMessage;
+
+    const customErrorLabelStyle = this.isTooltip()
+      ? config?.errorLabelStyle
+      : config?.errorLabelStyle || this.globalConfig.errorLabelStyle;
+
+    Object.assign(errorLabel.style, customErrorLabelStyle);
+
+    errorLabel.classList.add(
+      config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass,
+      'just-validate-error-label'
+    );
+
+    this.errorLabels.push(errorLabel);
+
+    return errorLabel;
+  }
+
   renderErrors() {
     if (!this.isSubmitted) {
       return;
@@ -771,62 +883,6 @@ class JustValidate {
     this.unlockForm();
 
     this.isValid = false;
-
-    for (const fieldName in this.fields) {
-      const field = this.fields[fieldName];
-
-      if (field.isValid) {
-        continue;
-      }
-
-      Object.assign(
-        field.elem.style,
-        field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle
-      );
-
-      field.elem.classList.add(
-        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
-      );
-
-      const errorLabel = document.createElement('div');
-      errorLabel.innerHTML = field.errorMessage!;
-
-      Object.assign(
-        errorLabel.style,
-        field.config?.errorLabelStyle || this.globalConfig.errorLabelStyle
-      );
-
-      errorLabel.classList.add(
-        field.config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
-      );
-
-      this.errorLabels.push(errorLabel);
-
-      if (field.elem.type === 'checkbox' || field.elem.type === 'radio') {
-        const label = document.querySelector(
-          `label[for="${field.elem.getAttribute('id')}"]`
-        );
-
-        if (field.elem.parentElement?.tagName?.toLowerCase() === 'label') {
-          field.elem.parentElement?.parentElement?.insertBefore(
-            errorLabel,
-            null
-          );
-        } else if (label) {
-          label.parentElement?.insertBefore(errorLabel, label.nextSibling);
-        } else {
-          field.elem.parentElement?.insertBefore(
-            errorLabel,
-            field.elem.nextSibling
-          );
-        }
-      } else {
-        field.elem.parentElement?.insertBefore(
-          errorLabel,
-          field.elem.nextSibling
-        );
-      }
-    }
 
     for (const groupName in this.groupFields) {
       const group = this.groupFields[groupName];
@@ -846,38 +902,71 @@ class JustValidate {
         );
       });
 
-      const errorLabel = document.createElement('div');
-      errorLabel.innerHTML = group.errorMessage!;
-
-      Object.assign(
-        errorLabel.style,
-        group.config?.errorLabelStyle || this.globalConfig.errorLabelStyle
+      const errorLabel = this.createErrorLabelElem(
+        group.errorMessage!,
+        group.config
       );
 
-      errorLabel.classList.add(
-        group.config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
-      );
+      group.groupElem.appendChild(errorLabel);
 
-      this.errorLabels.push(errorLabel);
-
-      group.groupElem.parentElement?.insertBefore(
-        errorLabel,
-        group.groupElem.nextSibling
-      );
+      if (this.isTooltip()) {
+        this.renderTooltip(
+          group.groupElem,
+          errorLabel,
+          group.config?.tooltip?.position
+        );
+      }
     }
 
-    // if (!this.tooltipSelectorWrap.length) {
-    //   return;
-    // }
-    //
-    // this.state.tooltipsTimer = setTimeout(() => {
-    //   this.hideTooltips();
-    // }, this.tooltipFadeOutTime);
+    for (const fieldName in this.fields) {
+      const field = this.fields[fieldName];
+
+      if (field.isValid) {
+        continue;
+      }
+
+      field.elem.classList.add(
+        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+      );
+
+      const errorLabel = this.createErrorLabelElem(
+        field.errorMessage!,
+        field.config
+      );
+
+      if (field.elem.type === 'checkbox' || field.elem.type === 'radio') {
+        const label = document.querySelector(
+          `label[for="${field.elem.getAttribute('id')}"]`
+        );
+
+        if (field.elem.parentElement?.tagName?.toLowerCase() === 'label') {
+          field.elem.parentElement?.parentElement?.appendChild(errorLabel);
+        } else if (label) {
+          label.parentElement?.appendChild(errorLabel);
+        } else {
+          field.elem.parentElement?.appendChild(errorLabel);
+        }
+      } else {
+        field.elem.parentElement?.appendChild(errorLabel);
+      }
+
+      if (this.isTooltip()) {
+        this.renderTooltip(
+          field.elem,
+          errorLabel,
+          field.config?.tooltip?.position
+        );
+      }
+    }
   }
 
   destroy() {
     this.eventListeners.forEach((event) => {
       event.elem.removeEventListener(event.type, event.func);
+    });
+
+    Object.keys(this.customStyleTags).forEach((key) => {
+      this.customStyleTags[key].remove();
     });
   }
 
@@ -892,9 +981,11 @@ class JustValidate {
       this.initialize(this.form, this.globalConfig);
 
       Object.keys(this.fields).forEach((key) => {
-        this.addField(key, [...this.fields[key].rules], {
-          ...this.fields[key].config,
-        });
+        this.addField(
+          key,
+          [...this.fields[key].rules],
+          this.fields[key].config
+        );
       });
     }
   }

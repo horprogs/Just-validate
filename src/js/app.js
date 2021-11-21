@@ -100,7 +100,7 @@
     this.invalidFormCallback = this.options.invalidFormCallback || undefined;
     this.promisesRemote = [];
     this.isValidationSuccess = false;
-    this.focusWrongField = this.options.focusWrongField || false;
+    this.focusInvalidField = this.options.focusWrongField || false;
     this.REGEXP = {
       // eslint-disable-next-line max-len
       email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,

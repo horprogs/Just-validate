@@ -13,6 +13,10 @@ const validation = new JustValidate(
   '#form',
   {
     errorFieldCssClass: 'class-error',
+    focusInvalidField: true,
+    tooltip: {
+      position: 'top',
+    },
   },
   [
     {
@@ -63,42 +67,56 @@ validation
       },
     ],
     {
-      errorLabelStyle: {
-        color: 'red',
-        fontWeight: '700',
-      },
-      errorLabelCssClass: 'label-custom-class-error',
       errorFieldStyle: {
         border: '1px solid red',
       },
       errorFieldCssClass: 'field-custom-class-error',
+      tooltip: {
+        position: 'left',
+      },
     }
   )
-  .addField('#password', [
-    {
-      rule: 'required' as Rules,
-    },
-    {
-      validator: (value, context) => {
-        if (typeof value !== 'string') {
+  .addField(
+    '#password',
+    [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        validator: (value, context) => {
+          if (typeof value !== 'string') {
+            return false;
+          }
+
+          if (value.length > 12 && value[0] === '!') {
+            return true;
+          }
+
           return false;
-        }
-
-        if (value.length > 12 && value[0] === '!') {
-          return true;
-        }
-
-        return false;
+        },
       },
-    },
-  ])
-  .addField('#text', [
+    ],
     {
-      validator: (value) => {
-        return () => fetch(0, () => !!value);
+      tooltip: {
+        position: 'bottom',
       },
-    },
-  ])
+    }
+  )
+  .addField(
+    '#text',
+    [
+      {
+        validator: (value) => {
+          return () => fetch(0, () => !!value);
+        },
+      },
+    ],
+    {
+      tooltip: {
+        position: 'bottom',
+      },
+    }
+  )
   .addField('#checkbox', [
     {
       rule: 'required' as Rules,
@@ -107,10 +125,22 @@ validation
       },
     },
   ])
-  .addField('#pet-select', [
+  .addField(
+    '#pet-select',
+    [
+      {
+        rule: 'required' as Rules,
+      },
+    ],
     {
-      rule: 'required' as Rules,
-    },
-  ])
+      tooltip: {
+        position: 'right',
+      },
+    }
+  )
   .addRequiredGroup('#checkbox-group', 'REQUIRED GROUP')
-  .addRequiredGroup('#radio-group');
+  .addRequiredGroup('#radio-group', undefined, {
+    tooltip: {
+      position: 'right',
+    },
+  });
