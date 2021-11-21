@@ -9,11 +9,18 @@ document.querySelector('#change-lang-btn')?.addEventListener('click', () => {
   validation.setCurrentLocale(currentLang);
 });
 
+const fetch = (time = 1000, func?: () => boolean) =>
+  new Promise<boolean>((resolve) => {
+    setTimeout(() => {
+      console.log('Fetch returns response');
+      resolve(func?.() || false);
+    }, time);
+  });
+
 const validation = new JustValidate(
   '#form',
   {
     errorFieldCssClass: 'class-error',
-    focusInvalidField: true,
     tooltip: {
       position: 'top',
     },
@@ -33,14 +40,6 @@ const validation = new JustValidate(
     },
   ]
 );
-
-const fetch = (time = 1000, func?: () => boolean) =>
-  new Promise<boolean>((resolve) => {
-    setTimeout(() => {
-      console.log('Fetch returns response');
-      resolve(func?.() || false);
-    }, time);
-  });
 
 validation
   .addField('#name', [
@@ -144,3 +143,5 @@ validation
       position: 'right',
     },
   });
+
+console.log(validation);

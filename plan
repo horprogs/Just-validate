@@ -25,9 +25,9 @@ Form validation
 
 + 11. Easily customizable and be able to define own vaidation function
 
-12. Add external interface
-Methods: validate, reset, submit, refresh, focus
-Properties: rules, state
++12. Add external interface
+    Methods: validate, reset, submit, refresh, focus
+    Properties: rules, state
 
 
 13. Good test coverage
@@ -38,7 +38,7 @@ Properties: rules, state
 
 + 16. Global and local settings for fields
 
-17. Tooltips
++ 17. Tooltips
 
 18. Docs, examples
 Regexp examples https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a

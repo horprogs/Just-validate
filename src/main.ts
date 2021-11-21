@@ -36,11 +36,12 @@ const defaultGlobalConfig: GlobalConfigInterface = {
     color: '#b81111',
     border: '1px solid #B81111',
   },
-  errorFieldCssClass: 'js-validate-error-field',
+  errorFieldCssClass: 'just-validate-error-field',
   errorLabelStyle: {
     color: '#b81111',
   },
-  errorLabelCssClass: 'js-validate-error-label',
+  errorLabelCssClass: 'just-validate-error-label',
+  focusInvalidField: true,
 };
 
 class JustValidate {
@@ -509,10 +510,18 @@ class JustValidate {
   focusInvalidField() {
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
-      if (this.globalConfig.focusInvalidField && !field.isValid) {
+      if (!field.isValid) {
         field.elem.focus();
         break;
       }
+    }
+  }
+
+  afterSubmitValidation() {
+    this.renderErrors();
+
+    if (this.globalConfig.focusInvalidField) {
+      this.focusInvalidField();
     }
   }
 
@@ -539,12 +548,10 @@ class JustValidate {
 
     if (promises.length) {
       Promise.allSettled(promises).then(() => {
-        this.renderErrors();
-        this.focusInvalidField();
+        this.afterSubmitValidation();
       });
     } else {
-      this.renderErrors();
-      this.focusInvalidField();
+      this.afterSubmitValidation();
     }
   }
 
@@ -608,7 +615,9 @@ class JustValidate {
     this.handleFieldChange(ev.target as HTMLInputElement);
     this.handleGroupChange(ev.target as HTMLInputElement);
 
-    if (!this.isTooltip()) {
+    if (this.isTooltip()) {
+      this.clearErrors();
+    } else {
       this.renderErrors();
     }
   };
