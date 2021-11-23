@@ -9,7 +9,7 @@ export const getDefaultFieldMessage = (
       return 'The field is required';
 
     case Rules.Email:
-      return 'Please, type a valid email';
+      return 'Email has invalid format';
 
     case Rules.MaxLength:
       return 'The field must contain a maximum of :value characters'.replace(
@@ -25,6 +25,9 @@ export const getDefaultFieldMessage = (
 
     case Rules.Password:
       return 'Password is not valid';
+
+    case Rules.Number:
+      return 'Value should be a number';
 
     case Rules.StrongPassword:
       return 'Password must contents at least one uppercase letter, one lowercase letter and one number';

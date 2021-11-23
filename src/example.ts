@@ -12,7 +12,6 @@ document.querySelector('#change-lang-btn')?.addEventListener('click', () => {
 const fetch = (time = 1000, func?: () => boolean) =>
   new Promise<boolean>((resolve) => {
     setTimeout(() => {
-      console.log('Fetch returns response');
       resolve(func?.() || false);
     }, time);
   });
@@ -82,17 +81,7 @@ validation
         rule: 'required' as Rules,
       },
       {
-        validator: (value, context) => {
-          if (typeof value !== 'string') {
-            return false;
-          }
-
-          if (value.length > 12 && value[0] === '!') {
-            return true;
-          }
-
-          return false;
-        },
+        validator: (value, context) => 1,
       },
     ],
     {
@@ -143,5 +132,3 @@ validation
       position: 'right',
     },
   });
-
-console.log(validation);

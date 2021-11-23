@@ -3,6 +3,8 @@ export interface GlobalConfigInterface {
   errorFieldCssClass: string;
   errorLabelStyle: Partial<CSSStyleDeclaration>;
   errorLabelCssClass: string;
+  lockForm: boolean;
+  testingMode: boolean;
   focusInvalidField?: boolean;
   tooltip?: TooltipConfigInterface;
 }

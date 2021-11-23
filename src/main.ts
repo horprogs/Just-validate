@@ -42,6 +42,8 @@ const defaultGlobalConfig: GlobalConfigInterface = {
   },
   errorLabelCssClass: 'just-validate-error-label',
   focusInvalidField: true,
+  lockForm: true,
+  testingMode: false,
 };
 
 class JustValidate {
@@ -61,11 +63,12 @@ class JustValidate {
   dictLocale: LocaleInterface[] = [];
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
+  onSuccessCallback?: () => void;
 
   constructor(
     form: string | Element,
-    globalConfig: Partial<GlobalConfigInterface>,
-    dictLocale: LocaleInterface[]
+    globalConfig?: Partial<GlobalConfigInterface>,
+    dictLocale?: LocaleInterface[]
   ) {
     this.initialize(form, globalConfig, dictLocale);
   }
@@ -246,8 +249,6 @@ class JustValidate {
           this.setFieldInvalid(field, fieldRule);
           break;
         }
-
-        console.log(elemValue, ruleValue, isMaxLength(elemValue, ruleValue));
 
         if (isMaxLength(elemValue, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
@@ -525,43 +526,60 @@ class JustValidate {
     }
   }
 
-  validate(): Promise<any> | void {
-    const promises: Promise<any>[] = [];
+  validate(): Promise<any> {
+    return new Promise<void>((resolve) => {
+      const promises: Promise<any>[] = [];
 
-    Object.keys(this.fields).forEach((fieldName) => {
-      const field = this.fields[fieldName];
-      const promise = this.validateField(fieldName, field);
+      Object.keys(this.fields).forEach((fieldName) => {
+        const field = this.fields[fieldName];
+        const promise = this.validateField(fieldName, field);
 
-      if (isPromise(promise)) {
-        promises.push(promise as Promise<any>);
-      }
-    });
-
-    Object.keys(this.groupFields).forEach((groupName) => {
-      const group = this.groupFields[groupName];
-      const promise = this.validateGroup(groupName, group);
-
-      if (isPromise(promise)) {
-        promises.push(promise as Promise<any>);
-      }
-    });
-
-    if (promises.length) {
-      Promise.allSettled(promises).then(() => {
-        this.afterSubmitValidation();
+        if (isPromise(promise)) {
+          promises.push(promise as Promise<any>);
+        }
       });
-    } else {
-      this.afterSubmitValidation();
-    }
+
+      Object.keys(this.groupFields).forEach((groupName) => {
+        const group = this.groupFields[groupName];
+        const promise = this.validateGroup(groupName, group);
+
+        if (isPromise(promise)) {
+          promises.push(promise as Promise<any>);
+        }
+      });
+
+      if (promises.length) {
+        Promise.allSettled(promises).then(() => {
+          this.afterSubmitValidation();
+          resolve();
+        });
+      } else {
+        this.afterSubmitValidation();
+        resolve();
+      }
+    });
   }
 
   setForm(form: Element) {
     this.form = form;
     this.form.setAttribute('novalidate', 'novalidate');
     this.form.addEventListener('submit', (ev) => {
-      ev.preventDefault();
       this.isSubmitted = true;
-      this.validate();
+
+      if (this.globalConfig.lockForm) {
+        this.lockForm();
+      }
+      this.validate().then(() => {
+        if (!this.isValid) {
+          ev.preventDefault();
+        } else {
+          this.onSuccessCallback?.();
+        }
+
+        if (this.globalConfig.lockForm) {
+          this.unlockForm();
+        }
+      });
     });
   }
 
@@ -656,6 +674,17 @@ class JustValidate {
       if (!('rule' in item || 'validator' in item)) {
         throw Error(
           `Rules argument for the field [${field}] must contain at least one rule or validator property.`
+        );
+      }
+
+      if (
+        !item.validator &&
+        (!item.rule || !Object.values(Rules).includes(item.rule))
+      ) {
+        throw Error(
+          `Rule should be one of these types: ${Object.values(Rules).join(
+            ', '
+          )}. Provided value: ${item.rule}`
         );
       }
     });
@@ -864,7 +893,11 @@ class JustValidate {
     errorLabel.dataset.direction = pos;
   }
 
-  createErrorLabelElem(errorMessage: string, config?: FieldConfigInterface) {
+  createErrorLabelElem(
+    name: string,
+    errorMessage: string,
+    config?: FieldConfigInterface
+  ) {
     const errorLabel = document.createElement('div');
     errorLabel.innerHTML = errorMessage;
 
@@ -879,6 +912,10 @@ class JustValidate {
       'just-validate-error-label'
     );
 
+    if (this.globalConfig.testingMode) {
+      errorLabel.dataset.testId = `error-label-${name}`;
+    }
+
     this.errorLabels.push(errorLabel);
 
     return errorLabel;
@@ -889,9 +926,8 @@ class JustValidate {
       return;
     }
     this.clearErrors();
-    this.unlockForm();
 
-    this.isValid = false;
+    this.isValid = true;
 
     for (const groupName in this.groupFields) {
       const group = this.groupFields[groupName];
@@ -899,6 +935,8 @@ class JustValidate {
       if (group.isValid) {
         continue;
       }
+
+      this.isValid = false;
 
       group.elems.forEach((elem) => {
         Object.assign(
@@ -912,6 +950,7 @@ class JustValidate {
       });
 
       const errorLabel = this.createErrorLabelElem(
+        groupName,
         group.errorMessage!,
         group.config
       );
@@ -934,11 +973,14 @@ class JustValidate {
         continue;
       }
 
+      this.isValid = false;
+
       field.elem.classList.add(
         field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
       );
 
       const errorLabel = this.createErrorLabelElem(
+        fieldName,
         field.errorMessage!,
         field.config
       );
@@ -981,7 +1023,9 @@ class JustValidate {
 
   refresh() {
     this.clearErrors();
-    this.unlockForm();
+    if (this.globalConfig.lockForm) {
+      this.unlockForm();
+    }
     this.destroy();
 
     if (!this.form) {
@@ -1006,6 +1050,10 @@ class JustValidate {
     }
 
     this.currentLocale = locale;
+  }
+
+  onSuccess(callback: () => void) {
+    this.onSuccessCallback = callback;
   }
 }
 

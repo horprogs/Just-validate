@@ -6,10 +6,12 @@
   "scripts": {
     "lint-md": "remark .",
     "semantic-release": "semantic-release",
-    "dev": "vite",
+    "dev": "vite --port 3001",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "remarkConfig": {
     "plugins": [
