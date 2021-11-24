@@ -32,6 +32,18 @@ export const getDefaultFieldMessage = (
     case Rules.StrongPassword:
       return 'Password must contents at least one uppercase letter, one lowercase letter and one number';
 
+    case Rules.MaxNumber:
+      return 'Number should be more less :value'.replace(
+        ':value',
+        String(ruleValue!)
+      );
+
+    case Rules.MinNumber:
+      return 'Number should be more than :value'.replace(
+        ':value',
+        String(ruleValue!)
+      );
+
     default:
       return 'Value is incorrect';
   }

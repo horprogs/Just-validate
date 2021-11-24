@@ -630,4 +630,80 @@ describe('Validation', () => {
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });
+
+  test('should be able to validate numbers', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+        {
+          rule: 'minNumber' as Rules,
+          value: 10,
+        },
+        {
+          rule: 'maxNumber' as Rules,
+          value: 100,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+
+    changeTextBySelector('#name', '4');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'Number should be more than 10'
+    );
+
+    changeTextBySelector('#name', '122');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'Number should be less than 100'
+    );
+
+    changeTextBySelector('#name', '50');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+  });
 });

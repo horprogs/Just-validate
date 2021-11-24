@@ -39,10 +39,10 @@ export const isStrongPassword = (value: string) => {
   return STRONG_PASSWORD_REGEXP.test(value);
 };
 
-export const isMaxNumber = (value: number, len: number) => {
+export const isNumberMoreThanMax = (value: number, len: number) => {
   return value > len;
 };
 
-export const isMinNumber = (value: number, len: number) => {
-  return value > len;
+export const isNumberLessThanMin = (value: number, len: number) => {
+  return value < len;
 };

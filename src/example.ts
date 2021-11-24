@@ -19,10 +19,11 @@ const fetch = (time = 1000, func?: () => boolean) =>
 const validation = new JustValidate(
   '#form',
   {
-    errorFieldCssClass: 'class-error',
+    errorFieldCssClass: 'is-invalid',
     tooltip: {
       position: 'top',
     },
+    lockForm: false,
   },
   [
     {
@@ -43,45 +44,29 @@ const validation = new JustValidate(
 validation
   .addField('#name', [
     {
-      rule: Rules.MinLength,
-      errorMessage: 'Name is too short',
-      value: 3,
+      rule: 'minNumber' as Rules,
+      value: 10,
     },
     {
-      rule: Rules.MaxLength,
-      value: 15,
+      rule: 'maxNumber' as Rules,
+      value: 100,
     },
   ])
-  .addField(
-    '#email',
-    [
-      {
-        rule: 'required' as Rules,
-        errorMessage: 'Field is required',
-      },
-      {
-        rule: 'email' as Rules,
-        errorMessage: 'Email is wrong!',
-      },
-    ],
+  .addField('#email', [
     {
-      errorFieldStyle: {
-        border: '1px solid red',
-      },
-      errorFieldCssClass: 'field-custom-class-error',
-      tooltip: {
-        position: 'left',
-      },
-    }
-  )
+      rule: 'required' as Rules,
+      errorMessage: 'Field is required',
+    },
+    {
+      rule: 'email' as Rules,
+      errorMessage: 'Email is wrong!',
+    },
+  ])
   .addField(
     '#password',
     [
       {
         rule: 'required' as Rules,
-      },
-      {
-        validator: (value, context) => 1,
       },
     ],
     {
@@ -91,7 +76,7 @@ validation
     }
   )
   .addField(
-    '#text',
+    '#message',
     [
       {
         validator: (value) => {
@@ -105,16 +90,21 @@ validation
       },
     }
   )
-  .addField('#checkbox', [
-    {
-      rule: 'required' as Rules,
-      validator: (value) => {
-        return () => fetch(0, () => !!value);
-      },
-    },
-  ])
   .addField(
-    '#pet-select',
+    '#consent_checkbox',
+    [
+      {
+        rule: 'required' as Rules,
+      },
+    ],
+    {
+      tooltip: {
+        position: 'left',
+      },
+    }
+  )
+  .addField(
+    '#favorite_animal_select',
     [
       {
         rule: 'required' as Rules,
@@ -126,8 +116,16 @@ validation
       },
     }
   )
-  .addRequiredGroup('#checkbox-group', 'REQUIRED GROUP')
-  .addRequiredGroup('#radio-group', undefined, {
+  .addRequiredGroup(
+    '#read_terms_checkbox_group',
+    'You should select at least one communication channel',
+    {
+      tooltip: {
+        position: 'right',
+      },
+    }
+  )
+  .addRequiredGroup('#communication_radio_group', undefined, {
     tooltip: {
       position: 'right',
     },

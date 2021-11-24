@@ -2,9 +2,9 @@ import {
   isEmail,
   isEmpty,
   isMaxLength,
-  isMaxNumber,
+  isNumberMoreThanMax,
   isMinLength,
-  isMinNumber,
+  isNumberLessThanMin,
   isNumber,
   isPassword,
   isStrongPassword,
@@ -63,7 +63,7 @@ class JustValidate {
   dictLocale: LocaleInterface[] = [];
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
-  onSuccessCallback?: () => void;
+  onSuccessCallback?: (event: Event) => void;
 
   constructor(
     form: string | Element,
@@ -117,19 +117,8 @@ class JustValidate {
       this.customStyleTags[CustomStyleTagIds.Label] = document.head.appendChild(
         styleTag
       );
-
-      document.addEventListener('click', this.handlerDocumentClick);
-      this.eventListeners.push({
-        type: 'click',
-        elem: document,
-        func: this.handlerDocumentClick,
-      });
     }
   }
-
-  handlerDocumentClick = () => {
-    this.clearErrors();
-  };
 
   getLocalisedString(str?: string) {
     if (!this.currentLocale || !this.dictLocale.length) {
@@ -340,7 +329,9 @@ class JustValidate {
 
         const num = +elemValue;
 
-        if (Number.isNaN(num) || isMaxNumber(num, ruleValue)) {
+        console.log(num, ruleValue)
+
+        if (Number.isNaN(num) || isNumberMoreThanMax(num, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
         break;
@@ -368,7 +359,7 @@ class JustValidate {
 
         const num = +elemValue;
 
-        if (Number.isNaN(num) || isMinNumber(num, ruleValue)) {
+        if (Number.isNaN(num) || isNumberLessThanMin(num, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
         break;
@@ -527,7 +518,7 @@ class JustValidate {
   }
 
   validate(): Promise<any> {
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       const promises: Promise<any>[] = [];
 
       Object.keys(this.fields).forEach((fieldName) => {
@@ -551,11 +542,11 @@ class JustValidate {
       if (promises.length) {
         Promise.allSettled(promises).then(() => {
           this.afterSubmitValidation();
-          resolve();
+          resolve(true);
         });
       } else {
         this.afterSubmitValidation();
-        resolve();
+        resolve(false);
       }
     });
   }
@@ -564,19 +555,19 @@ class JustValidate {
     this.form = form;
     this.form.setAttribute('novalidate', 'novalidate');
     this.form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
       this.isSubmitted = true;
 
       if (this.globalConfig.lockForm) {
         this.lockForm();
       }
-      this.validate().then(() => {
-        if (!this.isValid) {
-          ev.preventDefault();
-        } else {
-          this.onSuccessCallback?.();
+      this.validate().then((hasPromises) => {
+        if (this.isValid) {
+          (this.form as HTMLFormElement).submit();
+          this.onSuccessCallback?.(ev);
         }
 
-        if (this.globalConfig.lockForm) {
+        if (hasPromises && this.globalConfig.lockForm) {
           this.unlockForm();
         }
       });
@@ -633,11 +624,7 @@ class JustValidate {
     this.handleFieldChange(ev.target as HTMLInputElement);
     this.handleGroupChange(ev.target as HTMLInputElement);
 
-    if (this.isTooltip()) {
-      this.clearErrors();
-    } else {
-      this.renderErrors();
-    }
+    this.renderErrors();
   };
 
   addListener(type: string, elem: HTMLInputElement) {
@@ -798,6 +785,10 @@ class JustValidate {
       Object.keys(style).forEach((key) => {
         field.elem.style[key] = '';
       });
+
+      field.elem.classList.remove(
+        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+      );
     }
 
     for (const groupName in this.groupFields) {
@@ -809,6 +800,10 @@ class JustValidate {
       Object.keys(style).forEach((key) => {
         group.elems.forEach((elem) => {
           elem.style[key] = '';
+          elem.classList.remove(
+            group.config?.errorFieldCssClass ||
+              this.globalConfig.errorFieldCssClass
+          );
         });
       });
     }
