@@ -1,12 +1,14 @@
 import JustValidate from './main';
 import { Rules } from './interfaces';
 
-let currentLang = 'en';
-
-document.querySelector('#change-lang-btn')?.addEventListener('click', () => {
-  currentLang = currentLang === 'en' ? 'ru' : 'en';
+document.querySelector('#change-lang-btn-en')?.addEventListener('click', () => {
   validation.refresh();
-  validation.setCurrentLocale(currentLang);
+  validation.setCurrentLocale('en');
+});
+
+document.querySelector('#change-lang-btn-ru')?.addEventListener('click', () => {
+  validation.refresh();
+  validation.setCurrentLocale('ru');
 });
 
 const fetch = (time = 1000, func?: () => boolean) =>
@@ -20,22 +22,33 @@ const validation = new JustValidate(
   '#form',
   {
     errorFieldCssClass: 'is-invalid',
+    errorFieldStyle: {
+      border: '1px solid red',
+    },
+    errorLabelCssClass: 'is-label-invalid',
+    errorLabelStyle: {
+      color: 'red',
+      textDecoration: 'underlined',
+    },
+    focusInvalidField: true,
+    lockForm: true,
     tooltip: {
       position: 'top',
     },
-    lockForm: false,
   },
   [
     {
       key: 'Name is too short',
       dict: {
         ru: 'Имя слишком короткое',
+        es: 'El nombre es muy corto',
       },
     },
     {
       key: 'Field is required',
       dict: {
         ru: 'Обязательное поле',
+        es: 'Se requiere campo',
       },
     },
   ]
@@ -75,11 +88,25 @@ validation
       },
     }
   )
+  .addField('#repeat-password', [
+    {
+      validator: (value, fields) => {
+        if (fields['#password'] && fields['#password'].elem) {
+          const repeatPasswordValue = fields['#password'].elem.value;
+
+          return value === repeatPasswordValue;
+        }
+
+        return true;
+      },
+      errorMessage: 'Passwords should be the same',
+    },
+  ])
   .addField(
     '#message',
     [
       {
-        validator: (value) => {
+        validator: (value, fields) => {
           return () => fetch(0, () => !!value);
         },
       },
@@ -129,4 +156,7 @@ validation
     tooltip: {
       position: 'right',
     },
+  })
+  .onSuccess((event) => {
+    console.log('Validation passes and form submitted', event);
   });

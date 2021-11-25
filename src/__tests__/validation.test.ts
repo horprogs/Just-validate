@@ -13,7 +13,7 @@ import { waitFor } from '@testing-library/dom';
 describe('Validation', () => {
   beforeEach(() => {
     document.body.innerHTML = `
-<form action='#' class='row g-3' id='form' autocomplete='off' onsubmit='return false'>
+<form action='#' class='row g-3' id='form' autocomplete='off'>
       <div class='row'>
         <div class='col-md-6'>
           <label for='name'>Enter your name</label>
@@ -336,7 +336,7 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
 
     expect(getElem('#form')).toHaveAttribute('novalidate', 'novalidate');
     expect(getElemByTestId('error-label-#name')).toBeNull();
@@ -533,7 +533,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).toBeNull();
     expect(getElemByTestId('error-label-#email')).toBeNull();
     expect(getElemByTestId('error-label-#password')).toBeNull();
-    expect(onSubmit).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
   test('should be able to validate by custom sync rule', async () => {
@@ -583,7 +583,7 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });
@@ -626,7 +626,7 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });
@@ -696,13 +696,13 @@ describe('Validation', () => {
 
     changeTextBySelector('#name', '50');
 
+    expect(getElem('button')).toBeEnabled();
+
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(onSubmit).toHaveBeenCalledTimes(1);
     });
-
-    expect(onSubmit).toHaveBeenCalled();
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });

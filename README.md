@@ -1,403 +1,571 @@
 # Just-validate
-Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.
 
-Demo: <br>
-Classic validation <https://horprogs.github.io/Just-validate/> <br>
-Classic validation with tooltips <https://horprogs.github.io/Just-validate/tooltip.html>
+Modern, simple, lightweight (~5,5kb gzip) form validation written in Typescript, with no dependencies (no JQuery!).
+Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
+custom error messages and styles, localization.
 
-## How to use
+## Why Just-validate?
+
+It's a right choice for you, if you have a site, a landing page without React, JQuery etc.
+and you want to quick, simple and powerful solution for validating your form.
+
+## Features
+
+- small size and zero dependencies
+- no need to change your HTML
+- a wide range of pre-defined rules
+- custom rules
+- custom styles and css classes for invalid fields and error messages
+- custom messages
+- showing tooltips as error messages
+- localization (defining error messages for different languages)
+- user-friendly setup: console warning messages if something incorrect
+- written in Typescript and good test coverage
+
+## Installation
+
 ### npm
+
 ```shell
 npm install just-validate --save
 ```
 
 ### yarn
+
 ```shell
 yarn add just-validate
 ```
 
-Include the script of the Just-validate on your page
+Or just include the Just-validate script in your page
+
 ```html
 <script src="./path/to/just-validate.min.js"></script>
 ...
 </body>
 ```
 
-## Create your form
+## Quick start
+
+Let's say we have a basic HTML layout:
+
 ```html
-<form action="#" class="js-form form">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label for="name">Enter your name</label>
-        <input type="text" class="form__input form-control" placeholder="Enter your name" autocomplete="off" data-validate-field="name" name="name" id="name">
-      </div>
-      <div class="form-group col-md-6">
-        <label for="email">Enter your email</label>
-        <input type="email" class="form__input form-control" placeholder="Enter your email" autocomplete="off" data-validate-field="email" name="email" id="email">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="password">Enter your password</label>
-      <input type="password" class="form__input form-control" placeholder="Enter your password" autocomplete="off" data-validate-field="password" name="password" id="password">
-    </div>
-    <div class="form-group">
-      <label for="password">Enter your text</label>
-      <textarea name="msg" cols="30" rows="10" class="form__textarea form-control" data-validate-field="text" id="text"></textarea>
-    </div>
-    <div class="form-group">
-      <input type="checkbox" id="checkbox" class="form__checkbox" data-validate-field="checkbox" checked><label for="checkbox">I agree</label>
-    </div>
-    <div class="form-group">
-      <label><input type="checkbox" class="form__checkbox" data-validate-field="checkbox2" checked>I agree</label>
-    </div>
-    <div class="form-group">
-      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Male</label>
-      <br>
-      <label><input type="radio" name="radio" class="form__radio" data-validate-field="radio">Female</label>
-    </div>
-    <button class="form__btn btn btn-primary">SUBMIT</button>
-  </form>
+<form action="#" id="form" autocomplete="off">
+  <label for="name">Enter your name</label>
+  <input
+    type="text"
+    class="form__input form-control"
+    placeholder="Enter your name"
+    autocomplete="off"
+    name="name"
+    id="name"
+  />
+  <label for="email">Enter your email</label>
+  <input
+    type="email"
+    class="form__input form-control"
+    placeholder="Enter your email"
+    autocomplete="off"
+    name="email"
+    id="email"
+  />
+  <button class="btn btn-primary" id="submit-btn">Submit</button>
+</form>
 ```
 
-## Fields
-`` data-validate-field `` : Name of field to which the rule will be applied
+Next, let's add Just-validate to our layout and define some simple rules.
 
-Plugin has default fields, which already have rules.
+First, we should create the instance `new JustValidate('#form')` by passing a form selector as an argument.
 
-**Field: email** 
-
-*   required
-*   email
-*   remote
-
-**Field: name** 
-
-*   required
-*   minLength: 3
-*   maxLength: 15
-
-**Field: text** 
-
-*   required
-*   minLength: 5
-*   maxLength: 300
-
-**Field: password** 
-
-*   required
-*   password (at least 1 digit and 1 letter)
-*   minLength: 4
-*   maxLength: 8
-
-**Field: zip** 
-
-*   required
-*   zip (4-5 digits)
-
-**Field: phone** 
-
-*   phone (format 111-222-3333)
-    
-
-You can create your own fields, e.g. ``data-validate-field="myField"``.
-
-## Rules
-
-*   required -  Required field, not empty
-*   email - Check a valid email address
-*   minLength - Limit the minimum value
-*   maxLength - Limit the maximum value
-*   password - At least 1 letter and 1 digit
-*   zip - 4-5 digits
-*   phone - Format 111-222-3333
-*   remote - validate value via remote api
-*   strength - validate field for default or custom regexp
-*   function - provide your own validation function
-
-More about ``remote`` rule:
-Rule check remote server api for correct answer. For example:
-```js
-remote: {
-    url: '/check-correct',
-    successAnswer: 'OK',
-    sendParam: 'email',
-    method: 'GET'
-}
-```
-*   url - remote server api url
-*   successAnswer - expected response from server, if value is correct
-*   sendParam - parameter to be sent to server
-*   method - GET or POST
-
-More about `function` rule:
-Provide a function which takes two arguments `name` and `value` and returns true or false
-
-*   name - the name of the element
-*   value - the value of the element
-
-The following example will only validate input of a field if it is "hi"
+Second, we call `.addField()` with a field selector as the first argument and an array of rules as the second argument.
 
 ```js
-function: (name, value) => {
-    return (name === 'hi');
-}
-```
+const validation = new JustValidate('#form');
 
-**Strength rule format:**
-Default (at least one uppercase letter, one lowercase letter and one number):
-```js
-strength: {
-    default: true
-}
-```
-
-Custom (use your own regexp for check):
-```js
-strength: {
-    custom: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]'
-}
-```
-## Settings
-```js
-new window.JustValidate(element, options);
-```
-
-*   element - string, selector of DOM element
-*   options - object
-
-Initiate plugin:
-
-First argument - selector of DOM element.
-```js
-new window.JustValidate('.js-form');
-```
-
-In this case default rules and messages will be applied.
-
-Also, you can customize validation:
-```js
-new JustValidate('.js-form', {
-    rules: {
-      checkbox: {
-        required: true
-      },
-      myField: {
-        required: true
-      },
-      email: {
-        required: false,
-        email: true
-      },
-      password: {
-        strength: {
-          default: true,
-        }
+validation
+  .addField('#name', [
+    {
+      rule: 'minLength',
+      value: 3,
     },
-    messages: {
-      name: {
-        minLength: 'My custom message about only minLength rule'
+    {
+      rule: 'maxLength',
+      value: 30,
+    },
+  ])
+  .addField('#email', [
+    {
+      rule: 'required',
+      errorMessage: 'Email is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid!',
+    },
+  ]);
+```
+
+And that's it! Now our form is validated!
+
+## More fields, group fields and rules
+
+Let's check more advanced example:
+
+```html
+<form action="#" id="form" autocomplete="off">
+  <div class="row">
+    <div class="col">
+      <label for="name">Enter your name</label>
+      <input
+        type="text"
+        class="form__input form-control"
+        placeholder="Enter your name"
+        autocomplete="off"
+        name="name"
+        id="name"
+      />
+    </div>
+    <div class="col">
+      <label for="email">Enter your email</label>
+      <input
+        type="email"
+        class="form__input form-control"
+        placeholder="Enter your email"
+        autocomplete="off"
+        name="email"
+        id="email"
+      />
+    </div>
+  </div>
+  <div class="form-group mt-3">
+    <label for="password">Enter your password</label>
+    <input
+      type="password"
+      class="form__input form-control"
+      placeholder="Enter your password"
+      autocomplete="off"
+      name="password"
+      id="password"
+    />
+  </div>
+  <div class="form-group mt-3">
+    <label for="password">Repeat your password</label>
+    <input
+      type="password"
+      class="form__input form-control"
+      placeholder="Repeat your password"
+      autocomplete="off"
+      name="repeat-password"
+      id="repeat-password"
+    />
+  </div>
+  <div class="form-group mt-3">
+    <label for="password">Enter your message</label>
+    <textarea
+      name="msg"
+      cols="30"
+      rows="10"
+      class="form__textarea form-control"
+      id="message"
+    ></textarea>
+  </div>
+  <div class="form-group mt-4">
+    <label for="favorite_animal_select" class="form-label"
+      >Select you favorite animal</label
+    >
+    <select name="pets" id="favorite_animal_select" class="form-select">
+      <option value="">--Please choose an option--</option>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="hamster">Hamster</option>
+      <option value="parrot">Parrot</option>
+      <option value="spider">Spider</option>
+      <option value="goldfish">Goldfish</option>
+    </select>
+  </div>
+
+  <div class="form-group mt-4">
+    <div class="form-check">
+      <label class="form-check-label" for="consent_checkbox"
+        >I agree to provide the information</label
+      >
+      <input type="checkbox" id="consent_checkbox" class="form-check-input" />
+    </div>
+  </div>
+  <div
+    class="form-group mt-4"
+    id="read_terms_checkbox_group"
+    style="width: 250px"
+  >
+    <div class="form-check">
+      <label class="form-check-label" for="read_terms_checkbox_group_1"
+        >I have read Privacy Policy</label
+      >
+      <input
+        type="checkbox"
+        name="checkbox-group-fruit"
+        id="read_terms_checkbox_group_1"
+        class="form-check-input"
+      />
+    </div>
+    <div class="form-check">
+      <label class="form-check-label" for="read_terms_checkbox_group_2"
+        >I have read Terms Of Use</label
+      >
+      <input
+        type="checkbox"
+        name="checkbox-group-fruit"
+        id="read_terms_checkbox_group_2"
+        class="form-check-input"
+      />
+    </div>
+    <div class="form-check">
+      <label class="form-check-label" for="read_terms_checkbox_group_3"
+        >I have read Cookies Policy</label
+      >
+      <input
+        type="checkbox"
+        name="checkbox-group-fruit"
+        id="read_terms_checkbox_group_3"
+        class="form-check-input"
+      />
+    </div>
+  </div>
+  <div class="mt-4 form-group">
+    <div class="pb-1">
+      Please select the preferred way for communication
+    </div>
+    <div
+      class="form-check"
+      id="communication_radio_group"
+      style="max-width: 200px"
+    >
+      <input
+        type="radio"
+        name="radio"
+        class="form-check-input"
+        id="communication_radio_group_1"
+      />
+      <label class="form-check-label" for="communication_radio_group_1">
+        Email
+      </label>
+      <br />
+      <input
+        type="radio"
+        name="radio"
+        class="form-check-input"
+        id="communication_radio_group_2"
+      />
+      <label class="form-check-label" for="communication_radio_group_2">
+        SMS
+      </label>
+    </div>
+  </div>
+
+  <div class="d-grid mt-4">
+    <button class="btn btn-primary" id="submit-btn">Submit</button>
+  </div>
+</form>
+```
+
+```js
+const validation = new JustValidate('#form', {
+  errorFieldCssClass: 'is-invalid',
+});
+
+validation
+  .addField('#name', [
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 30,
+    },
+  ])
+  .addField('#email', [
+    {
+      rule: 'required',
+      errorMessage: 'Field is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid!',
+    },
+  ])
+  .addField('#password', [
+    {
+      rule: 'password',
+    },
+  ])
+  .addField('#message', [
+    {
+      validator: (value) => {
+        return value[0] === '!';
       },
-      email: 'My custom message about error (one error message for all rules)'
     },
-
-    submitHandler: function (form, values, ajax) {
-
-      ajax({
-        url: 'https://just-validate-api.herokuapp.com/submit',
-        method: 'POST',
-        data: values,
-        async: true,
-        callback: function(response)  {
-          console.log(response)
-        }
-      });
+  ])
+  .addField('#consent_checkbox', [
+    {
+      rule: 'required',
     },
+  ])
+  .addField('#favorite_animal_select', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addRequiredGroup(
+    '#read_terms_checkbox_group',
+    'You should select at least one communication channel'
+  )
+  .addRequiredGroup('#communication_radio_group')
+  .onSuccess((event) => {
+    console.log('Validation passes and form submitted', event);
   });
 ```
 
-You can override custom message for once rule or for all at once rules.
+## Instance setting
 
-Also, you can validate for required radiobuttons. For this, you need to create ``input[type="radio"]`` fields with identical ``data-validate-field`` (it's important).
+```
+new JustValidate(
+   form: string | Element,
+   globalConfig?: {
+     errorFieldStyle: Partial<CSSStyleDeclaration>,
+     errorFieldCssClass: string,
+     errorLabelStyle: Partial<CSSStyleDeclaration>,
+     errorLabelCssClass: string,
+     lockForm: boolean,
+     testingMode: boolean,
+     focusInvalidField?: boolean,
+     tooltip?: {
+       position: 'left' | 'top' | 'right' | 'bottom',
+     },
+   },
+   dictLocale?: {
+     key: string;
+     dict: {
+       [localeKey: string]: string,
+     };
+   }[];
+);
+```
 
-### Submit form
-You can override standard submit form, using method ``submitHandler``. It has 3 arguments:
-	
-*   form - DOM link to form
-*   values - object of fields values
-*   ajax - function of XMLHttpRequest
+For example, full setting:
 
-Function ajax helps you to send XMLHTTPRequest.
-
-Format:
 ```js
-ajax({
-    url: 'https://just-validate-api.herokuapp.com/submit',
-    method: 'POST',
-    data: values,
-    async: true,
-    callback: function(response)  {
-      console.log(response)
-    }
-});
-```
-
-There is a property `focusWrongField` (default false), which turns on focusing on the first incorrect input after submit.
- 
-There is a method `invalidFormCallback`, which runs when validation failed. It takes one argument: object with errors messages.
-
-### Tooltip
-
-You can show errors in the form of tooltips. <br>
-
-To do this, connect the file styles ``dist/css/justValidateTooltip.css`` or
- ``dist/css/justValidateTooltip.min.css`` on page. <br>
-```html
-<link rel="stylesheet" href="./path/to/justValidateTooltip.min.css">
-```
-
-For a container inside of which input, add a class ``just-validate-tooltip-container`` or add our class
-
-```html
- <div class="form-group col-md-6">
-    <label for="name">Enter your name</label>
-    <div class="just-validate-tooltip-container">
-        <input type="text" class="form__input form-control" placeholder="Enter your name" data-validate-field="name">
-    </div>
- </div>
-```
-
-You can customize time show of error, using property ``fadeOutTime``, for example: <br>
-```js
-new window.JustValidate('.js-form', {
+const validation = new JustValidate(
+  '#form',
+  {
+    errorFieldCssClass: 'is-invalid',
+    errorFieldStyle: {
+      border: '1px solid red',
+    },
+    errorLabelCssClass: 'is-label-invalid',
+    errorLabelStyle: {
+      color: 'red',
+      textDecoration: 'underlined',
+    },
+    focusInvalidField: true,
+    lockForm: true,
     tooltip: {
-        fadeOutTime: 4000 // default value - 5000 
-    }
-});
+      position: 'top',
+    },
+  },
+  [
+    {
+      key: 'Name is too short',
+      dict: {
+        ru: 'Имя слишком короткое',
+        es: 'El nombre es muy corto',
+      },
+    },
+    {
+      key: 'Field is required',
+      dict: {
+        ru: 'Обязательное поле',
+        es: 'Se requiere campo',
+      },
+    },
+  ]
+);
 ```
 
-You can customize class hide of tooltip, using property ``fadeOutClass``, for example: <br>
+- `lockForm` - if true, lock form during validation.
+  Could be useful for async validation to make it impossible for user to interact with the form
+- `focusInvalidField` - if true, the first invalid field will be focused after the form submitting
+- `tooltip` if the field defined, tooltips will be displayed instead of regular error labels.
+  It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
+
+## Rule object
+
+```
+{
+  rule: String,
+  errorMessage: String,
+  validator: (
+         value: String | Boolean,
+         context: Object
+ ) => Boolean | Promise;
+ value: number | string;
+}
+```
+
+Field `rule` could be one of these values:
+
+- `required` - Required field, not empty
+- `email` - Valid email address
+- `minLength` - Limit the minimum text length
+- `maxLength` - Limit the maximum text length
+- `number` - Value should be a number
+- `minNumber` - Number should be more than defined value
+- `maxNumber` - Number should be less than defined value
+- `password` - Minimum eight characters, at least one letter and one number
+- `strongPassword` - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+- `customRegexp` - Custom regexp expression
+
+Field `errorMessage` used for customizing the error message for this rule.
+
+Field `value` used only with `minLength`, `maxLength`, `minNumber`, `maxNumber`, `customRegexp` rules to define the rule value, for example:
+
 ```js
-new window.JustValidate('.js-form', {
-    tooltip: {
-        fadeOutClass: '.hide' // default value - just-validate-tooltip-hide
-    }
-});
+validation.addField('#name', [
+  {
+    rule: 'minLength',
+    value: 3,
+  },
+]);
 ```
 
-You can customize class inside of which input, using property ``selectorWrap``, for example: <br>
 ```js
-new window.JustValidate('.js-form', {
-    tooltip: {
-        selectorWrap: '.tooltip-wrapper' // default value - just-validate-tooltip-container
-    }
-});
+validation.addField('#password', [
+  {
+    rule: 'customRegexp',
+    value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{8,}/,
+  },
+]);
 ```
 
-### Styling
+Field `validator` used for custom validation. It should return a boolean or a function which returns a Promise.
 
-You can customize style color of error, using property ``colorWrong``, for example: <br>
 ```js
-new window.JustValidate('.js-form', {
-    colorWrong: 'red'
-});
+validation.addField('#text', [
+  {
+    validator: (value) => value[value.length - 1] === '.',
+  },
+]);
 ```
 
-Error fields and messages have classes: ``js-validate-error-label`` and  ``js-validate-error-field``
+```js
+validation.addField('#email', [
+  {
+    validator: (value) => () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, 500);
+      });
+    },
+  },
+]);
+```
+
+Also, it's possible to do validation based on other fields:
+
+```js
+validation.addField('#repeat-password', [
+  {
+    validator: (value, fields) => {
+      if (fields['#password'] && fields['#password'].elem) {
+        const repeatPasswordValue = fields['#password'].elem.value;
+
+        return value === repeatPasswordValue;
+      }
+
+      return true;
+    },
+    errorMessage: 'Passwords should be the same',
+  },
+]);
+```
+
+### Localization
+
+You could define own translations for different languages. To do that you should define `dictLocale` array, like:
+
+```
+  [
+    {
+      key: 'Name is too short',
+      dict: {
+        ru: 'Имя слишком короткое',
+        es: 'El nombre es muy corto',
+      },
+    },
+    {
+      key: 'Field is required',
+      dict: {
+        ru: 'Обязательное поле',
+        es: 'Se requiere campo',
+      },
+    },
+  ]
+```
+
+Field `key` should be defined as a key string, which also should be defined as `errorMessage` in a rule object.
+
+`dict` should be an object with languages keys with their translations.
+
+To switch a language you should call `validation.refresh()` to reset the current state and `validation.setCurrentLocale('ru');`.
+The argument for `setCurrentLocale()` method you should pass the key, which you defined in `dict` object.
+
+```js
+document.querySelector('#change-lang-btn-en').addEventListener('click', () => {
+  validation.refresh();
+  validation.setCurrentLocale('en');
+});
+
+document.querySelector('#change-lang-btn-ru').addEventListener('click', () => {
+  validation.refresh();
+  validation.setCurrentLocale('ru');
+});
+```
 
 ### Examples
+
 #### Validate multiple remote values with custom messages
 
 ```js
 new window.JustValidate('.js-form-1', {
-    rules: {
-        email: {
-            email: true,
-            remote: {
-                url: 'https://just-validate-api.herokuapp.com/check-correct',
-                sendParam: 'email',
-                successAnswer: 'OK',
-                method: 'GET'
-            }
-        },
-        login: {
-            remote: {
-                url: 'https://just-validate-api.herokuapp.com/check-correct',
-                sendParam: 'login',
-                successAnswer: 'OK',
-                method: 'GET'
-            }
-        }
+  rules: {
+    email: {
+      email: true,
+      remote: {
+        url: 'https://just-validate-api.herokuapp.com/check-correct',
+        sendParam: 'email',
+        successAnswer: 'OK',
+        method: 'GET',
+      },
     },
-    messages: {
-        email: {
-            remote: 'Email already exist',
-            email: 'Email not valid!'
-        },
-        login: {
-            remote: 'Login already exist',
-            required: 'Login is required!'
-        }
+    login: {
+      remote: {
+        url: 'https://just-validate-api.herokuapp.com/check-correct',
+        sendParam: 'login',
+        successAnswer: 'OK',
+        method: 'GET',
+      },
     },
+  },
+  messages: {
+    email: {
+      remote: 'Email already exist',
+      email: 'Email not valid!',
+    },
+    login: {
+      remote: 'Login already exist',
+      required: 'Login is required!',
+    },
+  },
 });
 ```
-#### Classic validation with custom submit form and ajax helper
-
-```js
-new window.JustValidate('.js-form', {
- rules: {
-  checkbox: {
-   required: true
-  },
-  checkbox2: {
-   required: true
-  },
-  email: {
-   required: true,
-   email: true,
-  }
- },
-
- focusInvalidField: true,
-
- submitHandler: function(form, values, ajax) {
-  ajax({
-   url: 'https://just-validate-api.herokuapp.com/submit',
-   method: 'POST',
-   data: values,
-   async: true,
-   callback: function(response) {
-    alert('AJAX submit successful! \nResponse from server:' + response)
-   },
-   error: function(response) {
-    alert('AJAX submit error! \nResponse from server:' + response)
-   }
-  });
- },
-
- invalidFormCallback: function(errors) {
-  console.log(errors);
- },
-});
-```
-
-## Changelog
-### 1.1.0
-Added rule for check strength of password  (default and custom)
-### 1.2.0
-Added tooltip style error
-### 1.3.0
-Added feature for check required radio buttons
-### 1.4.0
-Added feature to allow the user to provide their own validation function
-### 1.5.0
-Added feature for focus incorrect field after validation
-Added callback, when validation failed
-
-## Contributing
-	* Check the open issues or open a new issue to start a discussion around your feature idea or the bug you found.
-	* Fork repository, make changes, add your name and link in the authors session readme.md
-	* Send a pull request
-
-**Thank you**
-
 

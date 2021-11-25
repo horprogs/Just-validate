@@ -1,5 +1,4 @@
 import userEvent from '@testing-library/user-event';
-import { screen, fireEvent } from '@testing-library/dom';
 
 export const clickBySelector = async (selector: string) => {
   const elem = getElem(selector);

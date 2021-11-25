@@ -329,8 +329,6 @@ class JustValidate {
 
         const num = +elemValue;
 
-        console.log(num, ruleValue)
-
         if (Number.isNaN(num) || isNumberMoreThanMax(num, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
@@ -554,7 +552,12 @@ class JustValidate {
   setForm(form: Element) {
     this.form = form;
     this.form.setAttribute('novalidate', 'novalidate');
+    let callbackCalled = false;
     this.form.addEventListener('submit', (ev) => {
+      if (callbackCalled) {
+        return;
+      }
+
       ev.preventDefault();
       this.isSubmitted = true;
 
@@ -564,6 +567,7 @@ class JustValidate {
       this.validate().then((hasPromises) => {
         if (this.isValid) {
           (this.form as HTMLFormElement).submit();
+          callbackCalled = true;
           this.onSuccessCallback?.(ev);
         }
 
@@ -679,8 +683,6 @@ class JustValidate {
     this.fields[field] = {
       elem,
       rules,
-      value: '',
-      isDirty: false,
       isValid: undefined,
       config,
     };
@@ -1047,7 +1049,7 @@ class JustValidate {
     this.currentLocale = locale;
   }
 
-  onSuccess(callback: () => void) {
+  onSuccess(callback: (ev?: Event) => void) {
     this.onSuccessCallback = callback;
   }
 }

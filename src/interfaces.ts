@@ -63,10 +63,8 @@ export interface FieldConfigInterface
 
 export interface FieldInterface {
   rules: FieldRuleInterface[];
-  value?: string;
   elem: HTMLInputElement;
   isValid?: boolean;
-  isDirty: boolean;
   errorMessage?: string;
   config?: FieldConfigInterface;
 }
@@ -105,12 +103,6 @@ export interface LocaleDictInterface {
 export interface LocaleInterface {
   key: string;
   dict: LocaleDictInterface;
-}
-
-export interface TooltipConfigInterface {
-  class?: string;
-  style?: Partial<CSSStyleDeclaration>;
-  fadeOutTime?: number;
 }
 
 export enum CustomStyleTagIds {
