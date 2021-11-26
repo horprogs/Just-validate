@@ -19,11 +19,11 @@ export const isEmail = (value: string) => {
   return EMAIL_REGEXP.test(value);
 };
 
-export const isMaxLength = (value: string, len: number) => {
+export const isLengthMoreThanMax = (value: string, len: number) => {
   return value.length > len;
 };
 
-export const isMinLength = (value: string, len: number) => {
+export const isLengthLessThanMin = (value: string, len: number) => {
   return value.length < len;
 };
 

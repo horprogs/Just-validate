@@ -1,14 +1,14 @@
 import {
   isEmail,
   isEmpty,
-  isMaxLength,
+  isLengthMoreThanMax,
   isNumberMoreThanMax,
-  isMinLength,
+  isLengthLessThanMin,
   isNumberLessThanMin,
   isNumber,
   isPassword,
   isStrongPassword,
-} from './validationUtils';
+} from './utils/validationUtils';
 import {
   EventListenerInterface,
   FieldConfigInterface,
@@ -25,11 +25,14 @@ import {
   LocaleInterface,
   CustomStyleTagIds,
   TooltipPositionType,
-} from './interfaces';
-import { getDefaultFieldMessage, getDefaultGroupMessage } from './messages';
-import { isPromise } from './helperUtils';
-import { errorLabelCss } from './inlineStyles';
-import { TOOLTIP_ARROW_HEIGHT } from './const';
+} from './modules/interfaces';
+import {
+  getDefaultFieldMessage,
+  getDefaultGroupMessage,
+} from './modules/messages';
+import { isPromise } from './utils/helperUtils';
+import { errorLabelCss } from './modules/inlineStyles.compressed';
+import { TOOLTIP_ARROW_HEIGHT } from './modules/const';
 
 const defaultGlobalConfig: GlobalConfigInterface = {
   errorFieldStyle: {
@@ -239,7 +242,7 @@ class JustValidate {
           break;
         }
 
-        if (isMaxLength(elemValue, ruleValue)) {
+        if (isLengthMoreThanMax(elemValue, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
         break;
@@ -265,7 +268,7 @@ class JustValidate {
           break;
         }
 
-        if (isMinLength(elemValue, ruleValue)) {
+        if (isLengthLessThanMin(elemValue, ruleValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
         break;

@@ -1,4 +1,4 @@
-export const errorLabelCss = `
+const errorLabelCss = `
         .just-validate-error-label {
           position: fixed;
           padding: 4px 8px;

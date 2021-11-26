@@ -1,5 +1,5 @@
 import JustValidate from './main';
-import { Rules } from './interfaces';
+import { Rules } from './modules/interfaces';
 
 document.querySelector('#change-lang-btn-en')?.addEventListener('click', () => {
   validation.refresh();
@@ -106,7 +106,7 @@ validation
     '#message',
     [
       {
-        validator: (value, fields) => {
+        validator: (value) => {
           return () => fetch(0, () => !!value);
         },
       },

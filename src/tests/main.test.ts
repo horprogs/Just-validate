@@ -5,9 +5,9 @@ import {
   getElem,
   getElemByTestId,
   selectBySelector,
-} from '../testingUtils';
+} from '../utils/testingUtils';
 import JustValidate from '../main';
-import { Rules } from '../interfaces';
+import { Rules } from '../modules/interfaces';
 import { waitFor } from '@testing-library/dom';
 
 describe('Validation', () => {

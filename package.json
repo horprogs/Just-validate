@@ -1,8 +1,7 @@
 {
   "name": "just-validate",
-  "version": "1.5.0",
-  "description": "Lightweight (~4,5kb gzip) form validation in Javascript Vanilla, without dependencies, with customizable rules (including remote validation), customizable messages and customizable submit form with ajax helper.",
-  "main": "gulpfile.js",
+  "version": "2.0.0-beta.1",
+  "description": "Modern, simple, lightweight (~5,5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation, custom error messages and styles, localization.",
   "scripts": {
     "lint-md": "remark .",
     "semantic-release": "semantic-release",
@@ -18,7 +17,7 @@
       "remark-preset-lint-recommended"
     ]
   },
-  "author": "Perepecho Georgy (Horprogs) <horprogs@gmail.com>",
+  "author": "Georgii Perepecho <horprogs@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,10 +26,8 @@
   "keywords": [
     "form",
     "validation",
-    "just-validate",
-    "remote validation",
-    "ajax validation",
-    "custom messages"
+    "form validation",
+    "just-validate"
   ],
   "bugs": {
     "url": "https://github.com/horprogs/Just-validate/issues"

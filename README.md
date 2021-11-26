@@ -1,6 +1,6 @@
 # Just-validate
 
-Modern, simple, lightweight (~5,5kb gzip) form validation written in Typescript, with no dependencies (no JQuery!).
+Modern, simple, lightweight (~5,5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
 Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
 custom error messages and styles, localization.
 
@@ -530,42 +530,3 @@ document.querySelector('#change-lang-btn-ru').addEventListener('click', () => {
   validation.setCurrentLocale('ru');
 });
 ```
-
-### Examples
-
-#### Validate multiple remote values with custom messages
-
-```js
-new window.JustValidate('.js-form-1', {
-  rules: {
-    email: {
-      email: true,
-      remote: {
-        url: 'https://just-validate-api.herokuapp.com/check-correct',
-        sendParam: 'email',
-        successAnswer: 'OK',
-        method: 'GET',
-      },
-    },
-    login: {
-      remote: {
-        url: 'https://just-validate-api.herokuapp.com/check-correct',
-        sendParam: 'login',
-        successAnswer: 'OK',
-        method: 'GET',
-      },
-    },
-  },
-  messages: {
-    email: {
-      remote: 'Email already exist',
-      email: 'Email not valid!',
-    },
-    login: {
-      remote: 'Login already exist',
-      required: 'Login is required!',
-    },
-  },
-});
-```
-
