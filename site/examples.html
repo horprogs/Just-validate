@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Just-validate</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .form__radio,
+      .form__checkbox {
+        margin-right: 7px !important;
+      }
+      .flag {
+        width: 80px;
+        background-color: transparent;
+        border: 0;
+      }
+      .container {
+        max-width: 540px;
+      }
+    </style>
+    <link href="/css/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="header content">
+      <a href="/" class="logo">
+        <img src="/img/logo.svg" alt="JustValidate" />
+      </a>
+      <nav class="top-nav">
+        <a
+          href="https://github.com/horprogs/Just-validate"
+          class="top-nav__item"
+          >Github</a
+        >
+      </nav>
+    </header>
+    <main class="main">
+      <section class="base-example container pb-5">
+        <div class="mb-4">
+          <div class="row">
+            <button id="change-lang-btn-ru" class="flag">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 6">
+                <rect fill="#fff" width="9" height="3" />
+                <rect fill="#d52b1e" y="3" width="9" height="3" />
+                <rect fill="#0039a6" y="2" width="9" height="2" />
+              </svg>
+            </button>
+
+            <button id="change-lang-btn-en" class="flag">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">
+                <clipPath id="s">
+                  <path d="M0,0 v30 h60 v-30 z" />
+                </clipPath>
+                <clipPath id="t">
+                  <path
+                    d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"
+                  />
+                </clipPath>
+                <g clip-path="url(#s)">
+                  <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+                  <path
+                    d="M0,0 L60,30 M60,0 L0,30"
+                    stroke="#fff"
+                    stroke-width="6"
+                  />
+                  <path
+                    d="M0,0 L60,30 M60,0 L0,30"
+                    clip-path="url(#t)"
+                    stroke="#C8102E"
+                    stroke-width="4"
+                  />
+                  <path
+                    d="M30,0 v30 M0,15 h60"
+                    stroke="#fff"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M30,0 v30 M0,15 h60"
+                    stroke="#C8102E"
+                    stroke-width="6"
+                  />
+                </g>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <form action="#" id="form" autocomplete="off">
+          <div class="row">
+            <div class="col">
+              <label for="name">Enter your name</label>
+              <input
+                type="text"
+                class="form__input form-control"
+                placeholder="Enter your name"
+                autocomplete="off"
+                name="name"
+                id="name"
+              />
+            </div>
+            <div class="col">
+              <label for="email">Enter your email</label>
+              <input
+                type="email"
+                class="form__input form-control"
+                placeholder="Enter your email"
+                autocomplete="off"
+                name="email"
+                id="email"
+              />
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="password">Enter your password</label>
+            <input
+              type="password"
+              class="form__input form-control"
+              placeholder="Enter your password"
+              autocomplete="off"
+              name="password"
+              id="password"
+            />
+          </div>
+          <div class="form-group mt-3">
+            <label for="password">Repeat your password</label>
+            <input
+              type="password"
+              class="form__input form-control"
+              placeholder="Repeat your password"
+              autocomplete="off"
+              name="repeat-password"
+              id="repeat-password"
+            />
+          </div>
+          <div class="form-group mt-3">
+            <label for="password">Enter your message</label>
+            <textarea
+              name="msg"
+              cols="30"
+              rows="10"
+              class="form__textarea form-control"
+              id="message"
+            ></textarea>
+          </div>
+          <div class="form-group mt-4">
+            <label for="favorite_animal_select" class="form-label"
+              >Select you favorite animal</label
+            >
+            <select name="pets" id="favorite_animal_select" class="form-select">
+              <option value="">--Please choose an option--</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+              <option value="hamster">Hamster</option>
+              <option value="parrot">Parrot</option>
+              <option value="spider">Spider</option>
+              <option value="goldfish">Goldfish</option>
+            </select>
+          </div>
+
+          <div class="form-group mt-4">
+            <div class="form-check">
+              <label class="form-check-label" for="consent_checkbox"
+                >I agree to provide the information</label
+              >
+              <input
+                type="checkbox"
+                id="consent_checkbox"
+                class="form-check-input"
+              />
+            </div>
+          </div>
+          <div
+            class="form-group mt-4"
+            id="read_terms_checkbox_group"
+            style="width: 250px"
+          >
+            <div class="form-check">
+              <label class="form-check-label" for="read_terms_checkbox_group_1"
+                >I have read Privacy Policy</label
+              >
+              <input
+                type="checkbox"
+                name="checkbox-group-fruit"
+                id="read_terms_checkbox_group_1"
+                class="form-check-input"
+              />
+            </div>
+            <div class="form-check">
+              <label class="form-check-label" for="read_terms_checkbox_group_2"
+                >I have read Terms Of Use</label
+              >
+              <input
+                type="checkbox"
+                name="checkbox-group-fruit"
+                id="read_terms_checkbox_group_2"
+                class="form-check-input"
+              />
+            </div>
+            <div class="form-check">
+              <label class="form-check-label" for="read_terms_checkbox_group_3"
+                >I have read Cookies Policy</label
+              >
+              <input
+                type="checkbox"
+                name="checkbox-group-fruit"
+                id="read_terms_checkbox_group_3"
+                class="form-check-input"
+              />
+            </div>
+          </div>
+          <div class="mt-4 form-group">
+            <div class="pb-1">
+              Please select the preferred way for communication
+            </div>
+            <div
+              class="form-check"
+              id="communication_radio_group"
+              style="max-width: 200px"
+            >
+              <input
+                type="radio"
+                name="radio"
+                class="form-check-input"
+                id="communication_radio_group_1"
+              />
+              <label class="form-check-label" for="communication_radio_group_1">
+                Email
+              </label>
+              <br />
+              <input
+                type="radio"
+                name="radio"
+                class="form-check-input"
+                id="communication_radio_group_2"
+              />
+              <label class="form-check-label" for="communication_radio_group_2">
+                SMS
+              </label>
+            </div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button class="btn btn-primary" id="submit-btn">Submit</button>
+          </div>
+        </form>
+
+
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="content">
+        <nav class="bottom-nav">
+          <a href="https://github.com/horprogs" class="bottom-nav__item">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                fill-rule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </footer>
+    <script type="module" src="../src/main.ts"></script>
+  </body>
+</html>
