@@ -3,8 +3,8 @@ on:
   push:
   pull_request:
 jobs:
-  full:
-    name: Node.js 16 Full
+  build:
+    name: Build&test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
