@@ -1,4 +1,3 @@
 {
-  "dryRun": true,
-  "branches": ["v2"]
+  "dryRun": true
 }
