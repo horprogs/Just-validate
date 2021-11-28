@@ -3,17 +3,19 @@ import path from 'path';
 
 export default defineConfig(({ command, mode }) => {
   if (command === 'serve') {
-    return {};
+    return {
+    };
   } else {
     // command === 'build'
     return {
       build: {
-        lib: {
-          entry: path.resolve(__dirname, 'src/main.ts'),
-          name: 'Just-validate',
-          fileName: (format) => `just-validate.${format}.js`,
+        // root: '/site/',
+        rollupOptions: {
+          input: {
+            main: path.resolve(__dirname, 'index.html'),
+            examples: path.resolve(__dirname, 'examples/index.html'),
+          },
         },
-        rollupOptions: {},
       },
     };
   }

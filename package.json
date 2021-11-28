@@ -7,7 +7,6 @@
     "semantic-release": "semantic-release",
     "dev": "vite --port 3001",
     "build": "tsc && vite build",
-    "serve": "vite preview",
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -32,6 +31,16 @@
   ],
   "bugs": {
     "url": "https://github.com/horprogs/Just-validate/issues"
+  },
+  "unpkg": "./dist/just-validate.umd.js",
+  "files": ["dist"],
+  "main": "./dist/just-validate.umd.js",
+  "module": "./dist/just-validate.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/just-validate.es.js",
+      "require": "./dist/just-validate.umd.js"
+    }
   },
   "homepage": "https://github.com/horprogs/Just-validate#readme",
   "devDependencies": {
