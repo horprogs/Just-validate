@@ -21,6 +21,7 @@ jobs:
 
   release:
     name: Release
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
