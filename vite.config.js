@@ -10,8 +10,9 @@ export default defineConfig(({ command, mode }) => {
       build: {
         lib: {
           entry: path.resolve(__dirname, 'src/main.ts'),
-          name: 'Just-validate',
-          fileName: (format) => `just-validate.${format}.js`,
+          name: 'JustValidate',
+          fileName: (format) =>
+            `just-validate.${format === 'umd' ? 'production.min' : format}.js`,
         },
         rollupOptions: {},
       },

@@ -24,22 +24,22 @@ export const getDefaultFieldMessage = (
       );
 
     case Rules.Password:
-      return 'Password is not valid';
+      return 'Password must contain minimum eight characters, at least one letter and one number';
 
     case Rules.Number:
       return 'Value should be a number';
 
     case Rules.StrongPassword:
-      return 'Password must contents at least one uppercase letter, one lowercase letter and one number';
+      return 'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character';
 
     case Rules.MaxNumber:
-      return 'Number should be less than :value'.replace(
+      return 'Number should be less or equal than :value'.replace(
         ':value',
         String(ruleValue!)
       );
 
     case Rules.MinNumber:
-      return 'Number should be more than :value'.replace(
+      return 'Number should be more or equal than :value'.replace(
         ':value',
         String(ruleValue!)
       );
