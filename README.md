@@ -1,3 +1,8 @@
+[![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/master/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
+<a href="https://bundlephobia.com/result?p=just-validate@2.0.0-beta.3" target="\_parent">
+<img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@2.0.0-beta.3" />
+</a>
+
 # JustValidate
 
 Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
