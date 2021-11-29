@@ -528,7 +528,7 @@ class JustValidate {
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
       if (!field.isValid) {
-        field.elem.focus();
+        setTimeout(() => field.elem.focus(), 0);
         break;
       }
     }
@@ -579,12 +579,7 @@ class JustValidate {
   setForm(form: Element) {
     this.form = form;
     this.form.setAttribute('novalidate', 'novalidate');
-    let callbackCalled = false;
     this.form.addEventListener('submit', (ev) => {
-      if (callbackCalled) {
-        return;
-      }
-
       ev.preventDefault();
       this.isSubmitted = true;
 
@@ -593,8 +588,6 @@ class JustValidate {
       }
       this.validate().then((hasPromises) => {
         if (this.isValid) {
-          (this.form as HTMLFormElement).submit();
-          callbackCalled = true;
           this.onSuccessCallback?.(ev);
         }
 
@@ -1089,13 +1082,17 @@ class JustValidate {
     }
   }
 
-  setCurrentLocale(locale: string) {
-    if (typeof locale !== 'string') {
+  setCurrentLocale(locale?: string) {
+    if (typeof locale !== 'string' && locale !== undefined) {
       console.error('Current locale should be a string');
       return;
     }
 
     this.currentLocale = locale;
+
+    if (this.isSubmitted) {
+      this.validate();
+    }
   }
 
   onSuccess(callback: (ev?: Event) => void) {
