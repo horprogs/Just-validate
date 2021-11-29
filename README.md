@@ -1,7 +1,16 @@
-[![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/master/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
+[![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/beta/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
 <a href="https://bundlephobia.com/result?p=just-validate@2.0.0-beta.3" target="\_parent">
 <img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@2.0.0-beta.3" />
 </a>
+
+---
+**NOTE**
+
+**This is documentation for JustValidate 2. If you are looking for the old version, you could find it [here](https://github.com/horprogs/Just-validate/tree/v1).**
+
+---
+
+
 
 # JustValidate
 
