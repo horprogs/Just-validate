@@ -109,3 +109,7 @@ export enum CustomStyleTagIds {
   Label = 'label',
   LabelArrow = 'labelArrow',
 }
+
+export interface TooltipInstance {
+  refresh: () => void;
+}

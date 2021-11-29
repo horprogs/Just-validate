@@ -25,6 +25,7 @@ import {
   LocaleInterface,
   CustomStyleTagIds,
   TooltipPositionType,
+  TooltipInstance,
 } from './modules/interfaces';
 import {
   getDefaultFieldMessage,
@@ -67,6 +68,9 @@ class JustValidate {
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
   onSuccessCallback?: (event: Event) => void;
+  tooltips: TooltipInstance[] = [];
+  lastScrollPosition?: number;
+  isScrollTick?: boolean;
 
   constructor(
     form: string | Element,
@@ -89,6 +93,7 @@ class JustValidate {
     this.errorLabels = [];
     this.eventListeners = [];
     this.customStyleTags = {};
+    this.tooltips = [];
 
     if (typeof form === 'string') {
       const elem = document.querySelector(form);
@@ -117,11 +122,31 @@ class JustValidate {
       const styleTag = document.createElement('style');
       styleTag.textContent = errorLabelCss;
 
-      this.customStyleTags[CustomStyleTagIds.Label] = document.head.appendChild(
-        styleTag
-      );
+      this.customStyleTags[CustomStyleTagIds.Label] =
+        document.head.appendChild(styleTag);
+
+      this.addListener('scroll', document, this.handleDocumentScroll);
     }
   }
+
+  refreshAllTooltips = () => {
+    console.log(this.tooltips);
+    this.tooltips.forEach((item) => {
+      item.refresh();
+    });
+  };
+
+  handleDocumentScroll = () => {
+    this.lastScrollPosition = window.scrollY;
+
+    if (!this.isScrollTick) {
+      window.requestAnimationFrame(() => {
+        this.refreshAllTooltips();
+        this.isScrollTick = false;
+      });
+      this.isScrollTick = true;
+    }
+  };
 
   getLocalisedString(str?: string) {
     if (!this.currentLocale || !this.dictLocale.length) {
@@ -156,9 +181,8 @@ class JustValidate {
 
   setGroupInvalid(groupName: string, groupRule: GroupRuleInterface) {
     this.groupFields[groupName].isValid = false;
-    this.groupFields[groupName].errorMessage = this.getGroupErrorMessage(
-      groupRule
-    );
+    this.groupFields[groupName].errorMessage =
+      this.getGroupErrorMessage(groupRule);
   }
 
   setGroupValid(groupName: string) {
@@ -634,9 +658,13 @@ class JustValidate {
     this.renderErrors();
   };
 
-  addListener(type: string, elem: HTMLInputElement) {
-    elem.addEventListener(type, this.handlerChange);
-    this.eventListeners.push({ type, elem, func: this.handlerChange });
+  addListener(
+    type: string,
+    elem: HTMLInputElement | Document,
+    handler: (ev: Event) => void
+  ) {
+    elem.addEventListener(type, handler);
+    this.eventListeners.push({ type, elem, func: handler });
   }
 
   addField(
@@ -752,12 +780,12 @@ class JustValidate {
       case 'checkbox':
       case 'select-one':
       case 'radio': {
-        this.addListener('change', elem);
+        this.addListener('change', elem, this.handlerChange);
         break;
       }
 
       default: {
-        this.addListener('keyup', elem);
+        this.addListener('keyup', elem, this.handlerChange);
       }
     }
   }
@@ -812,6 +840,8 @@ class JustValidate {
         });
       });
     }
+
+    this.tooltips = [];
   }
 
   isTooltip() {
@@ -846,7 +876,7 @@ class JustValidate {
     elem: HTMLElement,
     errorLabel: HTMLDivElement,
     position?: TooltipPositionType
-  ) {
+  ): TooltipInstance {
     const { top, left, width, height } = elem.getBoundingClientRect();
     const errorLabelRect = errorLabel.getBoundingClientRect();
 
@@ -854,43 +884,51 @@ class JustValidate {
 
     switch (pos) {
       case 'left': {
-        errorLabel.style.top = `${top +
-          height / 2 -
-          errorLabelRect.height / 2}px`;
-        errorLabel.style.left = `${left -
-          errorLabelRect.width -
-          TOOLTIP_ARROW_HEIGHT}px`;
+        errorLabel.style.top = `${
+          top + height / 2 - errorLabelRect.height / 2
+        }px`;
+        errorLabel.style.left = `${
+          left - errorLabelRect.width - TOOLTIP_ARROW_HEIGHT
+        }px`;
         break;
       }
 
       case 'top': {
-        errorLabel.style.top = `${top -
-          errorLabelRect.height -
-          TOOLTIP_ARROW_HEIGHT}px`;
-        errorLabel.style.left = `${left +
-          width / 2 -
-          errorLabelRect.width / 2}px`;
+        errorLabel.style.top = `${
+          top - errorLabelRect.height - TOOLTIP_ARROW_HEIGHT
+        }px`;
+        errorLabel.style.left = `${
+          left + width / 2 - errorLabelRect.width / 2
+        }px`;
         break;
       }
 
       case 'right': {
-        errorLabel.style.top = `${top +
-          height / 2 -
-          errorLabelRect.height / 2}px`;
+        errorLabel.style.top = `${
+          top + height / 2 - errorLabelRect.height / 2
+        }px`;
         errorLabel.style.left = `${left + width + TOOLTIP_ARROW_HEIGHT}px`;
         break;
       }
 
       case 'bottom': {
         errorLabel.style.top = `${top + height + TOOLTIP_ARROW_HEIGHT}px`;
-        errorLabel.style.left = `${left +
-          width / 2 -
-          errorLabelRect.width / 2}px`;
+        errorLabel.style.left = `${
+          left + width / 2 - errorLabelRect.width / 2
+        }px`;
         break;
       }
     }
 
     errorLabel.dataset.direction = pos;
+
+    const refresh = () => {
+      this.renderTooltip(elem, errorLabel, position);
+    };
+
+    return {
+      refresh,
+    };
   }
 
   createErrorLabelElem(
@@ -911,6 +949,10 @@ class JustValidate {
       config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass,
       'just-validate-error-label'
     );
+
+    if (this.isTooltip()) {
+      errorLabel.dataset.tooltip = 'true';
+    }
 
     if (this.globalConfig.testingMode) {
       errorLabel.dataset.testId = `error-label-${name}`;
@@ -958,10 +1000,12 @@ class JustValidate {
       group.groupElem.appendChild(errorLabel);
 
       if (this.isTooltip()) {
-        this.renderTooltip(
-          group.groupElem,
-          errorLabel,
-          group.config?.tooltip?.position
+        this.tooltips.push(
+          this.renderTooltip(
+            group.groupElem,
+            errorLabel,
+            group.config?.tooltip?.position
+          )
         );
       }
     }
@@ -1002,10 +1046,12 @@ class JustValidate {
       }
 
       if (this.isTooltip()) {
-        this.renderTooltip(
-          field.elem,
-          errorLabel,
-          field.config?.tooltip?.position
+        this.tooltips.push(
+          this.renderTooltip(
+            field.elem,
+            errorLabel,
+            field.config?.tooltip?.position
+          )
         );
       }
     }

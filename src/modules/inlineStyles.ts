@@ -1,5 +1,5 @@
 const errorLabelCss = `
-        .just-validate-error-label {
+        .just-validate-error-label[data-tooltip="true"] {
           position: fixed;
           padding: 4px 8px;
           background: #423f3f;
@@ -9,7 +9,7 @@ const errorLabelCss = `
           border-radius: 4px;
           transform: translateY(-5px);
         }
-        .just-validate-error-label:before {
+        .just-validate-error-label[data-tooltip="true"]:before {
 	      content: '';
 	      width: 0;
 	      height: 0;
@@ -23,30 +23,30 @@ const errorLabelCss = `
           transform: rotate(180deg);
           left: calc(50% - 5px);
         }
-        .just-validate-error-label[data-direction="left"] {
+        .just-validate-error-label[data-tooltip="true"][data-direction="left"] {
           transform: translateX(-5px);
         }
-        .just-validate-error-label[data-direction="left"]:before {
+        .just-validate-error-label[data-tooltip="true"][data-direction="left"]:before {
 	      right: -7px;
 	      bottom: auto;
 	      left: auto;
           top: calc(50% - 2px);
           transform: rotate(90deg);
         }
-        .just-validate-error-label[data-direction="right"] {
+        .just-validate-error-label[data-tooltip="true"][data-direction="right"] {
           transform: translateX(5px);
         }
-        .just-validate-error-label[data-direction="right"]:before {
+        .just-validate-error-label[data-tooltip="true"][data-direction="right"]:before {
 	      right: auto;
 	      bottom: auto;
 	      left: -7px;
           top: calc(50% - 2px);
           transform: rotate(-90deg);
         }
-        .just-validate-error-label[data-direction="bottom"] {
+        .just-validate-error-label[data-tooltip="true"][data-direction="bottom"] {
           transform: translateY(5px);
         }
-        .just-validate-error-label[data-direction="bottom"]:before {
+        .just-validate-error-label[data-tooltip="true"][data-direction="bottom"]:before {
 	      right: auto;
 	      bottom: auto;
 	      left: calc(50% - 5px);
