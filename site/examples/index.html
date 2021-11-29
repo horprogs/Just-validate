@@ -70,9 +70,9 @@
       <nav class="top-nav">
         <a href="/examples/" class="top-nav__item">Examples</a>
         <a
-            href="https://github.com/horprogs/Just-validate"
-            class="top-nav__item"
-        >Github</a
+          href="https://github.com/horprogs/Just-validate"
+          class="top-nav__item"
+          >Github</a
         >
       </nav>
     </header>
@@ -138,6 +138,10 @@
             (() => {
               const validation = new JustValidate('#basic-validation-form', {
                 errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
                 focusInvalidField: true,
                 lockForm: true,
               });
@@ -258,7 +262,6 @@
             <div
               class="form-group mt-4"
               id="example2_read_terms_checkbox_group"
-              style="width: 250px"
             >
               <div class="form-check">
                 <label
@@ -307,7 +310,6 @@
               <div
                 class="form-check"
                 id="example2_communication_radio_group"
-                style="max-width: 200px"
               >
                 <input
                   type="radio"
@@ -349,8 +351,9 @@
                 '#more-fields-validation-form',
                 {
                   errorFieldCssClass: 'is-invalid',
-                  errorFieldStyle: {
-                    border: '1px solid red',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
                   },
                   focusInvalidField: true,
                   lockForm: true,
@@ -440,8 +443,9 @@
             (() => {
               const validation = new JustValidate('#async-validation-form', {
                 errorFieldCssClass: 'is-invalid',
-                errorFieldStyle: {
-                  border: '1px solid red',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
                 },
                 focusInvalidField: true,
                 lockForm: true,
@@ -616,6 +620,10 @@
             (() => {
               const validation = new JustValidate('#tooltips-validation-form', {
                 errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
                 focusInvalidField: true,
                 lockForm: true,
                 tooltip: {
