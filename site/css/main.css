@@ -53,6 +53,31 @@ pre {
   margin-top: 40px;
 }
 
+.flag {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  margin-left: 16px;
+}
+
+.flag img {
+  height: 40px;
+  width: 40px;
+}
+
+.flags {
+  display: flex;
+  align-items: center;
+}
+
+.flags__title {
+  margin-right: 16px;
+}
+
+.flags__content {
+  display: flex;
+}
+
 .header,
 .footer {
   flex-shrink: 0;

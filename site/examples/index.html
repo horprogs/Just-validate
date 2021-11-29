@@ -15,20 +15,6 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .form__radio,
-      .form__checkbox {
-        margin-right: 7px !important;
-      }
-      .flag {
-        width: 80px;
-        background-color: transparent;
-        border: 0;
-      }
-      .container {
-        max-width: 540px;
-      }
-    </style>
     <link href="../css/main.css" rel="stylesheet" />
     <link
       rel="stylesheet"
@@ -307,10 +293,7 @@
               <div class="pb-1">
                 Please select the preferred way for communication
               </div>
-              <div
-                class="form-check"
-                id="example2_communication_radio_group"
-              >
+              <div class="form-check" id="example2_communication_radio_group">
                 <input
                   type="radio"
                   name="radio"
@@ -706,6 +689,152 @@
                 )
                 .onSuccess((event) => {
                   console.log('Validation passes and form submitted', event);
+                });
+            })();
+          </script>
+        </section>
+      </div>
+
+      <div class="mt-5 section-shadow">
+        <h2>Localization</h2>
+        <section class="base-example container py-2 px-0">
+          <div class="mb-4">
+            <div class="flags">
+              <div class="flags__title">Change error messages language:</div>
+              <div class="flags__content">
+                <button id="change-lang-btn-ru" class="flag">
+                  <img src="../img/flag-ru.svg" alt="RU" />
+                </button>
+
+                <button id="change-lang-btn-en" class="flag">
+                  <img src="../img/flag-gb.svg" alt="GB" />
+                </button>
+
+                <button id="change-lang-btn-es" class="flag">
+                  <img src="../img/flag-es.svg" alt="ES" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <form action="#" id="localization-validation-form" autocomplete="off">
+            <div class="row">
+              <div class="col">
+                <label for="example5_name">Enter your name</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  placeholder="Enter your name"
+                  autocomplete="off"
+                  name="example5_name"
+                  id="example5_name"
+                />
+              </div>
+              <div class="col">
+                <label for="example5_email">Enter your email</label>
+                <input
+                  type="email"
+                  class="form__input form-control"
+                  placeholder="Enter your email"
+                  autocomplete="off"
+                  name="example5_email"
+                  id="example5_email"
+                />
+              </div>
+            </div>
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example5_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate(
+                '#localization-validation-form',
+                {
+                  errorFieldCssClass: 'is-invalid',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
+                  },
+                  focusInvalidField: true,
+                },
+                [
+                  {
+                    key: 'Name is too short',
+                    dict: {
+                      ru: 'Имя слишком короткое',
+                      es: 'El nombre es muy corto',
+                    },
+                  },
+                  {
+                    key: 'Name is too long',
+                    dict: {
+                      ru: 'Имя слишком длинное',
+                      es: 'El nombre es demasiado largo',
+                    },
+                  },
+                  {
+                    key: 'Email is required',
+                    dict: {
+                      ru: 'Еmail - обязательное поле',
+                      es: 'Correo electronico es requerido',
+                    },
+                  },
+                  {
+                    key: 'Email is invalid',
+                    dict: {
+                      ru: 'Указан некорректный Email',
+                      es: 'El correo electrónico es invalido',
+                    },
+                  },
+                ]
+              );
+
+              validation
+                .addField('#example5_name', [
+                  {
+                    rule: 'minLength',
+                    value: 3,
+                    errorMessage: 'Name is too short',
+                  },
+                  {
+                    rule: 'maxLength',
+                    value: 15,
+                    errorMessage: 'Name is too long',
+                  },
+                ])
+                .addField('#example5_email', [
+                  {
+                    rule: 'required',
+                    errorMessage: 'Email is required',
+                  },
+                  {
+                    rule: 'email',
+                    errorMessage: 'Email is invalid',
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev.preventDefault();
+                  window.showNotification();
+                });
+
+              document
+                .querySelector('#change-lang-btn-en')
+                .addEventListener('click', () => {
+                  validation.setCurrentLocale();
+                });
+
+              document
+                .querySelector('#change-lang-btn-ru')
+                .addEventListener('click', () => {
+                  validation.setCurrentLocale('ru');
+                });
+
+              document
+                .querySelector('#change-lang-btn-es')
+                .addEventListener('click', () => {
+                  validation.setCurrentLocale('es');
                 });
             })();
           </script>
