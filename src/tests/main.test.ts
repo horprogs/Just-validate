@@ -677,7 +677,7 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Number should be more than 10'
+      'Number should be more or equal than 10'
     );
 
     changeTextBySelector('#name', '122');
@@ -691,7 +691,7 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Number should be less than 100'
+      'Number should be less or equal than 100'
     );
 
     changeTextBySelector('#name', '50');

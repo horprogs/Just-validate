@@ -1,3 +1,5 @@
+// this is a source version of inlineStyles.compressed.ts
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorLabelCss = `
         .just-validate-error-label[data-tooltip="true"] {
           position: fixed;

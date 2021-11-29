@@ -1,4 +1,4 @@
 export default {
-    testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['./jest.setup.ts'],
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['./jest.setup.ts'],
 };

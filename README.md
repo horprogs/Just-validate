@@ -1,10 +1,10 @@
-# Just-validate
+# JustValidate
 
-Modern, simple, lightweight (~5,5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
+Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
 Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
 custom error messages and styles, localization.
 
-## Why Just-validate?
+## Why JustValidate?
 
 It's a right choice for you, if you have a site, a landing page without React, JQuery etc.
 and you want to quick, simple and powerful solution for validating your form.
@@ -36,11 +36,22 @@ npm install just-validate --save
 yarn add just-validate
 ```
 
-Or just include the Just-validate script in your page
+And then use it as an imported module:
+
+```js
+import JustValidate from 'just-validate';
+
+const validate = new JustValidate('#form');
+```
+
+Or if you don't use module bundlers, just include JustValidate script on your page from CDN and call it as `window.JustValidate`:
 
 ```html
-<script src="./path/to/just-validate.min.js"></script>
-...
+<script src="https://unpkg.com/just-validate@2.0.0-beta.2/dist/just-validate.production.min.js"></script>
+<body>
+  <script>
+    const validate = new window.JustValidate('#form');
+  </script>
 </body>
 ```
 
@@ -72,9 +83,9 @@ Let's say we have a basic HTML layout:
 </form>
 ```
 
-Next, let's add Just-validate to our layout and define some simple rules.
+Next, let's add JustValidate to our layout and define some simple rules.
 
-First, we should create the instance `new JustValidate('#form')` by passing a form selector as an argument.
+First, we should create the instance `new JustValidate('#form')` by passing a form selector, or the element as an argument.
 
 Second, we call `.addField()` with a field selector as the first argument and an array of rules as the second argument.
 
@@ -231,9 +242,7 @@ Let's check more advanced example:
     </div>
   </div>
   <div class="mt-4 form-group">
-    <div class="pb-1">
-      Please select the preferred way for communication
-    </div>
+    <div class="pb-1">Please select the preferred way for communication</div>
     <div
       class="form-check"
       id="communication_radio_group"
@@ -396,6 +405,7 @@ const validation = new JustValidate(
 - `focusInvalidField` - if true, the first invalid field will be focused after the form submitting
 - `tooltip` if the field defined, tooltips will be displayed instead of regular error labels.
   It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
+- localization object will be explained in Localization section
 
 ## Rule object
 
@@ -491,7 +501,7 @@ validation.addField('#repeat-password', [
 
 ### Localization
 
-You could define own translations for different languages. To do that you should define `dictLocale` array, like:
+You could define your own translations for different languages. To do that you should define `dictLocale` array, like:
 
 ```
   [
@@ -516,17 +526,20 @@ Field `key` should be defined as a key string, which also should be defined as `
 
 `dict` should be an object with languages keys with their translations.
 
-To switch a language you should call `validation.refresh()` to reset the current state and `validation.setCurrentLocale('ru');`.
-The argument for `setCurrentLocale()` method you should pass the key, which you defined in `dict` object.
+To switch a language you should call `validation.setCurrentLocale('ru');`.
+The argument for `setCurrentLocale()` method you should pass the key, which you defined in `dict` object,
+or you could call with empty argument to set the default language (strings defined in `key` fields).
 
 ```js
 document.querySelector('#change-lang-btn-en').addEventListener('click', () => {
-  validation.refresh();
-  validation.setCurrentLocale('en');
+  validation.setCurrentLocale();
 });
 
 document.querySelector('#change-lang-btn-ru').addEventListener('click', () => {
-  validation.refresh();
   validation.setCurrentLocale('ru');
+});
+
+document.querySelector('#change-lang-btn-es').addEventListener('click', () => {
+  validation.setCurrentLocale('es');
 });
 ```

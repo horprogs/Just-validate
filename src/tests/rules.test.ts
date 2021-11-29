@@ -9,8 +9,8 @@ import {
   isNumber,
 } from '../utils/validationUtils';
 
-describe('Validate rules', function() {
-  test('isEmail', function() {
+describe('Validate rules', () => {
+  test('isEmail', () => {
     expect(isEmail('test@test.com')).toBeTruthy();
     expect(isEmail('ivan123@gmail.com')).toBeTruthy();
     expect(isEmail('ivangmail.com')).toBeFalsy();
@@ -20,7 +20,7 @@ describe('Validate rules', function() {
     expect(isEmail('@gmail.com')).toBeFalsy();
   });
 
-  test('isPassword', function() {
+  test('isPassword', () => {
     expect(isPassword('1234567f')).toBeTruthy();
     expect(isPassword('qqqqqqq1')).toBeTruthy();
     expect(isPassword('1234567')).toBeFalsy();
@@ -30,7 +30,7 @@ describe('Validate rules', function() {
     expect(isPassword('')).toBeFalsy();
   });
 
-  test('isNumer', function() {
+  test('isNumber', () => {
     expect(isNumber('10')).toBeTruthy();
     expect(isNumber('01')).toBeTruthy();
     expect(isNumber('00')).toBeTruthy();
@@ -42,7 +42,7 @@ describe('Validate rules', function() {
     expect(isNumber('.11')).toBeFalsy();
   });
 
-  test('isMinLength', function() {
+  test('isMinLength', () => {
     expect(isLengthLessThanMin('12', 3)).toBeTruthy();
     expect(isLengthLessThanMin('', 3)).toBeTruthy();
     expect(isLengthLessThanMin('123', 3)).toBeFalsy();
@@ -50,7 +50,7 @@ describe('Validate rules', function() {
     expect(isLengthLessThanMin('1234555', 3)).toBeFalsy();
   });
 
-  test('isMaxLength', function() {
+  test('isMaxLength', () => {
     expect(isLengthMoreThanMax('123456', 5)).toBeTruthy();
     expect(isLengthMoreThanMax('123456789', 5)).toBeTruthy();
     expect(isLengthMoreThanMax('12345', 5)).toBeFalsy();
@@ -59,21 +59,21 @@ describe('Validate rules', function() {
     expect(isLengthMoreThanMax('', 5)).toBeFalsy();
   });
 
-  test('isNumberMoreThanMax', function() {
+  test('isNumberMoreThanMax', () => {
     expect(isNumberMoreThanMax(8, 5)).toBeTruthy();
     expect(isNumberMoreThanMax(6, 5)).toBeTruthy();
     expect(isNumberMoreThanMax(5, 5)).toBeFalsy();
     expect(isNumberMoreThanMax(0, 5)).toBeFalsy();
   });
 
-  test('isNumberLessThanMin', function() {
+  test('isNumberLessThanMin', () => {
     expect(isNumberLessThanMin(4, 5)).toBeTruthy();
     expect(isNumberLessThanMin(0, 5)).toBeTruthy();
     expect(isNumberLessThanMin(5, 5)).toBeFalsy();
     expect(isNumberLessThanMin(8, 5)).toBeFalsy();
   });
 
-  test('isStrongPassword', function() {
+  test('isStrongPassword', () => {
     expect(isStrongPassword('123456qA!')).toBeTruthy();
     expect(isStrongPassword('qqqqqqV1!')).toBeTruthy();
     expect(isStrongPassword('qqqqqq1!')).toBeFalsy();
