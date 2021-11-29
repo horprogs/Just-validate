@@ -68,6 +68,7 @@ class JustValidate {
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
   onSuccessCallback?: (event: Event) => void;
+  onFailCallback?: (fields: FieldsInterface) => void;
   tooltips: TooltipInstance[] = [];
   lastScrollPosition?: number;
   isScrollTick?: boolean;
@@ -589,6 +590,8 @@ class JustValidate {
       this.validate().then((hasPromises) => {
         if (this.isValid) {
           this.onSuccessCallback?.(ev);
+        } else {
+          this.onFailCallback?.(this.fields);
         }
 
         if (hasPromises && this.globalConfig.lockForm) {
@@ -1095,8 +1098,14 @@ class JustValidate {
     }
   }
 
-  onSuccess(callback: (ev?: Event) => void) {
+  onSuccess(callback: (ev?: Event) => void): JustValidate {
     this.onSuccessCallback = callback;
+    return this;
+  }
+
+  onFail(callback: (fields: FieldsInterface) => void): JustValidate {
+    this.onFailCallback = callback;
+    return this;
   }
 }
 

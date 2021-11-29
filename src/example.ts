@@ -190,7 +190,10 @@ const basicExample = () => {
     ])
     .onSuccess((ev) => {
       ev?.preventDefault();
-      console.log('!!!!', ev);
+      console.log('SUCCESS', ev);
+    })
+    .onFail((fields) => {
+      console.log('FAIL', fields);
     });
   // .addField('#basic_email', [
   //   {
