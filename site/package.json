@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --port 3002",
     "build": "vite build",
-    "serve": "vite preview --port"
+    "serve": "vite preview"
   },
   "author": "Georgii Perepecho <horprogs@gmail.com>",
   "license": "MIT",
