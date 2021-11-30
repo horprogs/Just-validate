@@ -2,7 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Just-validate</title>
+    <title>
+      JustValidate - modern form validation library written in Typescript
+    </title>
+    <meta
+      name="description"
+      content="Modern, customizable, simple, lightweight (~5kb gzip) form validation library, with no dependencies (no JQuery!)"
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#5c30f6" />
+    <meta name="theme-color" content="#ffffff" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -69,45 +88,58 @@
         </div>
       </section>
       <section class="docs content">
-          <h2 id="why-justvalidate-">Why JustValidate?</h2>
-          <p>It&#39;s a right choice for you, if you have a site, a landing page without React, JQuery etc.
-              and you want to quick, simple and powerful solution for validating your form.</p>
-          <h2 id="features">Features</h2>
-          <ul>
-              <li>small size and zero dependencies</li>
-              <li>no need to change your HTML</li>
-              <li>a wide range of pre-defined rules</li>
-              <li>custom rules</li>
-              <li>custom styles and css classes for invalid fields and error messages</li>
-              <li>custom messages</li>
-              <li>showing tooltips as error messages</li>
-              <li>localization (defining error messages for different languages)</li>
-              <li>user-friendly setup: console warning messages if something incorrect</li>
-              <li>written in Typescript and good test coverage</li>
-          </ul>
-          <h2 id="installation">Installation</h2>
-          <h3 id="npm">npm</h3>
-          <pre><code class="lang-shell">npm <span class="hljs-keyword">install</span> just-<span class="hljs-keyword">validate</span> <span class="hljs-comment">--save</span>
+        <h2 id="why-justvalidate-">Why JustValidate?</h2>
+        <p>
+          It&#39;s a right choice for you, if you have a site, a landing page
+          without React, JQuery etc. and you want to quick, simple and powerful
+          solution for validating your form.
+        </p>
+        <h2 id="features">Features</h2>
+        <ul>
+          <li>small size and zero dependencies</li>
+          <li>no need to change your HTML</li>
+          <li>a wide range of pre-defined rules</li>
+          <li>custom rules</li>
+          <li>
+            custom styles and css classes for invalid fields and error messages
+          </li>
+          <li>custom messages</li>
+          <li>showing tooltips as error messages</li>
+          <li>
+            localization (defining error messages for different languages)
+          </li>
+          <li>
+            user-friendly setup: console warning messages if something incorrect
+          </li>
+          <li>written in Typescript and good test coverage</li>
+        </ul>
+        <h2 id="installation">Installation</h2>
+        <h3 id="npm">npm</h3>
+        <pre><code class="lang-shell">npm <span class="hljs-keyword">install</span> just-<span class="hljs-keyword">validate</span> <span class="hljs-comment">--save</span>
 </code></pre>
-          <h3 id="yarn">yarn</h3>
-          <pre><code class="lang-shell">yarn <span class="hljs-keyword">add</span><span class="bash"> just-validate</span>
+        <h3 id="yarn">yarn</h3>
+        <pre><code class="lang-shell">yarn <span class="hljs-keyword">add</span><span class="bash"> just-validate</span>
 </code></pre>
-          <p>And then use it as an imported module:</p>
-          <pre><code class="lang-js"><span class="hljs-keyword">import</span> JustValidate <span class="hljs-keyword">from</span> <span class="hljs-string">'just-validate'</span>;
+        <p>And then use it as an imported module:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> JustValidate <span class="hljs-keyword">from</span> <span class="hljs-string">'just-validate'</span>;
 
 <span class="hljs-keyword">const</span> validate = <span class="hljs-keyword">new</span> JustValidate(<span class="hljs-string">'#form'</span>);
 </code></pre>
-          <p>Or if you don&#39;t use module bundlers, just include JustValidate script on your page from CDN and call it as <code>window.JustValidate</code>:</p>
-          <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/just-validate@2.0.0-beta.2/dist/just-validate.production.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+        <p>
+          Or if you don&#39;t use module bundlers, just include JustValidate
+          script on your page from CDN and call it as
+          <code>window.JustValidate</code>:
+        </p>
+        <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/just-validate@2.0.0-beta.2/dist/just-validate.production.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
     <span class="hljs-keyword">const</span> validate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.JustValidate(<span class="hljs-string">'#form'</span>);
   </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 </code></pre>
-          <h2 id="quick-start">Quick start</h2>
-          <p>Let&#39;s say we have a basic HTML layout:</p>
-          <pre><code class="lang-html">&lt;<span class="hljs-keyword">form</span> action=<span class="hljs-string">"#"</span> id=<span class="hljs-string">"form"</span> autocomplete=<span class="hljs-string">"off"</span>&gt;
+        <h2 id="quick-start">Quick start</h2>
+        <p>Let&#39;s say we have a basic HTML layout:</p>
+        <pre><code class="lang-html">&lt;<span class="hljs-keyword">form</span> action=<span class="hljs-string">"#"</span> id=<span class="hljs-string">"form"</span> autocomplete=<span class="hljs-string">"off"</span>&gt;
   &lt;<span class="hljs-keyword">label</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"name"</span>&gt;Enter your name&lt;/<span class="hljs-keyword">label</span>&gt;
   &lt;<span class="hljs-keyword">input</span>
     <span class="hljs-keyword">type</span>=<span class="hljs-string">"text"</span>
@@ -129,10 +161,20 @@
   &lt;button <span class="hljs-keyword">class</span>=<span class="hljs-string">"btn btn-primary"</span> id=<span class="hljs-string">"submit-btn"</span>&gt;Submit&lt;/button&gt;
 &lt;/<span class="hljs-keyword">form</span>&gt;
 </code></pre>
-          <p>Next, let&#39;s add JustValidate to our layout and define some simple rules.</p>
-          <p>First, we should create the instance <code>new JustValidate(&#39;#form&#39;)</code> by passing a form selector, or the element as an argument.</p>
-          <p>Second, we call <code>.addField()</code> with a field selector as the first argument and an array of rules as the second argument.</p>
-          <pre><code class="lang-js"><span class="hljs-keyword">const</span> validation = <span class="hljs-keyword">new</span> JustValidate(<span class="hljs-string">'#form'</span>);
+        <p>
+          Next, let&#39;s add JustValidate to our layout and define some simple
+          rules.
+        </p>
+        <p>
+          First, we should create the instance
+          <code>new JustValidate(&#39;#form&#39;)</code> by passing a form
+          selector, or the element as an argument.
+        </p>
+        <p>
+          Second, we call <code>.addField()</code> with a field selector as the
+          first argument and an array of rules as the second argument.
+        </p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> validation = <span class="hljs-keyword">new</span> JustValidate(<span class="hljs-string">'#form'</span>);
 
 validation
   .addField(<span class="hljs-string">'#name'</span>, [
@@ -156,9 +198,9 @@ validation
     },
   ]);
 </code></pre>
-          <p>And that&#39;s it! Now our form is validated!</p>
-          <h2 id="instance-setting">Instance setting</h2>
-          <pre><code><span class="hljs-keyword">new</span> JustValidate(
+        <p>And that&#39;s it! Now our form is validated!</p>
+        <h2 id="instance-setting">Instance setting</h2>
+        <pre><code><span class="hljs-keyword">new</span> JustValidate(
    form: <span class="hljs-keyword">string</span> | Element,
    globalConfig?: {
      errorFieldStyle: Partial&lt;CSSStyleDeclaration&gt;,
@@ -179,8 +221,9 @@ validation
      };
    }[];
 );
-</code></pre><p>For example, full setting:</p>
-          <pre><code class="lang-js">const validation = new JustValidate(
+</code></pre>
+        <p>For example, full setting:</p>
+        <pre><code class="lang-js">const validation = new JustValidate(
   <span class="hljs-string">'#form'</span>,
   {
 <span class="hljs-attr">    errorFieldCssClass:</span> <span class="hljs-string">'is-invalid'</span>,
@@ -216,16 +259,29 @@ validation
   ]
 );
 </code></pre>
-          <ul>
-              <li><code>lockForm</code> - if true, lock form during validation.
-                  Could be useful for async validation to make it impossible for user to interact with the form</li>
-              <li><code>focusInvalidField</code> - if true, the first invalid field will be focused after the form submitting</li>
-              <li><code>tooltip</code> if the field defined, tooltips will be displayed instead of regular error labels.
-                  It has <code>position</code> field which could be <code>&#39;left&#39; | &#39;top&#39; | &#39;right&#39; | &#39;bottom&#39;</code></li>
-              <li>localization object will be explained in Localization section</li>
-          </ul>
-          <h2 id="rule-object">Rule object</h2>
-          <pre><code>{
+        <ul>
+          <li>
+            <code>lockForm</code> - if true, lock form during validation. Could
+            be useful for async validation to make it impossible for user to
+            interact with the form
+          </li>
+          <li>
+            <code>focusInvalidField</code> - if true, the first invalid field
+            will be focused after the form submitting
+          </li>
+          <li>
+            <code>tooltip</code> if the field defined, tooltips will be
+            displayed instead of regular error labels. It has
+            <code>position</code> field which could be
+            <code
+              >&#39;left&#39; | &#39;top&#39; | &#39;right&#39; |
+              &#39;bottom&#39;</code
+            >
+          </li>
+          <li>localization object will be explained in Localization section</li>
+        </ul>
+        <h2 id="rule-object">Rule object</h2>
+        <pre><code>{
   rule: <span class="hljs-built_in">String</span>,
   errorMessage: <span class="hljs-built_in">String</span>,
   validator: (
@@ -234,43 +290,66 @@ validation
  ) =&gt; <span class="hljs-built_in">Boolean</span> | Promise;
  value: <span class="hljs-built_in">number</span> | <span class="hljs-built_in">string</span>;
 }
-</code></pre><p>Field <code>rule</code> could be one of these values:</p>
-          <ul>
-              <li><code>required</code> - Required field, not empty</li>
-              <li><code>email</code> - Valid email address</li>
-              <li><code>minLength</code> - Limit the minimum text length</li>
-              <li><code>maxLength</code> - Limit the maximum text length</li>
-              <li><code>number</code> - Value should be a number</li>
-              <li><code>minNumber</code> - Number should be more than defined value</li>
-              <li><code>maxNumber</code> - Number should be less than defined value</li>
-              <li><code>password</code> - Minimum eight characters, at least one letter and one number</li>
-              <li><code>strongPassword</code> - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character</li>
-              <li><code>customRegexp</code> - Custom regexp expression</li>
-          </ul>
-          <p>Field <code>errorMessage</code> used for customizing the error message for this rule.</p>
-          <p>Field <code>value</code> used only with <code>minLength</code>, <code>maxLength</code>, <code>minNumber</code>, <code>maxNumber</code>, <code>customRegexp</code> rules to define the rule value, for example:</p>
-          <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#name'</span>, [
+</code></pre>
+        <p>Field <code>rule</code> could be one of these values:</p>
+        <ul>
+          <li><code>required</code> - Required field, not empty</li>
+          <li><code>email</code> - Valid email address</li>
+          <li><code>minLength</code> - Limit the minimum text length</li>
+          <li><code>maxLength</code> - Limit the maximum text length</li>
+          <li><code>number</code> - Value should be a number</li>
+          <li>
+            <code>minNumber</code> - Number should be more than defined value
+          </li>
+          <li>
+            <code>maxNumber</code> - Number should be less than defined value
+          </li>
+          <li>
+            <code>password</code> - Minimum eight characters, at least one
+            letter and one number
+          </li>
+          <li>
+            <code>strongPassword</code> - Minimum eight characters, at least one
+            uppercase letter, one lowercase letter, one number and one special
+            character
+          </li>
+          <li><code>customRegexp</code> - Custom regexp expression</li>
+        </ul>
+        <p>
+          Field <code>errorMessage</code> used for customizing the error message
+          for this rule.
+        </p>
+        <p>
+          Field <code>value</code> used only with <code>minLength</code>,
+          <code>maxLength</code>, <code>minNumber</code>,
+          <code>maxNumber</code>, <code>customRegexp</code> rules to define the
+          rule value, for example:
+        </p>
+        <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#name'</span>, [
   {
     <span class="hljs-attribute">rule</span>: <span class="hljs-string">'minLength'</span>,
     <span class="hljs-attribute">value</span>: <span class="hljs-number">3</span>,
   },
 ]);
 </code></pre>
-          <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#password'</span>, [
+        <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#password'</span>, [
   {
     <span class="hljs-attribute">rule</span>: <span class="hljs-string">'customRegexp'</span>,
     <span class="hljs-attribute">value</span>: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&amp;^_-]).{<span class="hljs-number">8</span>,}/,
   },
 ]);
 </code></pre>
-          <p>Field <code>validator</code> used for custom validation. It should return a boolean or a function which returns a Promise.</p>
-          <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#text'</span>, [
+        <p>
+          Field <code>validator</code> used for custom validation. It should
+          return a boolean or a function which returns a Promise.
+        </p>
+        <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#text'</span>, [
   {
     validator: (<span class="hljs-keyword">value</span>) =&gt; <span class="hljs-keyword">value</span>[<span class="hljs-keyword">value</span>.length - <span class="hljs-number">1</span>] === <span class="hljs-string">'.'</span>,
   },
 ]);
 </code></pre>
-          <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#email'</span>, [
+        <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#email'</span>, [
   {
     validator: <span class="hljs-function"><span class="hljs-params">(value)</span> =&gt;</span> () =&gt; {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise(<span class="hljs-function"><span class="hljs-params">(resolve)</span> =&gt;</span> {
@@ -282,8 +361,8 @@ validation
   },
 ]);
 </code></pre>
-          <p>Also, it&#39;s possible to do validation based on other fields:</p>
-          <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#repeat-password'</span>, [
+        <p>Also, it&#39;s possible to do validation based on other fields:</p>
+        <pre><code class="lang-js">validation.addField(<span class="hljs-string">'#repeat-password'</span>, [
   {
     validator: (<span class="hljs-keyword">value</span>, fields) =&gt; {
       <span class="hljs-keyword">if</span> (fields[<span class="hljs-string">'#password'</span>] &amp;&amp; fields[<span class="hljs-string">'#password'</span>].elem) {
@@ -298,9 +377,12 @@ validation
   },
 ]);
 </code></pre>
-          <h3 id="localization">Localization</h3>
-          <p>You could define your own translations for different languages. To do that you should define <code>dictLocale</code> array, like:</p>
-          <pre><code>  [
+        <h3 id="localization">Localization</h3>
+        <p>
+          You could define your own translations for different languages. To do
+          that you should define <code>dictLocale</code> array, like:
+        </p>
+        <pre><code>  [
     {
       key: <span class="hljs-symbol">'Name</span> is too short',
       dict: {
@@ -316,12 +398,24 @@ validation
       },
     },
   ]
-</code></pre><p>Field <code>key</code> should be defined as a key string, which also should be defined as <code>errorMessage</code> in a rule object.</p>
-          <p><code>dict</code> should be an object with languages keys with their translations.</p>
-          <p>To switch a language you should call <code>validation.setCurrentLocale(&#39;ru&#39;);</code>.
-              The argument for <code>setCurrentLocale()</code> method you should pass the key, which you defined in <code>dict</code> object,
-              or you could call with empty argument to set the default language (strings defined in <code>key</code> fields).</p>
-          <pre><code class="lang-js"><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#change-lang-btn-en'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+</code></pre>
+        <p>
+          Field <code>key</code> should be defined as a key string, which also
+          should be defined as <code>errorMessage</code> in a rule object.
+        </p>
+        <p>
+          <code>dict</code> should be an object with languages keys with their
+          translations.
+        </p>
+        <p>
+          To switch a language you should call
+          <code>validation.setCurrentLocale(&#39;ru&#39;);</code>. The argument
+          for <code>setCurrentLocale()</code> method you should pass the key,
+          which you defined in <code>dict</code> object, or you could call with
+          empty argument to set the default language (strings defined in
+          <code>key</code> fields).
+        </p>
+        <pre><code class="lang-js"><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#change-lang-btn-en'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
   validation.setCurrentLocale();
 });
 
@@ -333,7 +427,6 @@ validation
   validation.setCurrentLocale(<span class="hljs-string">'es'</span>);
 });
 </code></pre>
-
       </section>
     </main>
 
