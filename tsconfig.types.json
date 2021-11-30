@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "isolatedModules": false,
+    "strict": false,
+    "noEmit": false,
+    "emitDeclarationOnly": true
+  },
+  "exclude": [
+    "src/example.ts",
+    "src/tests"
+  ]
+}

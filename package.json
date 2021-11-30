@@ -6,12 +6,23 @@
     "lint-md": "remark .",
     "semantic-release": "semantic-release",
     "dev": "vite --port 3001",
-    "build": "tsc && vite build",
+    "build:vite": "tsc && vite build",
+    "build:types": "tsc --project tsconfig.types.json",
+    "build": "yarn run build:vite && yarn run build:types",
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "upgrade-packages": "ncu --configFileName .ncurc.json"
   },
+  "main": "./dist/just-validate.production.min.js",
+  "module": "./dist/just-validate.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/just-validate.es.js",
+      "require": "./dist/just-validate.production.min.js"
+    }
+  },
+  "types": "./dist/main.d.ts",
   "remarkConfig": {
     "plugins": [
       "remark-preset-lint-recommended"
@@ -32,16 +43,10 @@
   "bugs": {
     "url": "https://github.com/horprogs/Just-validate/issues"
   },
-  "unpkg": "./dist/just-validate.umd.js",
-  "files": ["dist"],
-  "main": "./dist/just-validate.umd.js",
-  "module": "./dist/just-validate.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/just-validate.es.js",
-      "require": "./dist/just-validate.umd.js"
-    }
-  },
+  "unpkg": "./dist/just-validate.production.min.js",
+  "files": [
+    "dist"
+  ],
   "homepage": "https://github.com/horprogs/Just-validate#readme",
   "devDependencies": {
     "@babel/core": "7.16.0",
