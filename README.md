@@ -34,6 +34,8 @@ and you want to quick, simple and powerful solution for validating your form.
 - user-friendly setup: console warning messages if something incorrect
 - written in Typescript and good test coverage
 
+Please, check out the examples https://just-validate.dev/examples/
+
 ## Installation
 
 ### npm
