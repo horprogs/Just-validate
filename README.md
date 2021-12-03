@@ -1,7 +1,13 @@
+![main image](https://user-images.githubusercontent.com/14051960/144635813-82670c30-44c0-43e6-ad61-1505d5b8d929.png)
+
 [![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/beta/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
 <a href="https://bundlephobia.com/result?p=just-validate@2.0.0-beta.3" target="\_parent">
 <img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@2.0.0-beta.3" />
 </a>
+
+Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
+Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
+custom error messages and styles, localization.
 
 ---
 **NOTE**
@@ -9,14 +15,6 @@
 **This is documentation for JustValidate 2. If you are looking for the old version, you could find it [here](https://github.com/horprogs/Just-validate/tree/v1).**
 
 ---
-
-
-
-# JustValidate
-
-Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
-Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
-custom error messages and styles, localization.
 
 ## Why JustValidate?
 
