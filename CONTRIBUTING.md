@@ -61,4 +61,4 @@ Use an appropriate commit type.
 
 For each new commit added to `master` with `git push` or by merging a pull request or merging from another branch, a github action is triggered and runs the `semantic-release` command to make a release if there are codebase changes since the last release that affect the package functionalities.
 
-After the release, the link to the CDN for the new version should be changed here `site/examples/index.html` and in `README.md`.
+After the release, the link to the CDN for the new version should be changed here `site/examples/index.html`, in `README.md` and in `site/index.html`.

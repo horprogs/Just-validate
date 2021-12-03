@@ -59,7 +59,7 @@ const validate = new JustValidate('#form');
 Or if you don't use module bundlers, just include JustValidate script on your page from CDN and call it as `window.JustValidate`:
 
 ```html
-<script src="https://unpkg.com/just-validate@2.0.0-beta.2/dist/just-validate.production.min.js"></script>
+<script src="https://unpkg.com/just-validate@2.0.0-beta.6/dist/just-validate.production.min.js"></script>
 <body>
   <script>
     const validate = new window.JustValidate('#form');
