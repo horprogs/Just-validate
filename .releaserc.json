@@ -1,3 +1,4 @@
 {
-  "dryRun": false
+  "dryRun": false,
+  "plugins": ["@semantic-release/git"]
 }
