@@ -5405,6 +5405,11 @@ just-diff@^3.0.1:
   resolved "https://registry.yarnpkg.com/just-diff/-/just-diff-3.1.1.tgz#d50c597c6fd4776495308c63bdee1b6839082647"
   integrity sha512-sdMWKjRq8qWZEjDcVA6llnUT8RDEBIfOiGpYFPYa9u+2c39JCsejktSP7mj5eRid5EIvTzIpQ2kDOCw1Nq9BjQ==
 
+just-validate@2.0.0-beta.4:
+  version "2.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/just-validate/-/just-validate-2.0.0-beta.4.tgz#3e869038f24827fecfa22c8384739961c93365eb"
+  integrity sha512-a54TsV1UOMYrmQvgtJMkqa6lV85wQ8U9m76s14Nb5xXMKnU6rPPn1uIcCp+xQ8V7OLJWEH/7C9FY0d2WZsT+qg==
+
 kind-of@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"

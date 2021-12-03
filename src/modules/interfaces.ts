@@ -41,7 +41,7 @@ export interface FieldRuleInterface {
     value: string | boolean,
     context: FieldsInterface
   ) => ValidatorReturn;
-  value?: number | string;
+  value?: number | string | RegExp;
 }
 
 export interface GroupRuleInterface {

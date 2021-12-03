@@ -131,7 +131,6 @@ class JustValidate {
   }
 
   refreshAllTooltips = () => {
-    console.log(this.tooltips);
     this.tooltips.forEach((item) => {
       item.refresh();
     });
@@ -250,15 +249,17 @@ class JustValidate {
       case Rules.MaxLength: {
         if (!ruleValue) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a number. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
@@ -276,15 +277,17 @@ class JustValidate {
       case Rules.MinLength: {
         if (!ruleValue) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a number. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
@@ -338,15 +341,17 @@ class JustValidate {
       case Rules.MaxNumber: {
         if (!ruleValue) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
@@ -366,15 +371,17 @@ class JustValidate {
       case Rules.MinNumber: {
         if (!ruleValue) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
@@ -394,35 +401,25 @@ class JustValidate {
       case Rules.CustomRegexp: {
         if (!ruleValue) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
           );
-          return;
-        }
-
-        if (typeof ruleValue !== 'string') {
-          console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a string. Validation will be skipped for this rule.`
-          );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         let regexp;
 
         try {
-          regexp = new RegExp(ruleValue);
+          regexp = new RegExp(ruleValue as string | RegExp);
         } catch (e) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a valid regexp. Validation will be skipped for this rule.`
+            `Value for ${fieldRule.rule} rule for [${field}] should be a valid regexp. This field will be always invalid.`
           );
-          break;
-        }
-
-        if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
           break;
         }
 
-        if (!regexp.test(elemValue)) {
+        if (!regexp.test(String(elemValue))) {
           this.setFieldInvalid(field, fieldRule);
         }
 
@@ -432,15 +429,17 @@ class JustValidate {
       default: {
         if (!fieldRule.validator) {
           console.error(
-            `Validator for custom rule for [${field}] field is not defined. Validation will be skipped for this rule.`
+            `Validator for custom rule for [${field}] field is not defined. This field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
         if (typeof fieldRule.validator !== 'function') {
           console.error(
-            `Validator for custom rule for [${field}] field should be a function. Validation will be skipped for this rule.`
+            `Validator for custom rule for [${field}] field should be a function. This field will be always invalid.`
           );
+          this.setFieldInvalid(field, fieldRule);
           return;
         }
 
@@ -458,8 +457,9 @@ class JustValidate {
 
           if (!isPromise(promise)) {
             console.error(
-              `Validator function for custom rule for [${field}] field should return a Promise. Validation will be skipped for this rule.`
+              `Validator function for custom rule for [${field}] field should return a Promise. This field will be always invalid.`
             );
+            this.setFieldInvalid(field, fieldRule);
             return;
           }
 
@@ -786,22 +786,6 @@ class JustValidate {
     }
   }
 
-  removeField(field: string): JustValidate {
-    if (typeof field !== 'string') {
-      throw Error(
-        `Field selector is not valid. Please specify a string selector.`
-      );
-    }
-
-    if (!(field in this.fields)) {
-      console.warn(`There is no [${field}] field.`);
-      return this;
-    }
-
-    delete this.fields[field];
-    return this;
-  }
-
   clearErrors() {
     this.errorLabels.forEach((item) => item.remove());
 
@@ -1061,13 +1045,14 @@ class JustValidate {
     Object.keys(this.customStyleTags).forEach((key) => {
       this.customStyleTags[key].remove();
     });
-  }
 
-  refresh() {
     this.clearErrors();
     if (this.globalConfig.lockForm) {
       this.unlockForm();
     }
+  }
+
+  refresh() {
     this.destroy();
 
     if (!this.form) {

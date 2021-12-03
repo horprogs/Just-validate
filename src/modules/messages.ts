@@ -2,7 +2,7 @@ import { GroupRules, Rules } from './interfaces';
 
 export const getDefaultFieldMessage = (
   rule?: Rules,
-  ruleValue?: number | string
+  ruleValue?: number | string | RegExp
 ) => {
   switch (rule) {
     case Rules.Required:

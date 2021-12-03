@@ -8,10 +8,13 @@ import {
 } from '../utils/testingUtils';
 import JustValidate from '../main';
 import { Rules } from '../modules/interfaces';
-import { waitFor } from '@testing-library/dom';
+import { fireEvent, waitFor } from '@testing-library/dom';
 
 describe('Validation', () => {
   beforeEach(() => {
+    console.warn = jest.fn();
+    console.error = jest.fn();
+
     document.body.innerHTML = `
 <form action='#' class='row g-3' id='form' autocomplete='off'>
       <div class='row'>
@@ -145,13 +148,162 @@ describe('Validation', () => {
       <button class='btn btn-primary' id="submit-btn">Submit</button>
 `;
   });
+  test('should set form as Element', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate(document.querySelector('#form')!, {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+
+    changeTextBySelector('#name', 'Georgii');
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  test('should destroy the instance', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate(document.querySelector('#form')!, {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+
+    validation.destroy();
+
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+
+    clickBySelector('#submit-btn');
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  test('should refresh the instance', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate(document.querySelector('#form')!, {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+
+    validation.refresh();
+
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+
+    changeTextBySelector('#name', 'Georgii');
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
   test('should throw errors if setting invalid', async () => {
-    console.warn = jest.fn();
-    console.error = jest.fn();
+    const onSubmit = jest.fn();
+    expect(() => {
+      new JustValidate('#for', {
+        testingMode: true,
+      });
+    }).toThrow();
+
+    expect(() => {
+      new JustValidate(document.querySelector('ddd')!, {
+        testingMode: true,
+      });
+    }).toThrow();
+
+    expect(() => {
+      // @ts-ignore
+      new JustValidate(123, {
+        testingMode: true,
+      });
+    }).toThrow();
 
     const validation = new JustValidate('#form', {
       testingMode: true,
     });
+
+    validation.onSuccess(onSubmit);
 
     expect(() =>
       // @ts-ignore
@@ -184,25 +336,217 @@ describe('Validation', () => {
         },
       ])
     ).toThrow();
-
+    expect(() => validation.addField('#name', [{}])).toThrow();
+    expect(() => {
+      validation.addField('#name', [
+        {
+          validator: undefined,
+        },
+      ]);
+    }).toThrow();
     validation.addField('#name', [
       {
         // @ts-ignore
         validator: () => 1,
       },
     ]);
-
     clickBySelector('#submit-btn');
-
     await waitFor(() => {
       expect(getElem('button')).toBeEnabled();
     });
-
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
+
+    onSubmit.mockReset();
+
+    validation.addField('#name', [
+      {
+        rule: 'maxLength' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'maxLength' as Rules,
+        value: 'dd',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'minLength' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'minLength' as Rules,
+        value: 'dd',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'maxNumber' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'maxNumber' as Rules,
+        value: 'dd',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'minNumber' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'minNumber' as Rules,
+        value: 'dd',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'customRegexp' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'customRegexp' as Rules,
+        value: 'dfsdfsdf',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        // @ts-ignore
+        validator: '123123',
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        // @ts-ignore
+        validator: () => {
+          return () => true;
+        },
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#name', [
+      {
+        rule: 'required' as Rules,
+      },
+    ]);
+
+    // @ts-ignore
+    console.error.mockRestore();
+
+    changeTextBySelector('#name', '123');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(onSubmit).toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   test('should validate all fields and groups by basic rule', async () => {
     const onSubmit = jest.fn();
+    const onFail = jest.fn();
 
     const validation = new JustValidate('#form', {
       testingMode: true,
@@ -241,7 +585,8 @@ describe('Validation', () => {
       ])
       .addRequiredGroup('#read_terms_checkbox_group')
       .addRequiredGroup('#communication_radio_group')
-      .onSuccess(onSubmit);
+      .onSuccess(onSubmit)
+      .onFail(onFail);
 
     clickBySelector('#submit-btn');
     expect(getElem('button')).toBeDisabled();
@@ -251,6 +596,7 @@ describe('Validation', () => {
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
+    expect(onFail).toHaveBeenCalled();
 
     expect(getElem('#form')).toHaveAttribute('novalidate', 'novalidate');
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -281,6 +627,7 @@ describe('Validation', () => {
 
   test('should be able submit form if validation passed', async () => {
     const onSubmit = jest.fn();
+    const onFail = jest.fn();
 
     const validation = new JustValidate('#form', {
       testingMode: true,
@@ -319,7 +666,8 @@ describe('Validation', () => {
       ])
       .addRequiredGroup('#read_terms_checkbox_group')
       .addRequiredGroup('#communication_radio_group')
-      .onSuccess(onSubmit);
+      .onSuccess(onSubmit)
+      .onFail(onFail);
 
     changeTextBySelector('#name', 'Georgii');
     changeTextBySelector('#email', 'test@test.com');
@@ -337,6 +685,7 @@ describe('Validation', () => {
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onFail).not.toHaveBeenCalled();
 
     expect(getElem('#form')).toHaveAttribute('novalidate', 'novalidate');
     expect(getElemByTestId('error-label-#name')).toBeNull();
@@ -705,5 +1054,401 @@ describe('Validation', () => {
     });
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
+  });
+
+  test('should be able to validate password', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#password', [
+        {
+          rule: 'password' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password must contain minimum eight characters, at least one letter and one number'
+    );
+
+    changeTextBySelector('#password', '12345678');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password must contain minimum eight characters, at least one letter and one number'
+    );
+
+    changeTextBySelector('#password', '123456d');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password must contain minimum eight characters, at least one letter and one number'
+    );
+
+    changeTextBySelector('#password', '12345678a');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#password')).toBeNull();
+  });
+
+  test('should be able to validate strong password', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#password', [
+        {
+          rule: 'strongPassword' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+    );
+
+    changeTextBySelector('#password', '12345678a');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+    );
+
+    changeTextBySelector('#password', '12345678a!');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+    );
+
+    changeTextBySelector('#password', '12345678a!A');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#password')).toBeNull();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  test('should be able to validate custom regexps', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'customRegexp' as Rules,
+          value: /^[A-Z]+$/,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    changeTextBySelector('#name', 'asgda');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+
+    changeTextBySelector('#name', '123123sdf');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+
+    changeTextBySelector('#name', '123123sAA');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+
+    changeTextBySelector('#name', 'AAAA');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+    expect(getElemByTestId('error-label-#name')).toBeNull();
+  });
+
+  test('should be able to change language', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate(
+      '#form',
+      {
+        testingMode: true,
+      },
+      [
+        {
+          key: 'Name is invalid',
+          dict: {
+            ru: 'Имя некорректно',
+          },
+        },
+      ]
+    );
+
+    validation.addField('#name', [
+      {
+        rule: 'required' as Rules,
+        errorMessage: 'Name is invalid',
+      },
+    ]);
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'Name is invalid'
+    );
+
+    // @ts-ignore
+    validation.setCurrentLocale(123);
+
+    expect(console.error).toHaveBeenCalled();
+
+    validation.setCurrentLocale('ru');
+
+    await waitFor(() => {
+      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+        'Имя некорректно'
+      );
+    });
+
+    validation.setCurrentLocale();
+    await waitFor(() => {
+      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+        'Name is invalid'
+      );
+    });
+
+    validation.setCurrentLocale('en');
+
+    await waitFor(() => {
+      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+        'Name is invalid'
+      );
+    });
+
+    validation.setCurrentLocale('qq');
+
+    await waitFor(() => {
+      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+        'Name is invalid'
+      );
+    });
+  });
+
+  test('should be able to render tooltips', async () => {
+    jest
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((callback: FrameRequestCallback): number => {
+        callback(0);
+        return 0;
+      });
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+      tooltip: {
+        position: 'top',
+      },
+    });
+
+    validation
+      .addField(
+        '#name',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+        ],
+        {
+          tooltip: {
+            position: 'right',
+          },
+        }
+      )
+      .addField(
+        '#email',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+        ],
+        {
+          tooltip: {
+            position: 'bottom',
+          },
+        }
+      )
+      .addField(
+        '#password',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+        ],
+        {
+          tooltip: {
+            position: 'left',
+          },
+        }
+      )
+      .addField(
+        '#message',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+        ],
+        {
+          tooltip: {
+            position: 'top',
+          },
+        }
+      )
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'The field is required'
+    );
+    expect(getElemByTestId('error-label-#name')).toHaveAttribute(
+      'data-direction',
+      'right'
+    );
+    expect(getElemByTestId('error-label-#name')).toHaveAttribute(
+      'data-tooltip',
+      'true'
+    );
+    expect(getElemByTestId('error-label-#name')).toHaveStyle('left:5px');
+    expect(getElemByTestId('error-label-#name')).toHaveStyle('top:0px');
+
+    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+      'The field is required'
+    );
+    expect(getElemByTestId('error-label-#email')).toHaveAttribute(
+      'data-direction',
+      'bottom'
+    );
+    expect(getElemByTestId('error-label-#email')).toHaveAttribute(
+      'data-tooltip',
+      'true'
+    );
+    expect(getElemByTestId('error-label-#email')).toHaveStyle('left:0px');
+    expect(getElemByTestId('error-label-#email')).toHaveStyle('top:5px');
+
+    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+      'The field is required'
+    );
+    expect(getElemByTestId('error-label-#password')).toHaveAttribute(
+      'data-direction',
+      'left'
+    );
+    expect(getElemByTestId('error-label-#password')).toHaveAttribute(
+      'data-tooltip',
+      'true'
+    );
+    expect(getElemByTestId('error-label-#password')).toHaveStyle('left:-5px');
+    expect(getElemByTestId('error-label-#password')).toHaveStyle('top:0px');
+
+    expect(getElemByTestId('error-label-#message')).toHaveTextContent(
+      'The field is required'
+    );
+    expect(getElemByTestId('error-label-#message')).toHaveAttribute(
+      'data-direction',
+      'top'
+    );
+    expect(getElemByTestId('error-label-#message')).toHaveAttribute(
+      'data-tooltip',
+      'true'
+    );
+    expect(getElemByTestId('error-label-#message')).toHaveStyle('left:0px');
+    expect(getElemByTestId('error-label-#message')).toHaveStyle('top:-5px');
+
+    validation.tooltips.forEach((item) => {
+      item.refresh = jest.fn();
+    });
+
+    await fireEvent.scroll(document, { target: { scrollY: 100 } });
+
+    validation.tooltips.forEach((item) => {
+      expect(item.refresh).toHaveBeenCalled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    // @ts-ignore
+    window.requestAnimationFrame.mockRestore();
   });
 });
