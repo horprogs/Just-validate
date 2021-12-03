@@ -1,4 +1,4 @@
-import JustValidate from 'just-validate';
+import JustValidate from './main';
 import { Rules } from './modules/interfaces';
 
 const fetch = (time = 1000, func?: () => boolean) =>
