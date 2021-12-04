@@ -1,3 +1,10 @@
+# [2.0.0-beta.12](https://github.com/horprogs/Just-validate/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2021-12-04)
+
+
+### Bug Fixes
+
+* trigger test release ([cda3c21](https://github.com/horprogs/Just-validate/commit/cda3c215dc3ad34ec3ac3c18174c5f735b9aa384))
+
 # [2.0.0-beta.11](https://github.com/horprogs/Just-validate/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2021-12-04)
 
 
