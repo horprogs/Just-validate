@@ -17,7 +17,7 @@ jobs:
           KEY: ${{ secrets.SSHKEY }}
         with:
           source: "."
-          target: "Just-validate/site"
+          target: "~/Just-validate/site"
 
       - name: Install deps and build
         uses: appleboy/ssh-action@master
