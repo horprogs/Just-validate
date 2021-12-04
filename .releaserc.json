@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "./updatedoc.sh ${lastRelease.version} ${nextRelease.version}"
+        "publishCmd": "./updatedoc.sh ${lastRelease.version} ${nextRelease.version}"
       }
     ]
   ]
