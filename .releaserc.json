@@ -20,7 +20,13 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md", "package.json"],
+        "assets": [
+          "CHANGELOG.md",
+          "package.json",
+          "README.md",
+          "site/index.html",
+          "site/examples/index.html"
+        ],
         "message": "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]
