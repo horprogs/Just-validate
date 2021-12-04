@@ -17,6 +17,12 @@
         "assets": ["CHANGELOG.md", "package.json"],
         "message": "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "./updatedoc.sh ${lastRelease.version} ${nextRelease.version}"
+      }
     ]
   ]
 }
