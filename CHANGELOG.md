@@ -1,3 +1,10 @@
+# [2.0.0-beta.7](https://github.com/horprogs/Just-validate/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2021-12-04)
+
+
+### Bug Fixes
+
+* test change release automation ([1cdcdd8](https://github.com/horprogs/Just-validate/commit/1cdcdd812f1e97d4dce7c3b16227740c61acc201))
+
 # [2.0.0-beta.6](https://github.com/horprogs/Just-validate/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2021-12-03)
 
 
