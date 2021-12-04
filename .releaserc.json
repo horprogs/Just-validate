@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "chmod +x ${GITHUB_WORKSPACE}/updatedoc.sh && bash ./updatedoc.sh ${lastRelease.version} ${nextRelease.version}"
+        "prepareCmd": "./updatedoc.sh ${lastRelease.version} ${nextRelease.version}"
       }
     ]
   ]
