@@ -1,1 +1,1 @@
-yarn install && yarn build
+git pull origin beta && yarn install && yarn build
