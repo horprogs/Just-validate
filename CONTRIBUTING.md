@@ -15,7 +15,7 @@ We have very precise rules over how our git commit messages can be formatted. Th
 Each commit message consists of a **type** and a **subject**:
 
 ```
-<type>(): <subject>
+<type>(): <subject>   
 ```
 
 ### Type
