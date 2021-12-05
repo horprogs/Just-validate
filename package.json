@@ -12,7 +12,8 @@
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "upgrade-packages": "ncu --configFileName .ncurc.json"
+    "upgrade-packages": "ncu --configFileName .ncurc.json",
+    "heroku-postbuild": "cd site && yarn run build"
   },
   "main": "./dist/just-validate.production.min.js",
   "module": "./dist/just-validate.es.js",
@@ -86,5 +87,9 @@
     "ts-node": "10.4.0",
     "typescript": "4.5.2",
     "vite": "2.6.14"
+  },
+  "engines": {
+    "node": "16.x",
+    "yarn": "1.x"
   }
 }

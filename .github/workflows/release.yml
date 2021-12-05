@@ -46,22 +46,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
-
-  build_site:
-    name: Build site
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: yarn
-      - name: Install dependencies
-        working-directory: ./site
-        run: yarn install --frozen-lockfile
-      - name: Build
-        working-directory: ./site
-        run: yarn build
