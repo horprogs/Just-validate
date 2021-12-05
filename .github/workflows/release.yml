@@ -55,7 +55,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Install Node.js
-        working-directory: ./site
         uses: actions/setup-node@v2
         with:
           node-version: 16
