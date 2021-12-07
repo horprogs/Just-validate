@@ -1,8 +1,8 @@
 ![main image](https://user-images.githubusercontent.com/14051960/144635813-82670c30-44c0-43e6-ad61-1505d5b8d929.png)
 
 [![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/beta/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
-<a href="https://bundlephobia.com/result?p=just-validate@2.0.0-beta.3" target="\_parent">
-<img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@2.0.0-beta.3" />
+<a href="https://bundlephobia.com/result?p=just-validate@latest" target="\_parent">
+<img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@latest" />
 </a>
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=horprogs/Just-validate&amp;utm_campaign=Badge_Grade)
 [![Known Vulnerabilities](https://snyk.io/test/github/horprogs/Just-validate/badge.svg)](https://snyk.io/test/github/horprogs/Just-validate)
@@ -64,7 +64,7 @@ const validate = new JustValidate('#form');
 Or if you don't use module bundlers, just include JustValidate script on your page from CDN and call it as `window.JustValidate`:
 
 ```html
-<script src="https://unpkg.com/just-validate@2.0.0-beta.12/dist/just-validate.production.min.js"></script>
+<script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
 <body>
   <script>
     const validate = new window.JustValidate('#form');
