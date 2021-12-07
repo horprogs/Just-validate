@@ -1,3 +1,40 @@
+# [2.0.0](https://github.com/horprogs/Just-validate/compare/v1.5.0...v2.0.0) (2021-12-07)
+
+
+### Bug Fixes
+
+* add git plugin ([02edd67](https://github.com/horprogs/Just-validate/commit/02edd67393172396168ae4e94d2430d4d8a033eb))
+* adjust semantic-release config ([ed33cd1](https://github.com/horprogs/Just-validate/commit/ed33cd1a81129802c16945e4b703ea1a83146669))
+* change invalid import ([d28b4b5](https://github.com/horprogs/Just-validate/commit/d28b4b5b679ba0482e5f4bd1757a7fb6e5cda324))
+* fix global config ([be01fd8](https://github.com/horprogs/Just-validate/commit/be01fd8c5d88e29b3d70a856ad2e6c05c7bfcca6))
+* fix ts config and package.json ([918bbba](https://github.com/horprogs/Just-validate/commit/918bbbaae7a9b35c34ab0f1633b0c0205ccac544))
+* improve switching languages, fix focus field ([b0cd51c](https://github.com/horprogs/Just-validate/commit/b0cd51c3f6322517b31564f426a2d577d6d620ab))
+* improve tooltip position calculation on scroll ([2c12854](https://github.com/horprogs/Just-validate/commit/2c128546cb1a01799c632ccf86e8cc4eedcc23ae))
+* make field invalid if setting is invalid, add tests ([ede7a66](https://github.com/horprogs/Just-validate/commit/ede7a66e0b397fba539a3fa92d5e37f37f2c611e))
+* remove unnecessary dep ([67f5549](https://github.com/horprogs/Just-validate/commit/67f5549e70a4bfc9bba147cf3ccb59a0441c0970))
+* split settings for site ([2680add](https://github.com/horprogs/Just-validate/commit/2680adda6ac3796322cd368821f0f5c5e9a220ef))
+* test change release automation ([1cdcdd8](https://github.com/horprogs/Just-validate/commit/1cdcdd812f1e97d4dce7c3b16227740c61acc201))
+* trigger test release ([cda3c21](https://github.com/horprogs/Just-validate/commit/cda3c215dc3ad34ec3ac3c18174c5f735b9aa384))
+* trigger test release ([e9eacb9](https://github.com/horprogs/Just-validate/commit/e9eacb9634dabd55affaeb82468d13a42c78f42b))
+* trigger test release ([b553205](https://github.com/horprogs/Just-validate/commit/b553205ef4e160e7935f039103567eb7a2b2dd4f))
+* trigger test release ([69aedea](https://github.com/horprogs/Just-validate/commit/69aedea2cc53a7f649009dedc1ecf100dc36c01f))
+* trigger test release ([ea6c855](https://github.com/horprogs/Just-validate/commit/ea6c8550cc29b3d7d42579f10008d779575f9d8d))
+
+
+### Features
+
+* add basic methods, ecosystem, basic test ([f33c1a3](https://github.com/horprogs/Just-validate/commit/f33c1a3caed020952b45f271e3f05e8c65e41991))
+* add group validation, rename interfaces, render errors ([e4eea35](https://github.com/horprogs/Just-validate/commit/e4eea35ce93cb717d7384375eb9d4fc722f89164))
+* add localisation, fix select ([13f70c2](https://github.com/horprogs/Just-validate/commit/13f70c20d0919dde0848206203dfea05adf5423e))
+* add new tooltips ([68ab2e2](https://github.com/horprogs/Just-validate/commit/68ab2e265a383edf5ef6c08f3b79309fb021138c))
+* add onFail callback ([fe79dd5](https://github.com/horprogs/Just-validate/commit/fe79dd5fb7ca79208196ec16835e595abc6f0a3e))
+* add rendering, clearing errors ([64d12de](https://github.com/horprogs/Just-validate/commit/64d12de336f48d9b7c1cfb7406acccfecafd954a))
+
+
+### BREAKING CHANGES
+
+* change interfaces
+
 # [2.0.0-beta.12](https://github.com/horprogs/Just-validate/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2021-12-04)
 
 
