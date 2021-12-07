@@ -4,6 +4,9 @@
 <a href="https://bundlephobia.com/result?p=just-validate@2.0.0-beta.3" target="\_parent">
 <img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@2.0.0-beta.3" />
 </a>
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=horprogs/Just-validate&amp;utm_campaign=Badge_Grade)
+[![Known Vulnerabilities](https://snyk.io/test/github/horprogs/Just-validate/badge.svg)](https://snyk.io/test/github/horprogs/Just-validate)
+[![Release workflow](https://github.com/horprogs/Just-validate/workflows/Test%20and%20Release/badge.svg)](https://github.com/horprogs/Just-validate/actions)
 
 Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
 Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
