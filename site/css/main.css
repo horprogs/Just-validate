@@ -237,3 +237,12 @@ pre {
     width: 180px;
   }
 }
+
+.example-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.example-link:hover {
+  text-decoration: underline;
+}

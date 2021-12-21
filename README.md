@@ -424,6 +424,58 @@ const validation = new JustValidate(
   It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
 - localization object will be explained in Localization section
 
+### Methods
+
+Define validation rules for the new field:
+
+```
+.addField(
+  field: string,
+  rules: {
+    rule?: Rules;
+    errorMessage?: string;
+    validator?: (
+      value: string | boolean,
+      context: FieldsInterface
+    ) => boolean | (() => Promise<boolean>);
+    value?: number | string | RegExp;
+  },
+  config?: {
+    errorFieldStyle: Partial<CSSStyleDeclaration>;
+    errorFieldCssClass: string;
+    errorLabelStyle: Partial<CSSStyleDeclaration>;
+    errorLabelCssClass: string;
+    tooltip?: {
+      position: 'left' | 'top' | 'right' | 'bottom';
+    };
+  }
+)
+```
+
+Make the new group field required. It could be a group of checkboxes or radio buttons. 
+
+It means that at least one input in the group should be checked/selected.
+
+```
+.addRequiredGroup(
+    groupField: string,
+    errorMessage?: string,
+    config?: {
+      errorFieldStyle: Partial<CSSStyleDeclaration>;
+      errorFieldCssClass: string;
+      errorLabelStyle: Partial<CSSStyleDeclaration>;
+      errorLabelCssClass: string;
+      tooltip?: {
+        position: 'left' | 'top' | 'right' | 'bottom';
+      };
+    }
+)
+```
+
+`.onSuccess(event)` - callback if validation success
+
+`.onFail(fields)` - callback if validation failed
+
 ## Rule object
 
 ```

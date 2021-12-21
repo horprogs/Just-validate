@@ -13,5 +13,8 @@
     "type": "git",
     "url": "https://github.com/horprogs/Just-validate.git"
   },
-  "homepage": "https://github.com/horprogs/Just-validate#readme"
+  "homepage": "https://github.com/horprogs/Just-validate#readme",
+  "devDependencies": {
+    "vite": "2.6.14"
+  }
 }
