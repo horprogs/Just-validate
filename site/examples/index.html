@@ -211,7 +211,11 @@
       </div>
 
       <div class="mt-5 section-shadow" id="advanced">
-        <h2><a href="#advanced" class="example-link"> More fields, custom rules </a></h2>
+        <h2>
+          <a href="#advanced" class="example-link">
+            More fields, custom rules
+          </a>
+        </h2>
         <section class="base-example container py-2 px-0">
           <form action="#" id="more-fields-validation-form" autocomplete="off">
             <div class="form-group">
@@ -436,10 +440,8 @@
 
       <div class="mt-5 section-shadow" id="async">
         <h2>
-          <a href="#async" class="example-link">
-            Async validation
-          </a>
-          </h2>
+          <a href="#async" class="example-link"> Async validation </a>
+        </h2>
         <section class="base-example container py-2 px-0">
           <form action="#" id="async-validation-form" autocomplete="off">
             <div class="form-group">
@@ -490,10 +492,8 @@
 
       <div class="mt-5 section-shadow" id="tooltips">
         <h2>
-          <a href="#tooltips" class="example-link">
-            Tooltips
-          </a>
-          </h2>
+          <a href="#tooltips" class="example-link"> Tooltips </a>
+        </h2>
         <section class="base-example container py-2 px-0">
           <form action="#" id="tooltips-validation-form" autocomplete="off">
             <div class="row">
@@ -737,9 +737,7 @@
 
       <div class="mt-5 section-shadow" id="localization">
         <h2>
-          <a href="#localization" class="example-link">
-            Localization
-          </a>
+          <a href="#localization" class="example-link"> Localization </a>
         </h2>
         <section class="base-example container py-2 px-0">
           <div class="mb-4">
@@ -879,6 +877,83 @@
                 .querySelector('#change-lang-btn-es')
                 .addEventListener('click', () => {
                   validation.setCurrentLocale('es');
+                });
+            })();
+          </script>
+        </section>
+      </div>
+
+      <div class="mt-5 section-shadow" id="conditional">
+        <h2>
+          <a href="#conditional" class="example-link">Conditional validation</a>
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="conditional-validation-form" autocomplete="off">
+            <div class="row">
+              <div class="col">
+                <label for="example1_name">Enter your name</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  placeholder="Enter your name"
+                  autocomplete="off"
+                  name="example6_name"
+                  id="example6_name"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="form-check">
+                <label class="form-check-label" for="example6_checkbox"
+                  >Name is required</label
+                >
+                <input
+                  type="checkbox"
+                  id="example6_checkbox"
+                  class="form-check-input"
+                />
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example6_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate(
+                '#conditional-validation-form',
+                {
+                  errorFieldCssClass: 'is-invalid',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
+                  },
+                  focusInvalidField: true,
+                  lockForm: true,
+                }
+              );
+
+              validation.onSuccess((ev) => {
+                ev.preventDefault();
+                window.showNotification();
+              });
+
+              document
+                .querySelector('#example6_checkbox')
+                .addEventListener('click', (e) => {
+                  if (e.target.checked) {
+                    validation.addField('#example6_name', [
+                      {
+                        rule: 'required',
+                      },
+                    ]);
+                  } else {
+                    validation.removeField('#example6_name');
+                  }
                 });
             })();
           </script>

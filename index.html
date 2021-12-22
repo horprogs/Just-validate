@@ -251,6 +251,38 @@
         <button class="btn btn-primary" id="basic_submit-btn">Submit</button>
       </div>
     </form>
+
+    <form action="#" id="conditional_form" autocomplete="off" class="mt-5">
+      <div class="row">
+        <div class="col">
+          <label for="conditional_name">Enter your name</label>
+          <input
+            type="text"
+            class="form__input form-control"
+            placeholder="Enter your name"
+            autocomplete="off"
+            name="basic_name"
+            id="conditional_name"
+          />
+        </div>
+      </div>
+      <div class="form-group mt-4">
+        <div class="form-check">
+          <label class="form-check-label" for="conditional_required_name_checkbox"
+          >Name is required</label
+          >
+          <input
+            type="checkbox"
+            id="conditional_required_name_checkbox"
+            class="form-check-input"
+          />
+        </div>
+      </div>
+
+      <div class="d-grid mt-4">
+        <button class="btn btn-primary" id="conditional_submit-btn">Submit</button>
+      </div>
+    </form>
     <script type="module" src="./src/example.ts"></script>
   </body>
 </html>

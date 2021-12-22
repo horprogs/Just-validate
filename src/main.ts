@@ -51,7 +51,7 @@ const defaultGlobalConfig: GlobalConfigInterface = {
 };
 
 class JustValidate {
-  form: Element | null = null;
+  form: HTMLFormElement | null = null;
   fields: FieldsInterface = {};
   groupFields: GroupFieldsInterface = {};
   errors: {
@@ -97,7 +97,7 @@ class JustValidate {
     this.tooltips = [];
 
     if (typeof form === 'string') {
-      const elem = document.querySelector(form);
+      const elem = document.querySelector(form) as HTMLFormElement;
 
       if (!elem) {
         throw Error(
@@ -105,7 +105,7 @@ class JustValidate {
         );
       }
       this.setForm(elem);
-    } else if (form instanceof Element) {
+    } else if (form instanceof HTMLFormElement) {
       this.setForm(form);
     } else {
       throw Error(
@@ -577,28 +577,32 @@ class JustValidate {
     });
   }
 
-  setForm(form: Element) {
-    this.form = form;
-    this.form.setAttribute('novalidate', 'novalidate');
-    this.form.addEventListener('submit', (ev) => {
-      ev.preventDefault();
-      this.isSubmitted = true;
+  formSubmitHandler = (ev: Event) => {
+    ev.preventDefault();
+    this.isSubmitted = true;
+
+    if (this.globalConfig.lockForm) {
+      this.lockForm();
+    }
+
+    this.validate().then(() => {
+      if (this.isValid) {
+        this.onSuccessCallback?.(ev);
+      } else {
+        this.onFailCallback?.(this.fields);
+      }
 
       if (this.globalConfig.lockForm) {
-        this.lockForm();
+        this.unlockForm();
       }
-      this.validate().then((hasPromises) => {
-        if (this.isValid) {
-          this.onSuccessCallback?.(ev);
-        } else {
-          this.onFailCallback?.(this.fields);
-        }
-
-        if (hasPromises && this.globalConfig.lockForm) {
-          this.unlockForm();
-        }
-      });
     });
+  };
+
+  setForm(form: HTMLFormElement) {
+    this.form = form;
+    this.form.setAttribute('novalidate', 'novalidate');
+    this.removeListener('submit', this.form, this.formSubmitHandler);
+    this.addListener('submit', this.form, this.formSubmitHandler);
   }
 
   handleFieldChange = (target: HTMLInputElement) => {
@@ -656,11 +660,19 @@ class JustValidate {
 
   addListener(
     type: string,
-    elem: HTMLInputElement | Document,
+    elem: HTMLInputElement | Document | HTMLFormElement,
     handler: (ev: Event) => void
   ) {
     elem.addEventListener(type, handler);
     this.eventListeners.push({ type, elem, func: handler });
+  }
+
+  removeListener(
+    type: string,
+    elem: HTMLInputElement | Document | HTMLFormElement,
+    handler: (ev: Event) => void
+  ) {
+    elem.removeEventListener(type, handler);
   }
 
   addField(
@@ -715,6 +727,30 @@ class JustValidate {
     };
 
     this.setListeners(elem);
+
+    // if we add field after submitting the form we should validate again
+    if (this.isSubmitted) {
+      this.validate();
+    }
+    return this;
+  }
+
+  removeField(field: string): JustValidate {
+    if (typeof field !== 'string') {
+      throw Error(
+        `Field selector is not valid. Please specify a string selector.`
+      );
+    }
+
+    if (!this.fields[field]) {
+      console.error(`Field not found. Check the field selector.`);
+      return this;
+    }
+
+    this.destroy();
+    delete this.fields[field];
+    this.refresh();
+
     return this;
   }
 
@@ -771,19 +807,25 @@ class JustValidate {
     return this;
   }
 
-  setListeners(elem: HTMLInputElement) {
-    switch (elem.type) {
+  getListenerType(type: string) {
+    switch (type) {
       case 'checkbox':
       case 'select-one':
       case 'radio': {
-        this.addListener('change', elem, this.handlerChange);
+        return 'change';
         break;
       }
 
       default: {
-        this.addListener('keyup', elem, this.handlerChange);
+        return 'keyup';
       }
     }
+  }
+
+  setListeners(elem: HTMLInputElement) {
+    const type = this.getListenerType(elem.type);
+    this.removeListener(type, elem, this.handlerChange);
+    this.addListener(type, elem, this.handlerChange);
   }
 
   clearErrors() {
@@ -1039,7 +1081,7 @@ class JustValidate {
 
   destroy() {
     this.eventListeners.forEach((event) => {
-      event.elem.removeEventListener(event.type, event.func);
+      this.removeListener(event.type, event.elem, event.func);
     });
 
     Object.keys(this.customStyleTags).forEach((key) => {

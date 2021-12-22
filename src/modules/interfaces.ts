@@ -92,7 +92,7 @@ export interface GroupFieldsInterface {
 
 export interface EventListenerInterface {
   type: string;
-  elem: HTMLInputElement | Document;
+  elem: HTMLInputElement | Document | HTMLFormElement;
   func: (ev: Event) => void;
 }
 

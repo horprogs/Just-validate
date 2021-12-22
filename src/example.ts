@@ -207,5 +207,40 @@ const basicExample = () => {
   // ]);
 };
 
+const conditionalExample = () => {
+  const validation = new JustValidate('#conditional_form', {
+    errorFieldCssClass: 'is-invalid',
+    errorFieldStyle: {
+      border: '1px solid red',
+    },
+    errorLabelCssClass: 'is-label-invalid',
+    errorLabelStyle: {
+      color: 'red',
+      textDecoration: 'underlined',
+    },
+    focusInvalidField: true,
+  });
+
+  validation.onSuccess((ev) => {
+    ev?.preventDefault();
+    console.log('SUCCESS', ev);
+  });
+
+  document
+    .querySelector('#conditional_required_name_checkbox')!
+    .addEventListener('click', (e) => {
+      if ((e.target as HTMLInputElement).checked) {
+        validation.addField('#conditional_name', [
+          {
+            rule: 'required' as Rules,
+          },
+        ]);
+      } else {
+        validation.removeField('#conditional_name');
+      }
+    });
+};
+
 basicExample();
 advancedExample();
+conditionalExample();

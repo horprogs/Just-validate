@@ -531,6 +531,14 @@ describe('Validation', () => {
       },
     ]);
 
+    expect(() => {
+      // @ts-ignore
+      validation.removeField(123);
+    }).toThrow();
+
+    validation.removeField('dfdfdf');
+    expect(console.error).toHaveBeenCalled();
+
     // @ts-ignore
     console.error.mockRestore();
 
@@ -1450,5 +1458,45 @@ describe('Validation', () => {
 
     // @ts-ignore
     window.requestAnimationFrame.mockRestore();
+  });
+
+  test('should be able to remove field', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+
+    validation.removeField('#name');
+
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+
+    clickBySelector('#submit-btn');
+    expect(getElem('button')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
   });
 });
