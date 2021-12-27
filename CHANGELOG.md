@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/horprogs/Just-validate/compare/v2.2.1...v3.0.0) (2021-12-27)
+
+
+### Features
+
+* [#31](https://github.com/horprogs/Just-validate/issues/31) change required logic ([c7b6c78](https://github.com/horprogs/Just-validate/commit/c7b6c7805961dffb574c8cb40978e7a2bdcc2733))
+
+
+### BREAKING CHANGES
+
+* rules for maxLength, maxNumber etc. will not raise an error if the field is empty and there is no required rule. To validate for required you should define required rule directly.
+
 ## [2.2.1](https://github.com/horprogs/Just-validate/compare/v2.2.0...v2.2.1) (2021-12-27)
 
 
