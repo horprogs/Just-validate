@@ -134,6 +134,20 @@
   </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 </code></pre>
+        <h2 id="predefined-rules">Predefined rules</h2>
+        <p>There are plenty of rules which you could use out of the box:</p>
+        <ul>
+          <li>required, non-empty fields</li>
+          <li>valid email address</li>
+          <li>min/max text length</li>
+          <li>valid number</li>
+          <li>min/max number</li>
+          <li>valid password</li>
+          <li>valid strong password</li>
+          <li>check for the custom regexp</li>
+          <li>min/max count of uploaded files</li>
+          <li>min/max size, types, extensions, names of uploaded files</li>
+        </ul>
         <h2 id="quick-start">Quick start</h2>
         <p>Let&#39;s say we have a basic HTML layout:</p>
         <pre><code class="lang-html">&lt;<span class="hljs-keyword">form</span> action=<span class="hljs-string">"#"</span> id=<span class="hljs-string">"form"</span> autocomplete=<span class="hljs-string">"off"</span>&gt;
@@ -186,6 +200,217 @@ validation
   ]);
 </code></pre>
         <p>And that&#39;s it! Now our form is validated!</p>
+        <h2 id="more-fields-group-fields-and-rules">More fields, group fields and rules</h2>
+        <p>Let&#39;s check more advanced example:</p>
+        <pre><code class="lang-html">&lt;form action=<span class="hljs-string">"#"</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"form"</span> autocomplete=<span class="hljs-string">"off"</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"row"</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"col"</span>&gt;
+      &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"name"</span>&gt;Enter your <span class="hljs-built_in">name</span>&lt;/label&gt;
+      &lt;input
+        type=<span class="hljs-string">"text"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form__input form-control"</span>
+        placeholder=<span class="hljs-string">"Enter your name"</span>
+        autocomplete=<span class="hljs-string">"off"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"name"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"name"</span>
+      /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"col"</span>&gt;
+      &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"email"</span>&gt;Enter your email&lt;/label&gt;
+      &lt;input
+        type=<span class="hljs-string">"email"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form__input form-control"</span>
+        placeholder=<span class="hljs-string">"Enter your email"</span>
+        autocomplete=<span class="hljs-string">"off"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"email"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"email"</span>
+      /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-3"</span>&gt;
+    &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"password"</span>&gt;Enter your password&lt;/label&gt;
+    &lt;input
+      type=<span class="hljs-string">"password"</span>
+      <span class="hljs-built_in">class</span>=<span class="hljs-string">"form__input form-control"</span>
+      placeholder=<span class="hljs-string">"Enter your password"</span>
+      autocomplete=<span class="hljs-string">"off"</span>
+      <span class="hljs-built_in">name</span>=<span class="hljs-string">"password"</span>
+      <span class="hljs-built_in">id</span>=<span class="hljs-string">"password"</span>
+    /&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-3"</span>&gt;
+    &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"password"</span>&gt;Repeat your password&lt;/label&gt;
+    &lt;input
+      type=<span class="hljs-string">"password"</span>
+      <span class="hljs-built_in">class</span>=<span class="hljs-string">"form__input form-control"</span>
+      placeholder=<span class="hljs-string">"Repeat your password"</span>
+      autocomplete=<span class="hljs-string">"off"</span>
+      <span class="hljs-built_in">name</span>=<span class="hljs-string">"repeat-password"</span>
+      <span class="hljs-built_in">id</span>=<span class="hljs-string">"repeat-password"</span>
+    /&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-3"</span>&gt;
+    &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"password"</span>&gt;Enter your message&lt;/label&gt;
+    &lt;textarea
+      <span class="hljs-built_in">name</span>=<span class="hljs-string">"msg"</span>
+      cols=<span class="hljs-string">"30"</span>
+      rows=<span class="hljs-string">"10"</span>
+      <span class="hljs-built_in">class</span>=<span class="hljs-string">"form__textarea form-control"</span>
+      <span class="hljs-built_in">id</span>=<span class="hljs-string">"message"</span>
+    &gt;&lt;/textarea&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-4"</span>&gt;
+    &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"favorite_animal_select"</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-label"</span>
+      &gt;Select you favorite animal&lt;/label
+    &gt;
+    &lt;select <span class="hljs-built_in">name</span>=<span class="hljs-string">"pets"</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"favorite_animal_select"</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-select"</span>&gt;
+      &lt;option value=<span class="hljs-string">""</span>&gt;<span class="hljs-comment">--Please choose an option--&lt;/option&gt;</span>
+      &lt;option value=<span class="hljs-string">"dog"</span>&gt;Dog&lt;/option&gt;
+      &lt;option value=<span class="hljs-string">"cat"</span>&gt;Cat&lt;/option&gt;
+      &lt;option value=<span class="hljs-string">"hamster"</span>&gt;Hamster&lt;/option&gt;
+      &lt;option value=<span class="hljs-string">"parrot"</span>&gt;Parrot&lt;/option&gt;
+      &lt;option value=<span class="hljs-string">"spider"</span>&gt;Spider&lt;/option&gt;
+      &lt;option value=<span class="hljs-string">"goldfish"</span>&gt;Goldfish&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-4"</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check"</span>&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"consent_checkbox"</span>
+        &gt;I agree <span class="hljs-keyword">to</span> provide <span class="hljs-keyword">the</span> information&lt;/label
+      &gt;
+      &lt;input type=<span class="hljs-string">"checkbox"</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"consent_checkbox"</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span> /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span>
+    <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-group mt-4"</span>
+    <span class="hljs-built_in">id</span>=<span class="hljs-string">"read_terms_checkbox_group"</span>
+    style=<span class="hljs-string">"width: 250px"</span>
+  &gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check"</span>&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"read_terms_checkbox_group_1"</span>
+        &gt;I have <span class="hljs-built_in">read</span> Privacy Policy&lt;/label
+      &gt;
+      &lt;input
+        type=<span class="hljs-string">"checkbox"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"checkbox-group-fruit"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"read_terms_checkbox_group_1"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span>
+      /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check"</span>&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"read_terms_checkbox_group_2"</span>
+        &gt;I have <span class="hljs-built_in">read</span> Terms Of Use&lt;/label
+      &gt;
+      &lt;input
+        type=<span class="hljs-string">"checkbox"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"checkbox-group-fruit"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"read_terms_checkbox_group_2"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span>
+      /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check"</span>&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"read_terms_checkbox_group_3"</span>
+        &gt;I have <span class="hljs-built_in">read</span> Cookies Policy&lt;/label
+      &gt;
+      &lt;input
+        type=<span class="hljs-string">"checkbox"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"checkbox-group-fruit"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"read_terms_checkbox_group_3"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span>
+      /&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"mt-4 form-group"</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"pb-1"</span>&gt;Please select <span class="hljs-keyword">the</span> preferred way <span class="hljs-keyword">for</span> communication&lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;<span class="hljs-keyword">div</span>
+      <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check"</span>
+      <span class="hljs-built_in">id</span>=<span class="hljs-string">"communication_radio_group"</span>
+      style=<span class="hljs-string">"max-width: 200px"</span>
+    &gt;
+      &lt;input
+        type=<span class="hljs-string">"radio"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"radio"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"communication_radio_group_1"</span>
+      /&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"communication_radio_group_1"</span>&gt;
+        Email
+      &lt;/label&gt;
+      &lt;br /&gt;
+      &lt;input
+        type=<span class="hljs-string">"radio"</span>
+        <span class="hljs-built_in">name</span>=<span class="hljs-string">"radio"</span>
+        <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-input"</span>
+        <span class="hljs-built_in">id</span>=<span class="hljs-string">"communication_radio_group_2"</span>
+      /&gt;
+      &lt;label <span class="hljs-built_in">class</span>=<span class="hljs-string">"form-check-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">"communication_radio_group_2"</span>&gt;
+        SMS
+      &lt;/label&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+
+  &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">"d-grid mt-4"</span>&gt;
+    &lt;button <span class="hljs-built_in">class</span>=<span class="hljs-string">"btn btn-primary"</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"submit-btn"</span>&gt;Submit&lt;/button&gt;
+  &lt;/<span class="hljs-keyword">div</span>&gt;
+&lt;/form&gt;
+</code></pre>
+        <pre><code class="lang-js">const validation = new JustValidate(<span class="hljs-string">'#form'</span>, {
+  errorFieldCssClass: <span class="hljs-string">'is-invalid'</span>,
+});
+
+validation
+  .addField(<span class="hljs-string">'#name'</span>, [
+    {
+      rule: <span class="hljs-string">'minLength'</span>,
+      value: <span class="hljs-number">3</span>,
+    },
+    {
+      rule: <span class="hljs-string">'maxLength'</span>,
+      value: <span class="hljs-number">30</span>,
+    },
+  ])
+  .addField(<span class="hljs-string">'#email'</span>, [
+    {
+      rule: <span class="hljs-string">'required'</span>,
+      errorMessage: <span class="hljs-string">'Field is required'</span>,
+    },
+    {
+      rule: <span class="hljs-string">'email'</span>,
+      errorMessage: <span class="hljs-string">'Email is invalid!'</span>,
+    },
+  ])
+  .addField(<span class="hljs-string">'#password'</span>, [
+    {
+      rule: <span class="hljs-string">'password'</span>,
+    },
+  ])
+  .addField(<span class="hljs-string">'#message'</span>, [
+    {
+      validator: (value) =&gt; {
+        return value[<span class="hljs-number">0</span>] === <span class="hljs-string">'!'</span>;
+      },
+    },
+  ])
+  .addField(<span class="hljs-string">'#consent_checkbox'</span>, [
+    {
+      rule: <span class="hljs-string">'required'</span>,
+    },
+  ])
+  .addField(<span class="hljs-string">'#favorite_animal_select'</span>, [
+    {
+      rule: <span class="hljs-string">'required'</span>,
+    },
+  ])
+  .addRequiredGroup(
+    <span class="hljs-string">'#read_terms_checkbox_group'</span>,
+    <span class="hljs-string">'You should select at least one communication channel'</span>
+  )
+  .addRequiredGroup(<span class="hljs-string">'#communication_radio_group'</span>)
+  .onSuccess((event) =&gt; {
+    console.log(<span class="hljs-string">'Validation passes and form submitted'</span>, event);
+  });
+</code></pre>
         <h2 id="instance-setting">Instance setting</h2>
         <pre><code><span class="hljs-keyword">new</span> JustValidate(
    form: <span class="hljs-keyword">string</span> | Element,
@@ -255,7 +480,7 @@ validation
         </ul>
         <h3 id="methods">Methods</h3>
         <p>Define validation rules for the new field:</p>
-        <pre><code>addField(
+        <pre><code>.addField(
   field: <span class="hljs-keyword">string</span>,
   rules: {
     rule?: Rules;
@@ -276,9 +501,9 @@ validation
     };
   }
 )
-</code></pre><p>Make the new group field required. It could be a group of checkboxes or radio buttons. </p>
+</code></pre><p>Make the new group field required. It could be a group of checkboxes or radio buttons.</p>
         <p>It means that at least one input in the group should be checked/selected.</p>
-        <pre><code>addRequiredGroup(
+        <pre><code>.addRequiredGroup(
     groupField: <span class="hljs-keyword">string</span>,
     errorMessage?: <span class="hljs-keyword">string</span>,
     <span class="hljs-built_in">config</span>?: {
@@ -291,18 +516,15 @@ validation
       };
     }
 )
-</code></pre>
-
-        <p><code>.onSuccess(event)</code> - callback if validation success</p>
+</code></pre><p><code>.onSuccess(event)</code> - callback if validation success</p>
         <p><code>.onFail(fields)</code> - callback if validation failed</p>
-
         <h2 id="rule-object">Rule object</h2>
         <pre><code>{
   rule: <span class="hljs-built_in">String</span>,
   errorMessage: <span class="hljs-built_in">String</span>,
   validator: (
-         value: <span class="hljs-built_in">String</span> | <span class="hljs-built_in">Boolean</span>,
-         context: <span class="hljs-built_in">Object</span>
+    value: <span class="hljs-built_in">String</span> | <span class="hljs-built_in">Boolean</span>,
+    context: <span class="hljs-built_in">Object</span>
  ) =&gt; <span class="hljs-built_in">Boolean</span> | Promise;
  value: <span class="hljs-built_in">number</span> | <span class="hljs-built_in">string</span>;
 }
@@ -318,6 +540,9 @@ validation
           <li><code>password</code> - Minimum eight characters, at least one letter and one number</li>
           <li><code>strongPassword</code> - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character</li>
           <li><code>customRegexp</code> - Custom regexp expression</li>
+          <li><code>minFilesCount</code> - Uploaded files count should be more than defined value</li>
+          <li><code>maxFilesCount</code> - Uploaded files count should be less than defined value</li>
+          <li><code>files</code> - Uploaded files attributes should be valid, based on <code>value</code> config (check details below in Files validation section)</li>
         </ul>
         <p>Field <code>errorMessage</code> used for customizing the error message for this rule.</p>
         <p>Field <code>value</code> used only with <code>minLength</code>, <code>maxLength</code>, <code>minNumber</code>, <code>maxNumber</code>, <code>customRegexp</code> rules to define the rule value, for example:</p>
@@ -370,6 +595,49 @@ validation
   },
 ]);
 </code></pre>
+        <h2 id="files-validation">Files validation</h2>
+        <p>It&#39;s possible to validate min/max count of uploaded files and check for type, extension, min/max size and name of uploaded files.</p>
+        <h3 id="uploaded-files-count">Uploaded files count</h3>
+        <pre><code class="lang-html">&lt;input type=<span class="hljs-string">"file"</span> <span class="hljs-built_in">name</span>=<span class="hljs-string">"file"</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"file"</span> multiple /&gt;
+</code></pre>
+        <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#file'</span>, [
+  {
+    <span class="hljs-attribute">rule</span>: <span class="hljs-string">'minFilesCount'</span>,
+    <span class="hljs-attribute">value</span>: <span class="hljs-number">1</span>,
+  },
+  {
+    <span class="hljs-attribute">rule</span>: <span class="hljs-string">'maxFilesCount'</span>,
+    <span class="hljs-attribute">value</span>: <span class="hljs-number">3</span>,
+  },
+]);
+</code></pre>
+        <h3 id="files-attributes-validation">Files attributes validation</h3>
+        <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#file'</span>, [
+  {
+    <span class="hljs-attribute">rule</span>: <span class="hljs-string">'files'</span>,
+    <span class="hljs-attribute">value</span>: {
+      <span class="hljs-attribute">files</span>: {
+        <span class="hljs-attribute">extensions</span>: [<span class="hljs-string">'jpeg'</span>, <span class="hljs-string">'png'</span>],
+        <span class="hljs-attribute">maxSize</span>: <span class="hljs-number">25000</span>,
+        <span class="hljs-attribute">minSize</span>: <span class="hljs-number">1000</span>,
+        <span class="hljs-attribute">types</span>: [<span class="hljs-string">'image/jpeg'</span>, <span class="hljs-string">'image/png'</span>],
+        <span class="hljs-attribute">names</span>: [<span class="hljs-string">'file1.jpeg'</span>, <span class="hljs-string">'file2.png'</span>],
+      },
+    },
+  },
+]);
+</code></pre>
+        <p>Format of value for <code>files</code> rule:</p>
+        <pre><code>{
+<span class="hljs-symbol">  files:</span> {
+    <span class="hljs-keyword">extensions?: </span>string[]<span class="hljs-comment">;</span>
+    types?: string[]<span class="hljs-comment">;</span>
+    minSize?: number<span class="hljs-comment">;</span>
+    maxSize?: number<span class="hljs-comment">;</span>
+    names?: string[]<span class="hljs-comment">;</span>
+  }
+}
+</code></pre><p><code>minSize</code> and <code>maxSize</code> should be defined in bytes.</p>
         <h3 id="localization">Localization</h3>
         <p>You could define your own translations for different languages. To do that you should define <code>dictLocale</code> array, like:</p>
         <pre><code>  [
