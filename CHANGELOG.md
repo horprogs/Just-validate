@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/horprogs/Just-validate/compare/v2.2.0...v2.2.1) (2021-12-27)
+
+
+### Reverts
+
+* Revert "feat(): change required logic \n\n BREAKING CHANGE: rules for maxLength, maxNumber etc. will not raise an error if the field is empty and there is no required rule. To validate for required you should defined required rule directly." ([a1bce7e](https://github.com/horprogs/Just-validate/commit/a1bce7ed00dbeb1934ee5e3ee060ecefd0013ac6))
+
 # [2.2.0](https://github.com/horprogs/Just-validate/compare/v2.1.0...v2.2.0) (2021-12-27)
 
 
