@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/horprogs/Just-validate/compare/v2.0.0...v2.1.0) (2021-12-22)
+
+
+### Features
+
+* [#30](https://github.com/horprogs/Just-validate/issues/30) add removeField method ([9b09503](https://github.com/horprogs/Just-validate/commit/9b09503089686261436e9264090c99c1fd108985))
+
 # [2.0.0](https://github.com/horprogs/Just-validate/compare/v1.5.0...v2.0.0) (2021-12-07)
 
 
