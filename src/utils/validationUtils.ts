@@ -1,3 +1,5 @@
+import { ElemValueType } from '../modules/interfaces';
+
 const EMAIL_REGEXP =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const NUMBER_REGEXP = /^[0-9]+$/;
@@ -7,7 +9,7 @@ const PASSWORD_REGEXP = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 const STRONG_PASSWORD_REGEXP =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-export const isEmpty = (value: string | boolean) => {
+export const isEmpty = (value: ElemValueType) => {
   let newVal = value;
 
   if (typeof value === 'string') {

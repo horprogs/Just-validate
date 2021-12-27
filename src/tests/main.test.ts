@@ -2,13 +2,15 @@ import {
   changeTextBySelector,
   clickBySelector,
   fetch,
+  generateFileContent,
   getElem,
   getElemByTestId,
   selectBySelector,
 } from '../utils/testingUtils';
 import JustValidate from '../main';
 import { Rules } from '../modules/interfaces';
-import { fireEvent, waitFor } from '@testing-library/dom';
+import { fireEvent, screen, waitFor } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
 describe('Validation', () => {
   beforeEach(() => {
@@ -143,6 +145,21 @@ describe('Validation', () => {
           <option value='spider'>Spider</option>
           <option value='goldfish'>Goldfish</option>
         </select>
+      </div>
+      
+      <div class="row">
+        <div class="col">
+          <label for="files">Upload your files</label>
+          <input
+            type="file"
+            class="form__input form-control"
+            placeholder="Upload your files"
+            autocomplete="off"
+            name="files"
+            id="files"
+            multiple
+          />
+        </div>
       </div>
 
       <button class='btn btn-primary' id="submit-btn">Submit</button>
@@ -549,7 +566,63 @@ describe('Validation', () => {
     });
     expect(getElemByTestId('error-label-#name')).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
     expect(console.error).not.toHaveBeenCalled();
+
+    validation.addField('#files', [
+      {
+        rule: 'minFilesCount' as Rules,
+      },
+      {
+        rule: 'maxFilesCount' as Rules,
+      },
+    ]);
+
+    const input = screen.getByLabelText(
+      /Upload your files/i
+    ) as HTMLInputElement;
+    userEvent.upload(
+      input,
+      new File(generateFileContent(10), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#files', [
+      {
+        rule: 'files' as Rules,
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(console.error).toHaveBeenCalled();
+
+    validation.addField('#files', [
+      {
+        rule: 'files' as Rules,
+        value: {},
+      },
+    ]);
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(console.error).toHaveBeenCalled();
   });
 
   test('should validate all fields and groups by basic rule', async () => {
@@ -1496,5 +1569,408 @@ describe('Validation', () => {
     });
 
     expect(onSubmit).toHaveBeenCalled();
+  });
+
+  test('should be able validate uploaded files count', async () => {
+    const onSubmit = jest.fn();
+
+    const file = new File(['file'], 'file.png', { type: 'image/png' });
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#files', [
+        {
+          rule: 'minFilesCount' as Rules,
+          value: 1,
+        },
+        {
+          rule: 'maxFilesCount' as Rules,
+          value: 3,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Files count should be more or equal than 1'
+    );
+
+    const input = screen.getByLabelText(
+      /Upload your files/i
+    ) as HTMLInputElement;
+    userEvent.upload(input, [file, file, file, file]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Files count should be less or equal than 3'
+    );
+
+    userEvent.upload(input, [file, file, file]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(input, [file]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+  });
+
+  test('should be able validate files types and extensions', async () => {
+    const onSubmit = jest.fn();
+
+    const filePng = new File(['file'], 'file.png', { type: 'image/png' });
+    const fileJpeg = new File(['file'], 'file.jpeg', { type: 'image/jpeg' });
+    const fileTxt = new File(['file'], 'file.txt', { type: 'text/plain' });
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#files', [
+        {
+          rule: 'files' as Rules,
+          value: {
+            files: {
+              types: ['image/png', 'image/jpeg'],
+              extensions: ['png', 'jpeg'],
+            },
+          },
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    const input = screen.getByLabelText(
+      /Upload your files/i
+    ) as HTMLInputElement;
+    userEvent.upload(input, [filePng]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(input, [fileJpeg]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(input, [fileJpeg, filePng]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(input, [fileJpeg, filePng, fileTxt]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+
+    userEvent.upload(input, [fileTxt]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+  });
+
+  test('should be able validate files sizes', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#files', [
+        {
+          rule: 'files' as Rules,
+          value: {
+            files: {
+              minSize: 1000,
+              maxSize: 2000,
+            },
+          },
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    const input = screen.getByLabelText(
+      /Upload your files/i
+    ) as HTMLInputElement;
+    userEvent.upload(
+      input,
+      new File(generateFileContent(10), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+
+    userEvent.upload(
+      input,
+      new File(generateFileContent(999), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+
+    userEvent.upload(
+      input,
+      new File(generateFileContent(1000), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(
+      input,
+      new File(generateFileContent(1001), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(
+      input,
+      new File(generateFileContent(2000), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(
+      input,
+      new File(generateFileContent(2001), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+  });
+
+  test('should be able validate files names', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#files', [
+        {
+          rule: 'files' as Rules,
+          value: {
+            files: {
+              names: ['file.txt'],
+            },
+          },
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    const input = screen.getByLabelText(
+      /Upload your files/i
+    ) as HTMLInputElement;
+    userEvent.upload(
+      input,
+      new File(generateFileContent(10), 'file.png', { type: 'image/png' })
+    );
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+
+    userEvent.upload(input, [
+      new File(generateFileContent(10), 'file.png', { type: 'image/png' }),
+      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
+    ]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+      'Uploaded files have one or several invalid properties (extension/size/type etc)'
+    );
+
+    userEvent.upload(input, [
+      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
+    ]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+
+    userEvent.upload(input, [
+      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
+      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
+    ]);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
   });
 });

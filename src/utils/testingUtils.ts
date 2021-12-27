@@ -41,3 +41,7 @@ export const fetch = (time = 1000, func?: () => boolean) =>
       resolve(func?.() || false);
     }, time);
   });
+
+export const generateFileContent = (size: number) => [
+  new Array(size).fill('1').join(''),
+];

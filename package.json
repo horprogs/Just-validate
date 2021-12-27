@@ -9,7 +9,7 @@
     "build:vite": "tsc && vite build",
     "build:types": "tsc --project tsconfig.types.json",
     "build": "yarn run build:vite && yarn run build:types",
-    "lint": "eslint . --ext .ts",
+    "lint": "tsc && eslint . --ext .ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "upgrade-packages": "ncu --configFileName .ncurc.json",

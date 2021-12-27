@@ -4,15 +4,16 @@
 <a href="https://bundlephobia.com/result?p=just-validate@latest" target="\_parent">
 <img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@latest" />
 </a>
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=horprogs/Just-validate&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com&utm_medium=referral&utm_content=horprogs/Just-validate&utm_campaign=Badge_Grade)
 [![Known Vulnerabilities](https://snyk.io/test/github/horprogs/Just-validate/badge.svg)](https://snyk.io/test/github/horprogs/Just-validate)
 [![Release workflow](https://github.com/horprogs/Just-validate/workflows/Test%20and%20Release/badge.svg)](https://github.com/horprogs/Just-validate/actions)
 
 Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
-Support a wide range of pre-defined rules (plus it's possible to define own custom rules), async validation,
+Support a wide range of predefined rules (plus it's possible to define own custom rules), async validation, files validation,
 custom error messages and styles, localization.
 
 ---
+
 **NOTE**
 
 **This is documentation for JustValidate 2. If you are looking for the old version, you could find it [here](https://github.com/horprogs/Just-validate/tree/v1).**
@@ -71,6 +72,22 @@ Or if you don't use module bundlers, just include JustValidate script on your pa
   </script>
 </body>
 ```
+
+## Predefined rules
+
+There are plenty of rules which you could use out of the box:
+
+- required, non-empty fields
+- valid email address
+- min/max text length
+- valid number
+- min/max number
+- valid password
+- valid strong password
+- check for the custom regexp
+- min/max count of uploaded files
+- min/max size, types, extensions, names of uploaded files
+
 
 ## Quick start
 
@@ -452,7 +469,7 @@ Define validation rules for the new field:
 )
 ```
 
-Make the new group field required. It could be a group of checkboxes or radio buttons. 
+Make the new group field required. It could be a group of checkboxes or radio buttons.
 
 It means that at least one input in the group should be checked/selected.
 
@@ -483,8 +500,8 @@ It means that at least one input in the group should be checked/selected.
   rule: String,
   errorMessage: String,
   validator: (
-         value: String | Boolean,
-         context: Object
+    value: String | Boolean,
+    context: Object
  ) => Boolean | Promise;
  value: number | string;
 }
@@ -502,6 +519,9 @@ Field `rule` could be one of these values:
 - `password` - Minimum eight characters, at least one letter and one number
 - `strongPassword` - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
 - `customRegexp` - Custom regexp expression
+- `minFilesCount` - Uploaded files count should be more than defined value
+- `maxFilesCount` - Uploaded files count should be less than defined value
+- `files` - Uploaded files attributes should be valid, based on `value` config (check details below in Files validation section)
 
 Field `errorMessage` used for customizing the error message for this rule.
 
@@ -567,6 +587,65 @@ validation.addField('#repeat-password', [
   },
 ]);
 ```
+
+## Files validation
+
+It's possible to validate min/max count of uploaded files and check for type, extension, min/max size and name of uploaded files.
+
+### Uploaded files count
+
+```html
+<input type="file" name="file" id="file" multiple />
+```
+
+```js
+validation.addField('#file', [
+  {
+    rule: 'minFilesCount',
+    value: 1,
+  },
+  {
+    rule: 'maxFilesCount',
+    value: 3,
+  },
+]);
+```
+
+### Files attributes validation
+
+```js
+validation.addField('#file', [
+  {
+    rule: 'files',
+    value: {
+      files: {
+        extensions: ['jpeg', 'png'],
+        maxSize: 25000,
+        minSize: 1000,
+        types: ['image/jpeg', 'image/png'],
+        names: ['file1.jpeg', 'file2.png'],
+      },
+    },
+  },
+]);
+```
+
+Format of value for `files` rule:
+
+```
+{
+  files: {
+    extensions?: string[];
+    types?: string[];
+    minSize?: number;
+    maxSize?: number;
+    names?: string[];
+  }
+}
+
+```
+
+`minSize` and `maxSize` should be defined in bytes.
 
 ### Localization
 

@@ -20,6 +20,9 @@ export enum Rules {
   MinNumber = 'minNumber',
   StrongPassword = 'strongPassword',
   CustomRegexp = 'customRegexp',
+  MinFilesCount = 'minFilesCount',
+  MaxFilesCount = 'maxFilesCount',
+  Files = 'files',
 }
 
 export type TooltipPositionType = 'left' | 'top' | 'right' | 'bottom';
@@ -34,6 +37,24 @@ export enum GroupRules {
 
 type ValidatorReturn = boolean | (() => Promise<boolean>);
 
+export interface FileRuleValueInterface {
+  extensions?: string[];
+  types?: string[];
+  minSize?: number;
+  maxSize?: number;
+  names?: string[];
+}
+
+export interface FilesRuleValueInterface {
+  files?: FileRuleValueInterface;
+}
+
+export type FieldRuleValueType =
+  | number
+  | string
+  | RegExp
+  | FilesRuleValueInterface;
+
 export interface FieldRuleInterface {
   rule?: Rules;
   errorMessage?: string;
@@ -41,7 +62,7 @@ export interface FieldRuleInterface {
     value: string | boolean,
     context: FieldsInterface
   ) => ValidatorReturn;
-  value?: number | string | RegExp;
+  value?: FieldRuleValueType;
 }
 
 export interface GroupRuleInterface {
@@ -113,3 +134,5 @@ export enum CustomStyleTagIds {
 export interface TooltipInstance {
   refresh: () => void;
 }
+
+export type ElemValueType = boolean | string | FileList | null;

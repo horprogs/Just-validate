@@ -268,8 +268,10 @@
       </div>
       <div class="form-group mt-4">
         <div class="form-check">
-          <label class="form-check-label" for="conditional_required_name_checkbox"
-          >Name is required</label
+          <label
+            class="form-check-label"
+            for="conditional_required_name_checkbox"
+            >Name is required</label
           >
           <input
             type="checkbox"
@@ -280,9 +282,60 @@
       </div>
 
       <div class="d-grid mt-4">
-        <button class="btn btn-primary" id="conditional_submit-btn">Submit</button>
+        <button class="btn btn-primary" id="conditional_submit-btn">
+          Submit
+        </button>
       </div>
     </form>
+
+    <form action="#" id="file_form" autocomplete="off" class="mt-5">
+      <div class="row">
+        <div class="col">
+          <label for="file_minmax">Upload your 1-3 files</label>
+          <input
+            type="file"
+            class="form__input form-control"
+            placeholder="Upload your file"
+            autocomplete="off"
+            name="file_minmax"
+            id="file_minmax"
+            multiple
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="file_txt">Upload your 1 txt file</label>
+          <input
+            type="file"
+            class="form__input form-control"
+            placeholder="Upload your file"
+            autocomplete="off"
+            name="file_txt"
+            id="file_txt"
+            multiple
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="file_advanced">Upload your files (txt, jpeg, max size 1000)</label>
+          <input
+            type="file"
+            class="form__input form-control"
+            placeholder="Upload your file"
+            autocomplete="off"
+            name="file_advanced"
+            id="file_advanced"
+            multiple
+          />
+        </div>
+      </div>
+      <div class="d-grid mt-4">
+        <button class="btn btn-primary" id="file_submit-btn">Submit</button>
+      </div>
+    </form>
+
     <script type="module" src="./src/example.ts"></script>
   </body>
 </html>

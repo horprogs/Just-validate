@@ -26,6 +26,9 @@ import {
   CustomStyleTagIds,
   TooltipPositionType,
   TooltipInstance,
+  FileRuleValueInterface,
+  FilesRuleValueInterface,
+  ElemValueType,
 } from './modules/interfaces';
 import {
   getDefaultFieldMessage,
@@ -189,10 +192,12 @@ class JustValidate {
     this.groupFields[groupName].isValid = true;
   }
 
-  getElemValue(elem: HTMLInputElement): boolean | string {
+  getElemValue(elem: HTMLInputElement): ElemValueType {
     switch (elem.type) {
       case 'checkbox':
         return elem.checked;
+      case 'file':
+        return elem.files;
       default:
         return elem.value;
     }
@@ -454,6 +459,153 @@ class JustValidate {
         break;
       }
 
+      case Rules.MinFilesCount: {
+        if (!ruleValue) {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (typeof ruleValue !== 'number') {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (
+          Number.isFinite((elemValue as FileList)?.length) &&
+          (elemValue as FileList).length < ruleValue
+        ) {
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        break;
+      }
+
+      case Rules.MaxFilesCount: {
+        if (!ruleValue) {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (typeof ruleValue !== 'number') {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (
+          Number.isFinite((elemValue as FileList)?.length) &&
+          (elemValue as FileList).length > ruleValue
+        ) {
+          this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        break;
+      }
+
+      case Rules.Files: {
+        if (!ruleValue) {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          return;
+        }
+
+        if (typeof ruleValue !== 'object') {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field should be an object. This field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          return;
+        }
+
+        const filesConfig = (ruleValue as FilesRuleValueInterface).files;
+
+        if (typeof filesConfig !== 'object') {
+          console.error(
+            `Value for ${fieldRule.rule} rule for [${field}] field should be an object with files array. This field will be always invalid.`
+          );
+          this.setFieldInvalid(field, fieldRule);
+          return;
+        }
+
+        const isFilePropsInvalid = (
+          file: File,
+          fileConfig?: FileRuleValueInterface
+        ): boolean => {
+          if (!fileConfig) {
+            return true;
+          }
+
+          const minSizeInvalid =
+            Number.isFinite(fileConfig.minSize) &&
+            file.size < fileConfig.minSize!;
+
+          const maxSizeInvalid =
+            Number.isFinite(fileConfig.maxSize) &&
+            file.size > fileConfig.maxSize!;
+
+          const nameInvalid =
+            Array.isArray(fileConfig.names) &&
+            !fileConfig.names.includes(file.name);
+
+          const extInvalid =
+            Array.isArray(fileConfig.extensions) &&
+            !fileConfig.extensions.includes(
+              file.name.split('.')[file.name.split('.').length - 1]
+            );
+
+          const typeInvalid =
+            Array.isArray(fileConfig.types) &&
+            !fileConfig.types.includes(file.type);
+
+          return (
+            minSizeInvalid ||
+            maxSizeInvalid ||
+            nameInvalid ||
+            extInvalid ||
+            typeInvalid
+          );
+        };
+
+        if (typeof elemValue === 'object' && elemValue !== null) {
+          for (
+            let fileIdx = 0, len = elemValue.length;
+            fileIdx < len;
+            ++fileIdx
+          ) {
+            const file = elemValue.item(fileIdx);
+
+            if (!file) {
+              this.setFieldInvalid(field, fieldRule);
+              break;
+            }
+
+            const filesInvalid = isFilePropsInvalid(file, filesConfig);
+
+            if (filesInvalid) {
+              this.setFieldInvalid(field, fieldRule);
+              break;
+            }
+          }
+        }
+
+        break;
+      }
+
       default: {
         if (!fieldRule.validator) {
           console.error(
@@ -471,7 +623,10 @@ class JustValidate {
           return;
         }
 
-        const result = fieldRule.validator(elemValue, this.fields);
+        const result = fieldRule.validator(
+          elemValue as string | boolean,
+          this.fields
+        );
 
         if (typeof result !== 'boolean' && typeof result !== 'function') {
           console.error(
@@ -778,7 +933,6 @@ class JustValidate {
     this.destroy();
     delete this.fields[field];
     this.refresh();
-
     return this;
   }
 
@@ -839,6 +993,7 @@ class JustValidate {
     switch (type) {
       case 'checkbox':
       case 'select-one':
+      case 'file':
       case 'radio': {
         return 'change';
         break;

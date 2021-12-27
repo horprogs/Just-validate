@@ -7,7 +7,7 @@
     </title>
     <meta
       name="description"
-      content="Modern, customizable, simple, lightweight (~5kb gzip) form validation library, with no dependencies (no JQuery!)"
+      content="Modern, customizable, simple, lightweight (~5kb gzip) form validation library, with no dependencies (no JQuery!) and with plenty predefined rules including files validation"
     />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -960,6 +960,124 @@
                   } else {
                     validation.removeField('#example6_name');
                   }
+                });
+            })();
+          </script>
+        </section>
+      </div>
+
+      <div class="mt-5 section-shadow" id="files">
+        <h2>
+          <a href="#files" class="example-link">Files validation</a>
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="files-form" autocomplete="off">
+            <div class="form-group">
+              <div class="col">
+                <label for="example7_minmax">Upload 1-3 files</label>
+                <input
+                  type="file"
+                  class="form__input form-control"
+                  name="example7_minmax"
+                  id="example7_minmax"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example7_png">Upload 1 png file</label>
+                <input
+                  type="file"
+                  class="form__input form-control"
+                  name="example7_png"
+                  id="example7_png"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example7_attr"
+                  >Upload several png/jpg/jpeg files with min size 10kb and max
+                  size 25kb</label
+                >
+                <input
+                  type="file"
+                  class="form__input form-control"
+                  name="example7_attr"
+                  id="example7_attr"
+                />
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example7_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate(
+                '#conditional-validation-form',
+                {
+                  errorFieldCssClass: 'is-invalid',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
+                  },
+                  focusInvalidField: true,
+                  lockForm: true,
+                }
+              );
+
+              validation
+                .addField('#example7_minmax', [
+                  {
+                    rule: 'minFilesCount',
+                    value: 1,
+                  },
+                  {
+                    rule: 'maxFilesCount',
+                    value: 3,
+                  },
+                ])
+                .addField('#example7_png', [
+                  {
+                    rule: 'minFilesCount',
+                    value: 1,
+                  },
+                  {
+                    rule: 'maxFilesCount',
+                    value: 1,
+                  },
+                  {
+                    rule: 'files',
+                    value: {
+                      files: {
+                        types: ['image/png'],
+                        extensions: ['png'],
+                      },
+                    },
+                  },
+                ])
+                .addField('#example7_attr', [
+                  {
+                    rule: 'files',
+                    value: {
+                      files: {
+                        extensions: ['jpeg', 'jpg', 'png'],
+                        maxSize: 20000,
+                        minSize: 10000,
+                        types: ['image/jpeg', 'image/jpg', 'image/png'],
+                      },
+                    },
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev.preventDefault();
+                  window.showNotification();
                 });
             })();
           </script>

@@ -237,6 +237,83 @@ const conditionalExample = () => {
     });
 };
 
+const fileExample = () => {
+  const validation = new JustValidate('#file_form', {
+    errorFieldCssClass: 'is-invalid',
+    errorFieldStyle: {
+      border: '1px solid red',
+    },
+    errorLabelCssClass: 'is-label-invalid',
+    errorLabelStyle: {
+      color: 'red',
+      textDecoration: 'underlined',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+  });
+
+  validation
+    .addField('#file_minmax', [
+      {
+        rule: 'minFilesCount' as Rules,
+        value: 1,
+      },
+      {
+        rule: 'maxFilesCount' as Rules,
+        value: 3,
+      },
+    ])
+    .addField('#file_txt', [
+      {
+        rule: 'minFilesCount' as Rules,
+        value: 1,
+      },
+      {
+        rule: 'maxFilesCount' as Rules,
+        value: 1,
+      },
+      {
+        rule: 'files' as Rules,
+        value: {
+          files: {
+            extensions: ['txt'],
+          },
+        },
+      },
+    ])
+    .addField('#file_advanced', [
+      {
+        rule: 'files' as Rules,
+        value: {
+          files: {
+            extensions: ['jpeg', 'png'],
+            maxSize: 25000,
+            minSize: 1000,
+            types: ['image/jpeg', 'image/png'],
+          },
+        },
+      },
+    ])
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+      console.log('SUCCESS', ev);
+    })
+    .onFail((fields) => {
+      console.log('FAIL', fields);
+    });
+  // .addField('#basic_email', [
+  //   {
+  //     rule: 'required' as Rules,
+  //     errorMessage: 'Field is required',
+  //   },
+  //   {
+  //     rule: 'email' as Rules,
+  //     errorMessage: 'Email is wrong!',
+  //   },
+  // ]);
+};
+
 basicExample();
 advancedExample();
 conditionalExample();
+fileExample();

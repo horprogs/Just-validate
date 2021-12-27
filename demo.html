@@ -40,7 +40,7 @@
     type="text/javascript"
     src="https://cdn.jsdelivr.net/npm/toastify-js"
   ></script>
-  <script type="module" src="./src/main.ts"></script>
+  <script type="text/javascript" src="./dist/just-validate.production.min.js"></script>
   <script>
     window.fakeFetch = (time = 1000, func) =>
       new Promise((resolve) => {
@@ -957,7 +957,7 @@
     </h2>
     <section class="base-example container py-2 px-0">
       <form action="#" id="files-form" autocomplete="off">
-        <div class="row">
+        <div class="form-group mt-4">
           <div class="col">
             <label for="example7_minmax">Upload 1-3 files</label>
             <input
@@ -965,11 +965,12 @@
               class="form__input form-control"
               name="example7_minmax"
               id="example7_minmax"
+              multiple
             />
           </div>
         </div>
 
-        <div class="row">
+        <div class="form-group mt-4">
           <div class="col">
             <label for="example7_png">Upload 1 png file</label>
             <input
@@ -977,21 +978,23 @@
               class="form__input form-control"
               name="example7_png"
               id="example7_png"
+              multiple
             />
           </div>
         </div>
 
-        <div class="row">
+        <div class="form-group mt-4">
           <div class="col">
             <label for="example7_attr"
             >Upload several png/jpg/jpeg files with min size 10kb and max
-              size 20kb</label
+              size 25kb</label
             >
             <input
               type="file"
               class="form__input form-control"
               name="example7_attr"
               id="example7_attr"
+              multiple
             />
           </div>
         </div>
@@ -1005,7 +1008,7 @@
       <script>
         (() => {
           const validation = new JustValidate(
-            '#conditional-validation-form',
+            '#files-form',
             {
               errorFieldCssClass: 'is-invalid',
               errorLabelStyle: {
@@ -1053,7 +1056,7 @@
                 value: {
                   files: {
                     extensions: ['jpeg', 'jpg', 'png'],
-                    maxSize: 20000,
+                    maxSize: 25000,
                     minSize: 10000,
                     types: ['image/jpeg', 'image/jpg', 'image/png'],
                   },

@@ -1,8 +1,8 @@
-import { GroupRules, Rules } from './interfaces';
+import { FieldRuleValueType, GroupRules, Rules } from './interfaces';
 
 export const getDefaultFieldMessage = (
   rule?: Rules,
-  ruleValue?: number | string | RegExp
+  ruleValue?: FieldRuleValueType
 ) => {
   switch (rule) {
     case Rules.Required:
@@ -43,6 +43,21 @@ export const getDefaultFieldMessage = (
         ':value',
         String(ruleValue!)
       );
+
+    case Rules.MinFilesCount:
+      return 'Files count should be more or equal than :value'.replace(
+        ':value',
+        String(ruleValue!)
+      );
+
+    case Rules.MaxFilesCount:
+      return 'Files count should be less or equal than :value'.replace(
+        ':value',
+        String(ruleValue!)
+      );
+
+    case Rules.Files:
+      return 'Uploaded files have one or several invalid properties (extension/size/type etc)';
 
     default:
       return 'Value is incorrect';
