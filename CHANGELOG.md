@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/horprogs/Just-validate/compare/v3.1.0...v3.1.1) (2021-12-27)
+
+
+### Bug Fixes
+
+* upgrade devDependencies ([8f5cd53](https://github.com/horprogs/Just-validate/commit/8f5cd53384ca66a038f768b4badf7accea40dad5))
+
 # [3.1.0](https://github.com/horprogs/Just-validate/compare/v3.0.0...v3.1.0) (2021-12-27)
 
 
