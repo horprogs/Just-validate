@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import JustValidate from './main';
 import { Rules } from './modules/interfaces';
 
