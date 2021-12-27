@@ -1,3 +1,11 @@
+# [3.1.0](https://github.com/horprogs/Just-validate/compare/v3.0.0...v3.1.0) (2021-12-27)
+
+
+### Features
+
+* [#32](https://github.com/horprogs/Just-validate/issues/32) add minFilesCount, maxFilesCount, files rules for files validation ([db956dd](https://github.com/horprogs/Just-validate/commit/db956dde812755e49ca52a5dd79da3d70e20207b))
+* [#32](https://github.com/horprogs/Just-validate/issues/32) add minFilesCount, maxFilesCount, files rules for files validation ([5056975](https://github.com/horprogs/Just-validate/commit/50569753848605e3d6848b514acf9791086ce432))
+
 # [3.0.0](https://github.com/horprogs/Just-validate/compare/v2.2.1...v3.0.0) (2021-12-27)
 
 
