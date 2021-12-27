@@ -252,7 +252,7 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof ruleValue !== 'number') {
@@ -260,11 +260,15 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (elemValue === '') {
           break;
         }
 
@@ -280,7 +284,7 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof ruleValue !== 'number') {
@@ -288,11 +292,15 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (elemValue === '') {
           break;
         }
 
@@ -308,6 +316,10 @@ class JustValidate {
           break;
         }
 
+        if (elemValue === '') {
+          break;
+        }
+
         if (!isPassword(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
@@ -317,6 +329,10 @@ class JustValidate {
       case Rules.StrongPassword: {
         if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (elemValue === '') {
           break;
         }
 
@@ -332,6 +348,10 @@ class JustValidate {
           break;
         }
 
+        if (elemValue === '') {
+          break;
+        }
+
         if (!isNumber(elemValue)) {
           this.setFieldInvalid(field, fieldRule);
         }
@@ -344,7 +364,7 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof ruleValue !== 'number') {
@@ -352,11 +372,15 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (elemValue === '') {
           break;
         }
 
@@ -374,7 +398,7 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof ruleValue !== 'number') {
@@ -382,11 +406,15 @@ class JustValidate {
             `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
           );
           this.setFieldInvalid(field, fieldRule);
-          return;
+          break;
         }
 
         if (typeof elemValue !== 'string') {
           this.setFieldInvalid(field, fieldRule);
+          break;
+        }
+
+        if (elemValue === '') {
           break;
         }
 

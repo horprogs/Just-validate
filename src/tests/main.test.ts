@@ -1085,11 +1085,10 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password must contain minimum eight characters, at least one letter and one number'
-    );
+    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
 
     changeTextBySelector('#password', '12345678');
     clickBySelector('#submit-btn');
@@ -1141,11 +1140,10 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    );
+    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
 
     changeTextBySelector('#password', '12345678a');
     clickBySelector('#submit-btn');
