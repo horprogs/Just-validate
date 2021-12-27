@@ -180,8 +180,12 @@ const basicExample = () => {
   validation
     .addField('#basic_name', [
       {
-        rule: 'maxNumber' as Rules,
+        rule: 'minNumber' as Rules,
         value: 10,
+      },
+      {
+        rule: 'maxNumber' as Rules,
+        value: 100,
       },
     ])
     .onSuccess((ev) => {
