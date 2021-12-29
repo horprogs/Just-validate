@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/horprogs/Just-validate/compare/v3.1.1...v3.1.2) (2021-12-29)
+
+
+### Bug Fixes
+
+* fix README and trigger new patch release ([90b6b1e](https://github.com/horprogs/Just-validate/commit/90b6b1e3499eaa43c4058e0c1b65a8cae818fd73))
+
 ## [3.1.1](https://github.com/horprogs/Just-validate/compare/v3.1.0...v3.1.1) (2021-12-27)
 
 
