@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/horprogs/Just-validate/compare/v3.1.2...v3.2.0) (2021-12-30)
+
+
+### Features
+
+* add date validation and plugin support ([28e8382](https://github.com/horprogs/Just-validate/commit/28e838211573acdcdd0db183883ff685ea35cebb))
+
 ## [3.1.2](https://github.com/horprogs/Just-validate/compare/v3.1.1...v3.1.2) (2021-12-29)
 
 
