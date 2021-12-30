@@ -9,8 +9,8 @@
 [![Release workflow](https://github.com/horprogs/Just-validate/workflows/Test%20and%20Release/badge.svg)](https://github.com/horprogs/Just-validate/actions)
 
 Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!).
-Support a wide range of predefined rules (plus it's possible to define own custom rules), async validation, files validation,
-custom error messages and styles, localization.
+Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. 
+Supporting writing custom rules and plugins. 
 
 ---
 
@@ -31,6 +31,7 @@ and you want to quick, simple and powerful solution for validating your form.
 - no need to change your HTML
 - a wide range of pre-defined rules
 - custom rules
+- support plugins
 - custom styles and css classes for invalid fields and error messages
 - custom messages
 - showing tooltips as error messages
@@ -87,7 +88,7 @@ There are plenty of rules which you could use out of the box:
 - check for the custom regexp
 - min/max count of uploaded files
 - min/max size, types, extensions, names of uploaded files
-
+- format date, check for isAfter/isBefore dates
 
 ## Quick start
 
@@ -647,6 +648,119 @@ Format of value for `files` rule:
 
 `minSize` and `maxSize` should be defined in bytes.
 
+### Date validation
+
+Date validation is performed by a separate plugin [JustValidatePluginDate](https://github.com/horprogs/just-validate-plugin-date) to avoid extending the library size. The plugin uses [date-fns](https://github.com/date-fns/date-fns) for operating with dates.
+
+It is possible to validate for defined format, isAfter, isBefore dates. It works both for text input and for date input.
+
+#### Configuration
+
+`JustValidatePluginDate` takes 1 argument: function which returns config object:
+
+```js
+JustValidatePluginDate((fields) => ({
+  format: string,
+  isBefore: Date | string,
+  isAfter: Date | string,
+}));
+```
+
+It is useful to use `fields` for accessing other fields and their value to set values in the config.
+
+#### Validate for format
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation.addField('#date', [
+  {
+    plugin: JustValidatePluginDate(() => ({
+      format: 'dd MMM yyyy',
+    })),
+    errorMessage: 'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
+  },
+]);
+```
+
+#### Validate for isBefore/isAfter
+
+To be able to validate isBefore/isAfter it's important to define **the same format which supposed to use in isBefore/isAfter**,
+otherwise the library will not be able to parse this date string correctly.
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation.addField('#date', [
+  {
+    plugin: JustValidatePluginDate(() => ({
+      format: 'dd/MM/yyyy',
+      isBefore: '15/12/2021',
+      isAfter: '10/12/2021',
+    })),
+    errorMessage: 'Date should be between 10/12/2021 and 15/12/2021',
+  },
+]);
+```
+
+Also, you could perform validation depends on other fields:
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation
+  .addField('#date-start', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+  ])
+  .addField('#date-between', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+    {
+      plugin: JustValidatePluginDate((fields) => ({
+        format: 'dd/MM/yyyy',
+        isAfter: fields['#date-start'].elem.value,
+        isBefore: fields['#date-end'].elem.value,
+      })),
+      errorMessage: 'Date should be between start and end dates',
+    },
+  ])
+  .addField('#date-end', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+  ]);
+```
+
+#### Using with date input
+
+If you use date input, you don't need to define `format` field, because it's always in `yyyy-mm-dd` format, 
+you just should define isBefore/isAfter:
+
+```js
+validation.addField('#date-between', [
+  {
+    plugin: JustValidatePluginDate((fields) => ({
+      isAfter: document.querySelector('#date-start').value,
+      isBefore: document.querySelector('#date-end').value,
+    })),
+    errorMessage: 'Date should be between start and end dates',
+  },
+])
+
+```
+
 ### Localization
 
 You could define your own translations for different languages. To do that you should define `dictLocale` array, like:
@@ -691,3 +805,9 @@ document.querySelector('#change-lang-btn-es').addEventListener('click', () => {
   validation.setCurrentLocale('es');
 });
 ```
+
+### Plugins
+
+If you need more custom functionality it is possible to write your own plugin. For now there is one official plugin:
+- [JustValidatePluginDate](https://github.com/horprogs/just-validate-plugin-date)
+

@@ -231,6 +231,18 @@ class JustValidate {
     const ruleValue = fieldRule.value;
     const elemValue = this.getElemValue(elem);
 
+    if (fieldRule.plugin) {
+      const result = fieldRule.plugin(
+        elemValue as string | boolean,
+        this.fields
+      );
+
+      if (!result) {
+        this.setFieldInvalid(field, fieldRule);
+      }
+      return;
+    }
+
     switch (fieldRule.rule) {
       case Rules.Required: {
         if (isEmpty(elemValue)) {
@@ -884,7 +896,7 @@ class JustValidate {
     }
 
     rules.forEach((item) => {
-      if (!('rule' in item || 'validator' in item)) {
+      if (!('rule' in item || 'validator' in item || 'plugin' in item)) {
         throw Error(
           `Rules argument for the field [${field}] must contain at least one rule or validator property.`
         );
@@ -892,6 +904,7 @@ class JustValidate {
 
       if (
         !item.validator &&
+        !item.plugin &&
         (!item.rule || !Object.values(Rules).includes(item.rule))
       ) {
         throw Error(
@@ -996,6 +1009,10 @@ class JustValidate {
       case 'file':
       case 'radio': {
         return 'change';
+        break;
+      }
+      case 'date': {
+        return 'input';
         break;
       }
 

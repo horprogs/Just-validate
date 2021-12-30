@@ -56,6 +56,7 @@
       src="https://cdn.jsdelivr.net/npm/toastify-js"
     ></script>
     <script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
+    <script src="https://unpkg.com/just-validate-plugin-date@latest/dist/just-validate-plugin-date.production.min.js"></script>
     <script>
       window.fakeFetch = (time = 1000, func) =>
         new Promise((resolve) => {
@@ -1019,18 +1020,15 @@
           </form>
           <script>
             (() => {
-              const validation = new JustValidate(
-                '#files-form',
-                {
-                  errorFieldCssClass: 'is-invalid',
-                  errorLabelStyle: {
-                    fontSize: '14px',
-                    color: '#dc3545',
-                  },
-                  focusInvalidField: true,
-                  lockForm: true,
-                }
-              );
+              const validation = new JustValidate('#files-form', {
+                errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
+                focusInvalidField: true,
+                lockForm: true,
+              });
 
               validation
                 .addField('#example7_minmax', [
@@ -1077,6 +1075,222 @@
                 ])
                 .onSuccess((ev) => {
                   ev.preventDefault();
+                  window.showNotification();
+                });
+            })();
+          </script>
+        </section>
+      </div>
+
+      <div class="mt-5 section-shadow" id="date-text-input">
+        <h2>
+          <a href="#date-text-input" class="example-link"
+            >Date validation using text input</a
+          >
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="date-text-input-form" autocomplete="off">
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example8_start_date">Start date</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  name="example8_start_date"
+                  id="example8_start_date"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example8_between_date">Between date</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  name="example8_between_date"
+                  id="example8_between_date"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example8_end_date">End date</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  name="example8_end_date"
+                  id="example8_end_date"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example8_format"
+                  >Check for dd MMM yyyy format</label
+                >
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  name="example8_format"
+                  id="example8_format"
+                />
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example8_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new window.JustValidate(
+                '#date-text-input-form',
+                {
+                  errorFieldCssClass: 'is-invalid',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
+                  },
+                  focusInvalidField: true,
+                  lockForm: true,
+                }
+              );
+
+              validation
+                .addField('#example8_start_date', [
+                  {
+                    plugin: JustValidatePluginDate(() => ({
+                      format: 'dd/MM/yyyy',
+                    })),
+                    errorMessage:
+                      'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+                  },
+                ])
+                .addField('#example8_between_date', [
+                  {
+                    plugin: JustValidatePluginDate(() => ({
+                      format: 'dd/MM/yyyy',
+                    })),
+                    errorMessage:
+                      'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+                  },
+                  {
+                    plugin: JustValidatePluginDate((fields) => ({
+                      format: 'dd/MM/yyyy',
+                      isAfter: fields['#example8_start_date'].elem.value,
+                      isBefore: fields['#example8_end_date'].elem.value,
+                    })),
+                    errorMessage: 'Date should be between start and end dates',
+                  },
+                ])
+                .addField('#example8_end_date', [
+                  {
+                    plugin: JustValidatePluginDate(() => ({
+                      format: 'dd/MM/yyyy',
+                    })),
+                    errorMessage:
+                      'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+                  },
+                ])
+                .addField('#example8_format', [
+                  {
+                    plugin: JustValidatePluginDate(() => ({
+                      format: 'dd MMM yyyy',
+                    })),
+                    errorMessage:
+                      'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev?.preventDefault();
+                  window.showNotification();
+                });
+            })();
+          </script>
+        </section>
+      </div>
+
+      <div class="mt-5 section-shadow" id="date-date-input">
+        <h2>
+          <a href="#date-date-input" class="example-link"
+            >Date validation using date input</a
+          >
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="date-date-input-form" autocomplete="off">
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example9_start_date">Start date</label>
+                <input
+                  type="date"
+                  class="form__input form-control"
+                  name="example9_start_date"
+                  id="example9_start_date"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example9_between_date">Between date</label>
+                <input
+                  type="date"
+                  class="form__input form-control"
+                  name="example9_between_date"
+                  id="example9_between_date"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="col">
+                <label for="example9_end_date">End date</label>
+                <input
+                  type="date"
+                  class="form__input form-control"
+                  name="example9_end_date"
+                  id="example9_end_date"
+                />
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example9_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate('#date-date-input-form', {
+                errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
+                focusInvalidField: true,
+                lockForm: true,
+              });
+
+              validation
+                .addField('#example9_between_date', [
+                  {
+                    plugin: JustValidatePluginDate(() => ({
+                      isAfter: document.querySelector('#example9_start_date')
+                        .value,
+                      isBefore:
+                        document.querySelector('#example9_end_date').value,
+                    })),
+                    errorMessage: 'Date should be between start and end dates',
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev?.preventDefault();
                   window.showNotification();
                 });
             })();

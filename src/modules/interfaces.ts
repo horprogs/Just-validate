@@ -55,9 +55,6 @@ export type FieldRuleValueType =
   | RegExp
   | FilesRuleValueInterface;
 
-export type PluginValueType = string | boolean;
-export type PluginContextType = FieldsInterface;
-
 export interface FieldRuleInterface {
   rule?: Rules;
   errorMessage?: string;
@@ -66,10 +63,7 @@ export interface FieldRuleInterface {
     context: FieldsInterface
   ) => ValidatorReturn;
   value?: FieldRuleValueType;
-  plugin?: (
-    value: PluginValueType,
-    context: FieldsInterface
-  ) => ValidatorReturn;
+  plugin?: (value: string | boolean, context: FieldsInterface) => boolean;
 }
 
 export interface GroupRuleInterface {
