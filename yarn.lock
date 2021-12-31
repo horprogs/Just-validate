@@ -5587,10 +5587,10 @@ just-diff@^3.0.1:
   resolved "https://registry.yarnpkg.com/just-diff/-/just-diff-3.1.1.tgz#d50c597c6fd4776495308c63bdee1b6839082647"
   integrity sha512-sdMWKjRq8qWZEjDcVA6llnUT8RDEBIfOiGpYFPYa9u+2c39JCsejktSP7mj5eRid5EIvTzIpQ2kDOCw1Nq9BjQ==
 
-just-validate-plugin-date@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/just-validate-plugin-date/-/just-validate-plugin-date-1.0.1.tgz#5a1efed03be021b11742a9a47b1731e81eace8eb"
-  integrity sha512-TnuBDW8K2wTQg43Qt8S6SmG8PzI8eQKcIBcygJeGlpjEkM6Ec6iLTqeeXMILiHRUsyBmqQyIcVdYva/JpFPeHA==
+just-validate-plugin-date@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/just-validate-plugin-date/-/just-validate-plugin-date-1.1.0.tgz#52805ac22e7b23d5ae39c9d235d6e6abada6ad14"
+  integrity sha512-m5FhkwhvYMwb8Ydue5ynEnI6OA7AH0yPP6HqNunlS1+OJwZfxWd54f/ZiwqFzbEwA2/0+swjyTlk1CVwakgAZw==
   dependencies:
     date-fns "2.28.0"
 

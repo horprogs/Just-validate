@@ -504,6 +504,20 @@ const dateDateInput = () => {
     .addField('#example9_between_date', [
       {
         plugin: JustValidatePluginDate(() => ({
+          required: true,
+          isAfter: (
+            document.querySelector('#example9_start_date') as HTMLInputElement
+          ).value,
+          isBefore: (
+            document.querySelector('#example9_end_date') as HTMLInputElement
+          ).value,
+        })),
+        errorMessage: 'Date should be between start and end dates',
+      },
+    ])
+    .addField('#example9_between_not_required_date', [
+      {
+        plugin: JustValidatePluginDate(() => ({
           isAfter: (
             document.querySelector('#example9_start_date') as HTMLInputElement
           ).value,
