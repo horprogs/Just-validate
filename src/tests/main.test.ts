@@ -498,6 +498,7 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
 
+    changeTextBySelector('#name', 'text');
     validation.addField('#name', [
       {
         rule: 'customRegexp' as Rules,
@@ -511,6 +512,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
+    changeTextBySelector('#name', '');
 
     validation.addField('#name', [
       {
