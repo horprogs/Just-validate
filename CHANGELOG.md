@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/horprogs/Just-validate/compare/v3.2.1...v3.2.2) (2021-12-31)
+
+
+### Bug Fixes
+
+* [#34](https://github.com/horprogs/Just-validate/issues/34) fix empty value for customRegexp rule ([73cd1d7](https://github.com/horprogs/Just-validate/commit/73cd1d78db7d83017070a5fe283fc6f519a95cf3))
+
 ## [3.2.1](https://github.com/horprogs/Just-validate/compare/v3.2.0...v3.2.1) (2021-12-31)
 
 
