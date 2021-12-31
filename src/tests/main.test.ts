@@ -1135,6 +1135,33 @@ describe('Validation', () => {
     });
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
+
+    onSubmit.mockReset();
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'minNumber' as Rules,
+          value: 0,
+        },
+        {
+          rule: 'maxNumber' as Rules,
+          value: 100,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    changeTextBySelector('#name', '0');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
   });
 
   test('should be able to validate password', async () => {

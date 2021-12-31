@@ -264,7 +264,7 @@ class JustValidate {
       }
 
       case Rules.MaxLength: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
@@ -296,7 +296,7 @@ class JustValidate {
       }
 
       case Rules.MinLength: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
@@ -376,7 +376,7 @@ class JustValidate {
       }
 
       case Rules.MaxNumber: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
@@ -410,7 +410,7 @@ class JustValidate {
       }
 
       case Rules.MinNumber: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
           );
@@ -444,7 +444,7 @@ class JustValidate {
       }
 
       case Rules.CustomRegexp: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
           );
@@ -472,7 +472,7 @@ class JustValidate {
       }
 
       case Rules.MinFilesCount: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
           );
@@ -500,7 +500,7 @@ class JustValidate {
       }
 
       case Rules.MaxFilesCount: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
           );
@@ -528,7 +528,7 @@ class JustValidate {
       }
 
       case Rules.Files: {
-        if (!ruleValue) {
+        if (ruleValue === undefined) {
           console.error(
             `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
           );
