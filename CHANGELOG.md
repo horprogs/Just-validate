@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/horprogs/Just-validate/compare/v3.2.0...v3.2.1) (2021-12-31)
+
+
+### Bug Fixes
+
+* [#36](https://github.com/horprogs/Just-validate/issues/36) fix checking ruleValue for 0 ([fc8483e](https://github.com/horprogs/Just-validate/commit/fc8483e764c0c03fbff1b8b309a0ccfbd8cf8986))
+
 # [3.2.0](https://github.com/horprogs/Just-validate/compare/v3.1.2...v3.2.0) (2021-12-30)
 
 
