@@ -464,7 +464,9 @@ class JustValidate {
           break;
         }
 
-        if (!regexp.test(String(elemValue))) {
+        const str = String(elemValue);
+
+        if (str !== '' && !regexp.test(str)) {
           this.setFieldInvalid(field, fieldRule);
         }
 

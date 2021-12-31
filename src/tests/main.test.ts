@@ -1296,15 +1296,17 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
 
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
 
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     changeTextBySelector('#name', 'asgda');
     clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('button')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
 
     changeTextBySelector('#name', '123123sdf');
@@ -1313,6 +1315,7 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
 
     changeTextBySelector('#name', '123123sAA');
@@ -1321,6 +1324,7 @@ describe('Validation', () => {
       expect(getElem('button')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
 
     changeTextBySelector('#name', 'AAAA');
@@ -1332,6 +1336,29 @@ describe('Validation', () => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
     });
     expect(getElemByTestId('error-label-#name')).toBeNull();
+
+    onSubmit.mockReset();
+    validation.addField('#name', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'customRegexp' as Rules,
+        value: /^[A-Z]+$/,
+      },
+    ]);
+
+    changeTextBySelector('#name', '');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
   });
 
   test('should be able to change language', async () => {
