@@ -451,7 +451,10 @@ Define validation rules for the new field:
   field: string,
   rules: {
     rule?: Rules;
-    errorMessage?: string;
+    errorMessage?: string | (
+      value: string | boolean,
+      context: FieldsInterface
+    ) => string);
     validator?: (
       value: string | boolean,
       context: FieldsInterface
@@ -498,11 +501,14 @@ It means that at least one input in the group should be checked/selected.
 
 ```
 {
-  rule: String,
-  errorMessage: String,
+  rule: string,
+  errorMessage?: string | (
+      value: string | boolean,
+      context: FieldsInterface
+    ) => string);
   validator: (
-    value: String | Boolean,
-    context: Object
+    value: string | boolean,
+    context: object
  ) => Boolean | Promise;
  value: number | string;
 }
@@ -524,7 +530,8 @@ Field `rule` could be one of these values:
 - `maxFilesCount` - Uploaded files count should be less than defined value
 - `files` - Uploaded files attributes should be valid, based on `value` config (check details below in Files validation section)
 
-Field `errorMessage` used for customizing the error message for this rule.
+Field `errorMessage` used for customizing the error message for this rule. It could be a string, or a function which returns a string
+(it helps to create conditional messages, based on the field value).
 
 Field `value` used only with `minLength`, `maxLength`, `minNumber`, `maxNumber`, `customRegexp` rules to define the rule value, for example:
 

@@ -853,6 +853,95 @@ describe('Validation', () => {
     ).toHaveTextContent('Animal select is required');
   });
 
+  test('should be able to show conditional custom error messages', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          validator: (val) => {
+            switch (val) {
+              case 'Z':
+              case 'X':
+              case 'C':
+              case '.':
+                return false;
+              default:
+                return true;
+            }
+          },
+          errorMessage: (val) => {
+            switch (val) {
+              case 'Z':
+              case 'X':
+              case 'C':
+                return 'You cannot use Z/X/C as names';
+              default:
+                return 'Name is invalid';
+            }
+          },
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    changeTextBySelector('#name', 'Z');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'You cannot use Z/X/C as names'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    changeTextBySelector('#name', 'X');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'You cannot use Z/X/C as names'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    changeTextBySelector('#name', 'C');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'You cannot use Z/X/C as names'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    changeTextBySelector('#name', '.');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+      'Name is invalid'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    changeTextBySelector('#name', '123123123');
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+  });
+
   test('should be able to validate by different rules', async () => {
     const onSubmit = jest.fn();
 

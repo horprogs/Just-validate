@@ -163,9 +163,14 @@ class JustValidate {
     return localisedStr || str;
   }
 
-  getFieldErrorMessage(fieldRule: FieldRuleInterface) {
+  getFieldErrorMessage(fieldRule: FieldRuleInterface, elem: HTMLInputElement) {
+    const errMsg =
+      typeof fieldRule.errorMessage === 'function'
+        ? fieldRule.errorMessage(this.getElemValue(elem), this.fields)
+        : fieldRule.errorMessage;
+
     return (
-      this.getLocalisedString(fieldRule.errorMessage) ||
+      this.getLocalisedString(errMsg) ||
       getDefaultFieldMessage(fieldRule.rule, fieldRule.value)
     );
   }
@@ -179,7 +184,10 @@ class JustValidate {
 
   setFieldInvalid(field: string, fieldRule: FieldRuleInterface) {
     this.fields[field].isValid = false;
-    this.fields[field].errorMessage = this.getFieldErrorMessage(fieldRule);
+    this.fields[field].errorMessage = this.getFieldErrorMessage(
+      fieldRule,
+      this.fields[field].elem
+    );
   }
 
   setGroupInvalid(groupName: string, groupRule: GroupRuleInterface) {

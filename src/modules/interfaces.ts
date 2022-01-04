@@ -55,13 +55,20 @@ export type FieldRuleValueType =
   | RegExp
   | FilesRuleValueInterface;
 
+export type ValidatorFuncType = (
+  value: string | boolean,
+  context: FieldsInterface
+) => ValidatorReturn;
+
+export type ErrorMessageFuncType = (
+  value: ElemValueType,
+  context: FieldsInterface
+) => string;
+
 export interface FieldRuleInterface {
   rule?: Rules;
-  errorMessage?: string;
-  validator?: (
-    value: string | boolean,
-    context: FieldsInterface
-  ) => ValidatorReturn;
+  errorMessage?: string | ErrorMessageFuncType;
+  validator?: ValidatorFuncType;
   value?: FieldRuleValueType;
   plugin?: (value: string | boolean, context: FieldsInterface) => boolean;
 }
