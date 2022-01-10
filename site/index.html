@@ -75,8 +75,8 @@
           <div class="features-item__title">Customizable</div>
           <div class="features-item__text">
             Plenty pre-defined rules, but you could also write your own! Support
-            custom styles and css classes for fields and labels, custom error
-            messages.
+            custom styles and css classes for fields and labels, custom error and success
+            messages. Support plugins.
           </div>
         </div>
         <div class="features-item">
@@ -486,7 +486,10 @@ validation
   field: <span class="hljs-keyword">string</span>,
   rules: {
     rule?: Rules;
-    errorMessage?: <span class="hljs-keyword">string</span>;
+    errorMessage?: <span class="hljs-keyword">string</span> | (
+      value: <span class="hljs-keyword">string</span> | <span class="hljs-keyword">boolean</span>,
+      context: FieldsInterface
+    ) =&gt; <span class="hljs-keyword">string</span>);
     validator?: (
       value: <span class="hljs-keyword">string</span> | <span class="hljs-keyword">boolean</span>,
       context: FieldsInterface
@@ -498,9 +501,14 @@ validation
     errorFieldCssClass: <span class="hljs-keyword">string</span>;
     errorLabelStyle: Partial&lt;CSSStyleDeclaration&gt;;
     errorLabelCssClass: <span class="hljs-keyword">string</span>;
+    successFieldStyle?: Partial&lt;CSSStyleDeclaration&gt;;
+    successFieldCssClass: <span class="hljs-keyword">string</span>;
+    successLabelStyle?: Partial&lt;CSSStyleDeclaration&gt;;
+    successLabelCssClass: <span class="hljs-keyword">string</span>;
     tooltip?: {
       <span class="hljs-built_in">position</span>: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>;
     };
+    successMessage?: <span class="hljs-keyword">string</span>;
   }
 )
 </code></pre><p>Make the new group field required. It could be a group of checkboxes or radio buttons.</p>
@@ -513,22 +521,33 @@ validation
       errorFieldCssClass: <span class="hljs-keyword">string</span>;
       errorLabelStyle: Partial&lt;CSSStyleDeclaration&gt;;
       errorLabelCssClass: <span class="hljs-keyword">string</span>;
+      successFieldStyle?: Partial&lt;CSSStyleDeclaration&gt;;
+      successFieldCssClass: <span class="hljs-keyword">string</span>;
+      successLabelStyle?: Partial&lt;CSSStyleDeclaration&gt;;
+      successLabelCssClass: <span class="hljs-keyword">string</span>;
       tooltip?: {
         <span class="hljs-built_in">position</span>: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>;
       };
-    }
+    },
+    successMessage?: <span class="hljs-keyword">string</span>,
 )
 </code></pre><p><code>.onSuccess(event)</code> - callback if validation success</p>
         <p><code>.onFail(fields)</code> - callback if validation failed</p>
+        <p>If you define <code>successMessage</code> argument, this text will be shown if validation (all rules) passes.
+          You could customize it by defining <code>successFieldStyle</code>, <code>successFieldCssClass</code>, <code>successLabelStyle</code>, <code>successLabelCssClass</code>
+          as we do for error messages.  </p>
         <h2 id="rule-object">Rule object</h2>
         <pre><code>{
-  rule: <span class="hljs-built_in">String</span>,
-  errorMessage: <span class="hljs-built_in">String</span>,
+  rule: <span class="hljs-built_in">string</span>,
+  errorMessage?: <span class="hljs-built_in">string</span> | (
+      <span class="hljs-keyword">value</span>: <span class="hljs-built_in">string</span> | boolean,
+      context: <span class="hljs-type">FieldsInterface</span>
+    ) =&gt; <span class="hljs-built_in">string</span>);
   validator: (
-    value: <span class="hljs-built_in">String</span> | <span class="hljs-built_in">Boolean</span>,
-    context: <span class="hljs-built_in">Object</span>
- ) =&gt; <span class="hljs-built_in">Boolean</span> | Promise;
- value: <span class="hljs-built_in">number</span> | <span class="hljs-built_in">string</span>;
+    <span class="hljs-keyword">value</span>: <span class="hljs-built_in">string</span> | boolean,
+    context: <span class="hljs-keyword">object</span>
+ ) =&gt; <span class="hljs-type">Boolean</span> | <span class="hljs-type">Promise</span>;
+ <span class="hljs-keyword">value</span>: number | <span class="hljs-built_in">string</span>;
 }
 </code></pre><p>Field <code>rule</code> could be one of these values:</p>
         <ul>
@@ -546,7 +565,8 @@ validation
           <li><code>maxFilesCount</code> - Uploaded files count should be less than defined value</li>
           <li><code>files</code> - Uploaded files attributes should be valid, based on <code>value</code> config (check details below in Files validation section)</li>
         </ul>
-        <p>Field <code>errorMessage</code> used for customizing the error message for this rule.</p>
+        <p>Field <code>errorMessage</code> used for customizing the error message for this rule. It could be a string, or a function which returns a string
+          (it helps to create conditional messages, based on the field value).</p>
         <p>Field <code>value</code> used only with <code>minLength</code>, <code>maxLength</code>, <code>minNumber</code>, <code>maxNumber</code>, <code>customRegexp</code> rules to define the rule value, for example:</p>
         <pre><code class="lang-js"><span class="hljs-selector-tag">validation</span><span class="hljs-selector-class">.addField</span>(<span class="hljs-string">'#name'</span>, [
   {
@@ -646,11 +666,13 @@ validation
         <h4 id="configuration">Configuration</h4>
         <p><code>JustValidatePluginDate</code> takes 1 argument: function which returns config object:</p>
         <pre><code class="lang-js">JustValidatePluginDate((fields) =&gt; ({
+  required: boolean,
   <span class="hljs-keyword">format</span>: <span class="hljs-keyword">string</span>,
   isBefore: <span class="hljs-built_in">Date</span> | <span class="hljs-keyword">string</span>,
   isAfter: <span class="hljs-built_in">Date</span> | <span class="hljs-keyword">string</span>,
 }));
 </code></pre>
+        <p>If it&#39;s not required, validation will pass if the value is empty.</p>
         <p>It is useful to use <code>fields</code> for accessing other fields and their value to set values in the config.</p>
         <h4 id="validate-for-format">Validate for format</h4>
         <pre><code class="lang-js"><span class="hljs-keyword">import</span> JustValidatePluginDate <span class="hljs-keyword">from</span> <span class="hljs-string">'just-validate-plugin-date'</span>;
@@ -708,6 +730,24 @@ validation
       <span class="hljs-name">errorMessage</span>: <span class="hljs-string">'Date should be between start and end dates'</span>,
     },
   ])
+  .addField(<span class="hljs-string">'#date-between-required'</span>, [
+    {
+      <span class="hljs-name">plugin</span>: JustValidatePluginDate(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+        <span class="hljs-name">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-name">format</span>: <span class="hljs-string">'dd/MM/yyyy'</span>,
+      })),
+      <span class="hljs-name">errorMessage</span>: <span class="hljs-string">'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)'</span>,
+    },
+    {
+      <span class="hljs-name">plugin</span>: JustValidatePluginDate(<span class="hljs-function"><span class="hljs-params">(fields)</span> =&gt;</span> ({
+        <span class="hljs-name">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-name">format</span>: <span class="hljs-string">'dd/MM/yyyy'</span>,
+        <span class="hljs-name">isAfter</span>: fields[<span class="hljs-string">'#date-start'</span>].elem.value,
+        <span class="hljs-name">isBefore</span>: fields[<span class="hljs-string">'#date-end'</span>].elem.value,
+      })),
+      <span class="hljs-name">errorMessage</span>: <span class="hljs-string">'Date should be between start and end dates'</span>,
+    },
+  ])
   .addField(<span class="hljs-string">'#date-end'</span>, [
     {
       <span class="hljs-name">plugin</span>: JustValidatePluginDate(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -728,7 +768,7 @@ validation
     })),
     errorMessage: <span class="hljs-string">'Date should be between start and end dates'</span>,
   },
-])
+]);
 </code></pre>
         <h3 id="localization">Localization</h3>
         <p>You could define your own translations for different languages. To do that you should define <code>dictLocale</code> array, like:</p>

@@ -211,6 +211,69 @@
         </section>
       </div>
 
+      <div class="mt-5 section-shadow" id="success-label">
+        <h2>
+          <a href="#success-label" class="example-link"
+            >Success field and label</a
+          >
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="success-label-form" autocomplete="off">
+            <div class="form-group">
+              <label for="example10_name">Enter your name</label>
+              <input
+                type="text"
+                class="form__input form-control"
+                placeholder="Enter your name"
+                autocomplete="off"
+                name="example10_name"
+                id="example10_name"
+              />
+            </div>
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example10_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate('#success-label-form', {
+                errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
+                successFieldCssClass: 'is-valid',
+                successLabelStyle: {
+                  fontSize: '14px',
+                  color: '#20b418',
+                },
+                focusInvalidField: true,
+                lockForm: true,
+              });
+
+              validation
+                  .addField(
+                      '#example10_name',
+                      [
+                        {
+                          rule: 'required',
+                        },
+                      ],
+                      {
+                        successMessage: 'Looks good!',
+                      }
+                  )
+                  .onSuccess((ev) => {
+                    ev.preventDefault();
+                    window.showNotification();
+                  });
+            })();
+          </script>
+        </section>
+      </div>
+
       <div class="mt-5 section-shadow" id="advanced">
         <h2>
           <a href="#advanced" class="example-link">

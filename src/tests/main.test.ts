@@ -216,7 +216,27 @@ describe('Validation', () => {
           rule: 'required' as Rules,
         },
       ])
+      .addField(
+        '#email',
+        [
+          {
+            rule: 'email' as Rules,
+          },
+        ],
+        {
+          successMessage: 'Looks good',
+        }
+      )
+      .addRequiredGroup(
+        '#read_terms_checkbox_group',
+        'Invalid',
+        undefined,
+        'Valid'
+      )
       .onSuccess(onSubmit);
+
+    clickBySelector('#read_terms_checkbox_group_1');
+    changeTextBySelector('#email', 'test@test.com');
 
     clickBySelector('#submit-btn');
     expect(getElem('button')).toBeDisabled();
@@ -230,13 +250,37 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
       'The field is required'
     );
+    expect(
+      getElemByTestId('success-label-#read_terms_checkbox_group')
+    ).toHaveTextContent('Valid');
+    expect(getElemByTestId('success-label-#email')).toHaveTextContent(
+      'Looks good'
+    );
 
     validation.destroy();
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByTestId('success-label-#name')).toBeNull();
+    expect(getElemByTestId('error-label-#email')).toBeNull();
+    expect(getElemByTestId('success-label-#email')).toBeNull();
+    expect(
+      getElemByTestId('success-label-#read_terms_checkbox_group')
+    ).toBeNull();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).toBeNull();
 
     clickBySelector('#submit-btn');
     expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByTestId('success-label-#name')).toBeNull();
+    expect(getElemByTestId('error-label-#email')).toBeNull();
+    expect(getElemByTestId('success-label-#email')).toBeNull();
+    expect(
+      getElemByTestId('success-label-#read_terms_checkbox_group')
+    ).toBeNull();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).toBeNull();
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
@@ -2117,5 +2161,97 @@ describe('Validation', () => {
     onSubmit.mockReset();
 
     expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+  });
+
+  test('should be able to show success labels', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField(
+        '#name',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+        ],
+        {
+          successMessage: 'Name looks good',
+        }
+      )
+      .addField(
+        '#email',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+          {
+            rule: 'email' as Rules,
+            errorMessage: 'Email is invalid',
+          },
+        ],
+        {
+          successMessage: 'Email looks good',
+        }
+      )
+      .addRequiredGroup(
+        '#read_terms_checkbox_group',
+        'Group is invalid',
+        undefined,
+        'Group looks good'
+      )
+      .onSuccess(onSubmit);
+
+    changeTextBySelector('#name', 'Georgii');
+    changeTextBySelector('#email', '123');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
+      'Name looks good'
+    );
+    expect(getElemByTestId('success-label-#email')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+      'Email is invalid'
+    );
+    expect(
+      getElemByTestId('success-label-#read_terms_checkbox_group')
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).toHaveTextContent('Group is invalid');
+
+    clickBySelector('#read_terms_checkbox_group_1');
+    changeTextBySelector('#email', 'test@test.com');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(getElemByTestId('success-label-#email')).toHaveTextContent(
+      'Email looks good'
+    );
+    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
+      'Name looks good'
+    );
+    expect(
+      getElemByTestId('success-label-#read_terms_checkbox_group')
+    ).toHaveTextContent('Group looks good');
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).not.toBeInTheDocument();
   });
 });

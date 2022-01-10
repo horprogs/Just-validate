@@ -71,6 +71,7 @@ const advanced = () => {
       fontSize: '14px',
       color: '#dc3545',
     },
+    successFieldCssClass: 'is-valid',
     focusInvalidField: true,
     lockForm: true,
   });
@@ -534,6 +535,40 @@ const dateDateInput = () => {
     });
 };
 
+const successLabel = () => {
+  const validation = new JustValidate('#success-label-form', {
+    errorFieldCssClass: 'is-invalid',
+    errorLabelStyle: {
+      fontSize: '14px',
+      color: '#dc3545',
+    },
+    successFieldCssClass: 'is-valid',
+    successLabelStyle: {
+      fontSize: '14px',
+      color: '#20b418',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+  });
+
+  validation
+    .addField(
+      '#example10_name',
+      [
+        {
+          rule: 'required' as Rules,
+        },
+      ],
+      {
+        successMessage: 'Looks good!',
+      }
+    )
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+      window.showNotification();
+    });
+};
+
 basic();
 advanced();
 async();
@@ -543,3 +578,4 @@ conditional();
 files();
 dateTextInput();
 dateDateInput();
+successLabel();

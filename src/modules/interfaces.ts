@@ -3,6 +3,10 @@ export interface GlobalConfigInterface {
   errorFieldCssClass: string;
   errorLabelStyle: Partial<CSSStyleDeclaration>;
   errorLabelCssClass: string;
+  successFieldStyle?: Partial<CSSStyleDeclaration>;
+  successFieldCssClass: string;
+  successLabelStyle?: Partial<CSSStyleDeclaration>;
+  successLabelCssClass: string;
   lockForm: boolean;
   testingMode: boolean;
   focusInvalidField?: boolean;
@@ -60,14 +64,14 @@ export type ValidatorFuncType = (
   context: FieldsInterface
 ) => ValidatorReturn;
 
-export type ErrorMessageFuncType = (
+export type CustomMessageFuncType = (
   value: ElemValueType,
   context: FieldsInterface
 ) => string;
 
 export interface FieldRuleInterface {
   rule?: Rules;
-  errorMessage?: string | ErrorMessageFuncType;
+  errorMessage?: string | CustomMessageFuncType;
   validator?: ValidatorFuncType;
   value?: FieldRuleValueType;
   plugin?: (value: string | boolean, context: FieldsInterface) => boolean;
@@ -76,6 +80,7 @@ export interface FieldRuleInterface {
 export interface GroupRuleInterface {
   rule?: GroupRules;
   errorMessage?: string;
+  successMessage?: string;
 }
 
 export interface FieldConfigInterface
@@ -86,15 +91,22 @@ export interface FieldConfigInterface
       | 'errorFieldCssClass'
       | 'errorLabelStyle'
       | 'errorLabelCssClass'
+      | 'successFieldStyle'
+      | 'successFieldCssClass'
+      | 'successLabelStyle'
+      | 'successLabelCssClass'
       | 'tooltip'
     >
-  > {}
+  > {
+  successMessage?: string | CustomMessageFuncType;
+}
 
 export interface FieldInterface {
   rules: FieldRuleInterface[];
   elem: HTMLInputElement;
   isValid?: boolean;
   errorMessage?: string;
+  successMessage?: string;
   config?: FieldConfigInterface;
 }
 
@@ -108,6 +120,7 @@ export interface GroupFieldInterface {
   isValid?: boolean;
   isDirty: boolean;
   errorMessage?: string;
+  successMessage?: string;
   config?: FieldConfigInterface;
 }
 

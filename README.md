@@ -466,9 +466,14 @@ Define validation rules for the new field:
     errorFieldCssClass: string;
     errorLabelStyle: Partial<CSSStyleDeclaration>;
     errorLabelCssClass: string;
+    successFieldStyle?: Partial<CSSStyleDeclaration>;
+    successFieldCssClass: string;
+    successLabelStyle?: Partial<CSSStyleDeclaration>;
+    successLabelCssClass: string;
     tooltip?: {
       position: 'left' | 'top' | 'right' | 'bottom';
     };
+    successMessage?: string;
   }
 )
 ```
@@ -486,16 +491,25 @@ It means that at least one input in the group should be checked/selected.
       errorFieldCssClass: string;
       errorLabelStyle: Partial<CSSStyleDeclaration>;
       errorLabelCssClass: string;
+      successFieldStyle?: Partial<CSSStyleDeclaration>;
+      successFieldCssClass: string;
+      successLabelStyle?: Partial<CSSStyleDeclaration>;
+      successLabelCssClass: string;
       tooltip?: {
         position: 'left' | 'top' | 'right' | 'bottom';
       };
-    }
+    },
+    successMessage?: string,
 )
 ```
 
 `.onSuccess(event)` - callback if validation success
 
 `.onFail(fields)` - callback if validation failed
+
+If you define `successMessage` argument, this text will be shown if validation (all rules) passes. 
+You could customize it by defining `successFieldStyle`, `successFieldCssClass`, `successLabelStyle`, `successLabelCssClass` 
+as we do for error messages.  
 
 ## Rule object
 

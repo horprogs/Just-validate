@@ -29,6 +29,7 @@ import {
   FileRuleValueInterface,
   FilesRuleValueInterface,
   ElemValueType,
+  CustomMessageFuncType,
 } from './modules/interfaces';
 import {
   getDefaultFieldMessage,
@@ -44,10 +45,12 @@ const defaultGlobalConfig: GlobalConfigInterface = {
     border: '1px solid #B81111',
   },
   errorFieldCssClass: 'just-validate-error-field',
+  successFieldCssClass: 'just-validate-success-field',
   errorLabelStyle: {
     color: '#b81111',
   },
   errorLabelCssClass: 'just-validate-error-label',
+  successLabelCssClass: 'just-validate-success-label',
   focusInvalidField: true,
   lockForm: true,
   testingMode: false,
@@ -66,6 +69,7 @@ class JustValidate {
   isSubmitted = false;
   globalConfig: GlobalConfigInterface = defaultGlobalConfig;
   errorLabels: HTMLDivElement[] = [];
+  successLabels: HTMLDivElement[] = [];
   eventListeners: EventListenerInterface[] = [];
   dictLocale: LocaleInterface[] = [];
   currentLocale?: string;
@@ -164,15 +168,27 @@ class JustValidate {
   }
 
   getFieldErrorMessage(fieldRule: FieldRuleInterface, elem: HTMLInputElement) {
-    const errMsg =
+    const msg =
       typeof fieldRule.errorMessage === 'function'
         ? fieldRule.errorMessage(this.getElemValue(elem), this.fields)
         : fieldRule.errorMessage;
 
     return (
-      this.getLocalisedString(errMsg) ||
+      this.getLocalisedString(msg) ||
       getDefaultFieldMessage(fieldRule.rule, fieldRule.value)
     );
+  }
+
+  getFieldSuccessMessage(
+    successMessage: string | CustomMessageFuncType,
+    elem: HTMLInputElement
+  ) {
+    const msg =
+      typeof successMessage === 'function'
+        ? successMessage(this.getElemValue(elem), this.fields)
+        : successMessage;
+
+    return this.getLocalisedString(msg);
   }
 
   getGroupErrorMessage(groupRule: GroupRuleInterface) {
@@ -180,6 +196,10 @@ class JustValidate {
       this.getLocalisedString(groupRule.errorMessage) ||
       getDefaultGroupMessage(groupRule.rule)
     );
+  }
+
+  getGroupSuccessMessage(groupRule: GroupRuleInterface) {
+    return this.getLocalisedString(groupRule.successMessage);
   }
 
   setFieldInvalid(field: string, fieldRule: FieldRuleInterface) {
@@ -190,14 +210,29 @@ class JustValidate {
     );
   }
 
+  setFieldValid(
+    field: string,
+    successMessage?: string | CustomMessageFuncType
+  ) {
+    this.fields[field].isValid = true;
+    if (successMessage !== undefined) {
+      this.fields[field].successMessage = this.getFieldSuccessMessage(
+        successMessage,
+        this.fields[field].elem
+      );
+    }
+  }
+
   setGroupInvalid(groupName: string, groupRule: GroupRuleInterface) {
     this.groupFields[groupName].isValid = false;
     this.groupFields[groupName].errorMessage =
       this.getGroupErrorMessage(groupRule);
   }
 
-  setGroupValid(groupName: string) {
+  setGroupValid(groupName: string, groupRule: GroupRuleInterface) {
     this.groupFields[groupName].isValid = true;
+    this.groupFields[groupName].successMessage =
+      this.getGroupSuccessMessage(groupRule);
   }
 
   getElemValue(elem: HTMLInputElement): ElemValueType {
@@ -223,7 +258,7 @@ class JustValidate {
           if (elems.every((elem) => !elem.checked)) {
             this.setGroupInvalid(groupName, groupRule);
           } else {
-            this.setGroupValid(groupName);
+            this.setGroupValid(groupName, groupRule);
           }
         }
       }
@@ -706,6 +741,10 @@ class JustValidate {
       }
     });
 
+    if (field.isValid) {
+      this.setFieldValid(fieldName, field.config?.successMessage);
+    }
+
     return Promise.allSettled(promises);
   }
 
@@ -962,7 +1001,8 @@ class JustValidate {
   addRequiredGroup(
     groupField: string,
     errorMessage?: string,
-    config?: FieldConfigInterface
+    config?: FieldConfigInterface,
+    successMessage?: string
   ): JustValidate {
     if (typeof groupField !== 'string') {
       throw Error(
@@ -995,6 +1035,7 @@ class JustValidate {
         {
           rule: GroupRules.Required,
           errorMessage,
+          successMessage,
         },
       ],
       groupElem: elem,
@@ -1040,34 +1081,58 @@ class JustValidate {
 
   clearErrors() {
     this.errorLabels.forEach((item) => item.remove());
+    this.successLabels.forEach((item) => item.remove());
 
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
 
-      const style =
+      const errorStyle =
         field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
+      Object.keys(errorStyle).forEach((key) => {
+        field.elem.style[key] = '';
+      });
 
-      Object.keys(style).forEach((key) => {
+      const successStyle =
+        field.config?.successFieldStyle ||
+        this.globalConfig.successFieldStyle ||
+        {};
+      Object.keys(successStyle).forEach((key) => {
         field.elem.style[key] = '';
       });
 
       field.elem.classList.remove(
-        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+        field.config?.errorFieldCssClass ||
+          this.globalConfig.errorFieldCssClass,
+        field.config?.successFieldCssClass ||
+          this.globalConfig.successFieldCssClass
       );
     }
 
     for (const groupName in this.groupFields) {
       const group = this.groupFields[groupName];
 
-      const style =
+      const errorStyle =
         group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
-
-      Object.keys(style).forEach((key) => {
+      Object.keys(errorStyle).forEach((key) => {
         group.elems.forEach((elem) => {
           elem.style[key] = '';
           elem.classList.remove(
             group.config?.errorFieldCssClass ||
               this.globalConfig.errorFieldCssClass
+          );
+        });
+      });
+
+      const successStyle =
+        group.config?.successFieldStyle ||
+        this.globalConfig.successFieldStyle ||
+        {};
+      Object.keys(successStyle).forEach((key) => {
+        group.elems.forEach((elem) => {
+          elem.style[key] = '';
+          elem.classList.remove(
+            group.config?.successFieldCssClass ||
+              this.globalConfig.successFieldCssClass
           );
         });
       });
@@ -1195,6 +1260,55 @@ class JustValidate {
     return errorLabel;
   }
 
+  createSuccessLabelElem(
+    name: string,
+    successMessage?: string,
+    config?: FieldConfigInterface
+  ): HTMLDivElement | null {
+    if (successMessage === undefined) {
+      return null;
+    }
+
+    const successLabel = document.createElement('div');
+    successLabel.innerHTML = successMessage;
+
+    const customSuccessLabelStyle =
+      config?.successLabelStyle || this.globalConfig.successLabelStyle;
+
+    Object.assign(successLabel.style, customSuccessLabelStyle);
+
+    successLabel.classList.add(
+      config?.successLabelCssClass || this.globalConfig.successLabelCssClass,
+      'just-validate-success-label'
+    );
+
+    if (this.globalConfig.testingMode) {
+      successLabel.dataset.testId = `success-label-${name}`;
+    }
+
+    this.successLabels.push(successLabel);
+
+    return successLabel;
+  }
+
+  renderFieldLabel(elem: HTMLInputElement, label: HTMLDivElement) {
+    if (elem.type === 'checkbox' || elem.type === 'radio') {
+      const labelElem = document.querySelector(
+        `label[for="${elem.getAttribute('id')}"]`
+      );
+
+      if (elem.parentElement?.tagName?.toLowerCase() === 'label') {
+        elem.parentElement?.parentElement?.appendChild(label);
+      } else if (labelElem) {
+        labelElem.parentElement?.appendChild(label);
+      } else {
+        elem.parentElement?.appendChild(label);
+      }
+    } else {
+      elem.parentElement?.appendChild(label);
+    }
+  }
+
   renderErrors() {
     if (!this.isSubmitted) {
       return;
@@ -1207,6 +1321,25 @@ class JustValidate {
       const group = this.groupFields[groupName];
 
       if (group.isValid) {
+        group.elems.forEach((elem) => {
+          Object.assign(
+            elem.style,
+            group.config?.successFieldStyle ||
+              this.globalConfig.successFieldStyle
+          );
+          elem.classList.add(
+            group.config?.successFieldCssClass ||
+              this.globalConfig.successFieldCssClass
+          );
+        });
+        const successLabel = this.createSuccessLabelElem(
+          groupName,
+          group.successMessage,
+          group.config
+        );
+        if (successLabel) {
+          group.groupElem.appendChild(successLabel);
+        }
         continue;
       }
 
@@ -1228,7 +1361,6 @@ class JustValidate {
         group.errorMessage!,
         group.config
       );
-
       group.groupElem.appendChild(errorLabel);
 
       if (this.isTooltip()) {
@@ -1246,6 +1378,18 @@ class JustValidate {
       const field = this.fields[fieldName];
 
       if (field.isValid) {
+        const successLabel = this.createSuccessLabelElem(
+          fieldName,
+          field.successMessage,
+          field.config
+        );
+        if (successLabel) {
+          this.renderFieldLabel(field.elem, successLabel);
+        }
+        field.elem.classList.add(
+          field.config?.successFieldCssClass ||
+            this.globalConfig.successFieldCssClass
+        );
         continue;
       }
 
@@ -1260,22 +1404,7 @@ class JustValidate {
         field.errorMessage!,
         field.config
       );
-
-      if (field.elem.type === 'checkbox' || field.elem.type === 'radio') {
-        const label = document.querySelector(
-          `label[for="${field.elem.getAttribute('id')}"]`
-        );
-
-        if (field.elem.parentElement?.tagName?.toLowerCase() === 'label') {
-          field.elem.parentElement?.parentElement?.appendChild(errorLabel);
-        } else if (label) {
-          label.parentElement?.appendChild(errorLabel);
-        } else {
-          field.elem.parentElement?.appendChild(errorLabel);
-        }
-      } else {
-        field.elem.parentElement?.appendChild(errorLabel);
-      }
+      this.renderFieldLabel(field.elem, errorLabel);
 
       if (this.isTooltip()) {
         this.tooltips.push(
