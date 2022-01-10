@@ -1,3 +1,11 @@
+# [3.3.0](https://github.com/horprogs/Just-validate/compare/v3.2.2...v3.3.0) (2022-01-10)
+
+
+### Features
+
+* [#35](https://github.com/horprogs/Just-validate/issues/35) add conditional messages ([914d4d2](https://github.com/horprogs/Just-validate/commit/914d4d2ac59d4bcbf7e9e45f03f27cce044b1d32))
+* add success messages ([bbf0d82](https://github.com/horprogs/Just-validate/commit/bbf0d829276ca6f31f2487d0380cf29c16bd8ca2))
+
 ## [3.2.2](https://github.com/horprogs/Just-validate/compare/v3.2.1...v3.2.2) (2021-12-31)
 
 
