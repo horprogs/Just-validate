@@ -3,7 +3,7 @@
   "version": "3.3.0",
   "description": "Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins.",
   "scripts": {
-    "lint-md": "remark .",
+    "lint-md": "remark . --output",
     "semantic-release": "semantic-release",
     "dev": "vite --port 3001",
     "build:vite": "tsc && vite build",
@@ -55,7 +55,6 @@
     "@babel/preset-typescript": "7.16.5",
     "@commitlint/cli": "^16.0.0",
     "@commitlint/config-conventional": "^16.0.0",
-    "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.2",

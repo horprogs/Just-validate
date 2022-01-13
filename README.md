@@ -1,10 +1,7 @@
 ![main image](https://user-images.githubusercontent.com/14051960/144635813-82670c30-44c0-43e6-ad61-1505d5b8d929.png)
 
-[![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/master/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate)
-<a href="https://bundlephobia.com/result?p=just-validate@latest" target="\_parent">
-<img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@latest" />
-</a>
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com&utm_medium=referral&utm_content=horprogs/Just-validate&utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/horprogs/Just-validate/branch/master/graph/badge.svg?token=O6DXXL5TUU)](https://codecov.io/gh/horprogs/Just-validate) <a href="https://bundlephobia.com/result?p=just-validate@latest" target="\_parent"> <img alt="" src="https://badgen.net/bundlephobia/minzip/just-validate@latest" /> </a>
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c7a25cc9fdb4bf8869884339418352d)](https://www.codacy.com/gh/horprogs/Just-validate/dashboard?utm_source=github.com\&utm_medium=referral\&utm_content=horprogs/Just-validate\&utm_campaign=Badge_Grade)
 [![Known Vulnerabilities](https://snyk.io/test/github/horprogs/Just-validate/badge.svg)](https://snyk.io/test/github/horprogs/Just-validate)
 [![Release workflow](https://github.com/horprogs/Just-validate/workflows/Test%20and%20Release/badge.svg)](https://github.com/horprogs/Just-validate/actions)
 
@@ -12,13 +9,13 @@ Modern, simple, lightweight (~5kb gzip) form validation library written in Types
 Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization.
 Supporting writing custom rules and plugins.
 
----
+***
 
 **NOTE**
 
 **This is documentation for JustValidate 2. If you are looking for the old version, you could find it [here](https://github.com/horprogs/Just-validate/tree/v1).**
 
----
+***
 
 ## Why JustValidate?
 
@@ -27,17 +24,17 @@ and you want to quick, simple and powerful solution for validating your form.
 
 ## Features
 
-- small size and zero dependencies
-- no need to change your HTML
-- a wide range of pre-defined rules
-- custom rules
-- support plugins
-- custom styles and css classes for invalid fields and error messages
-- custom messages
-- showing tooltips as error messages
-- localization (defining error messages for different languages)
-- user-friendly setup: console warning messages if something incorrect
-- written in Typescript and good test coverage
+*   small size and zero dependencies
+*   no need to change your HTML
+*   a wide range of pre-defined rules
+*   custom rules
+*   support plugins
+*   custom styles and css classes for invalid fields and error messages
+*   custom messages
+*   showing tooltips as error messages
+*   localization (defining error messages for different languages)
+*   user-friendly setup: console warning messages if something incorrect
+*   written in Typescript and good test coverage
 
 Please, check out the examples https://just-validate.dev/examples/
 
@@ -78,17 +75,17 @@ Or if you don't use module bundlers, just include JustValidate script on your pa
 
 There are plenty of rules which you could use out of the box:
 
-- required, non-empty fields
-- valid email address
-- min/max text length
-- valid number
-- min/max number
-- valid password
-- valid strong password
-- check for the custom regexp
-- min/max count of uploaded files
-- min/max size, types, extensions, names of uploaded files
-- format date, check for isAfter/isBefore dates
+*   required, non-empty fields
+*   valid email address
+*   min/max text length
+*   valid number
+*   min/max number
+*   valid password
+*   valid strong password
+*   check for the custom regexp
+*   min/max count of uploaded files
+*   min/max size, types, extensions, names of uploaded files
+*   format date, check for isAfter/isBefore dates
 
 ## Quick start
 
@@ -371,29 +368,27 @@ validation
 
 ## Instance setting
 
-```
-new JustValidate(
-   form: string | Element,
-   globalConfig?: {
-     errorFieldStyle: Partial<CSSStyleDeclaration>,
-     errorFieldCssClass: string,
-     errorLabelStyle: Partial<CSSStyleDeclaration>,
-     errorLabelCssClass: string,
-     lockForm: boolean,
-     testingMode: boolean,
-     focusInvalidField?: boolean,
-     tooltip?: {
-       position: 'left' | 'top' | 'right' | 'bottom',
-     },
-   },
-   dictLocale?: {
-     key: string;
-     dict: {
-       [localeKey: string]: string,
-     };
-   }[];
-);
-```
+    new JustValidate(
+       form: string | Element,
+       globalConfig?: {
+         errorFieldStyle: Partial<CSSStyleDeclaration>,
+         errorFieldCssClass: string,
+         errorLabelStyle: Partial<CSSStyleDeclaration>,
+         errorLabelCssClass: string,
+         lockForm: boolean,
+         testingMode: boolean,
+         focusInvalidField?: boolean,
+         tooltip?: {
+           position: 'left' | 'top' | 'right' | 'bottom',
+         },
+       },
+       dictLocale?: {
+         key: string;
+         dict: {
+           [localeKey: string]: string,
+         };
+       }[];
+    );
 
 For example, full setting:
 
@@ -435,73 +430,69 @@ const validation = new JustValidate(
 );
 ```
 
-- `lockForm` - if true, lock form during validation.
-  Could be useful for async validation to make it impossible for user to interact with the form
-- `focusInvalidField` - if true, the first invalid field will be focused after the form submitting
-- `tooltip` if the field defined, tooltips will be displayed instead of regular error labels.
-  It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
-- localization object will be explained in Localization section
+*   `lockForm` - if true, lock form during validation.
+    Could be useful for async validation to make it impossible for user to interact with the form
+*   `focusInvalidField` - if true, the first invalid field will be focused after the form submitting
+*   `tooltip` if the field defined, tooltips will be displayed instead of regular error labels.
+    It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
+*   localization object will be explained in Localization section
 
 ### Methods
 
 Define validation rules for the new field:
 
-```
-.addField(
-  field: string,
-  rules: {
-    rule?: Rules;
-    errorMessage?: string | (
-      value: string | boolean,
-      context: FieldsInterface
-    ) => string);
-    validator?: (
-      value: string | boolean,
-      context: FieldsInterface
-    ) => boolean | (() => Promise<boolean>);
-    value?: number | string | RegExp;
-  },
-  config?: {
-    errorFieldStyle: Partial<CSSStyleDeclaration>;
-    errorFieldCssClass: string;
-    errorLabelStyle: Partial<CSSStyleDeclaration>;
-    errorLabelCssClass: string;
-    successFieldStyle?: Partial<CSSStyleDeclaration>;
-    successFieldCssClass: string;
-    successLabelStyle?: Partial<CSSStyleDeclaration>;
-    successLabelCssClass: string;
-    tooltip?: {
-      position: 'left' | 'top' | 'right' | 'bottom';
-    };
-    successMessage?: string;
-  }
-)
-```
+    .addField(
+      field: string,
+      rules: {
+        rule?: Rules;
+        errorMessage?: string | (
+          value: string | boolean,
+          context: FieldsInterface
+        ) => string);
+        validator?: (
+          value: string | boolean,
+          context: FieldsInterface
+        ) => boolean | (() => Promise<boolean>);
+        value?: number | string | RegExp;
+      },
+      config?: {
+        errorFieldStyle: Partial<CSSStyleDeclaration>;
+        errorFieldCssClass: string;
+        errorLabelStyle: Partial<CSSStyleDeclaration>;
+        errorLabelCssClass: string;
+        successFieldStyle?: Partial<CSSStyleDeclaration>;
+        successFieldCssClass: string;
+        successLabelStyle?: Partial<CSSStyleDeclaration>;
+        successLabelCssClass: string;
+        tooltip?: {
+          position: 'left' | 'top' | 'right' | 'bottom';
+        };
+        successMessage?: string;
+      }
+    )
 
 Make the new group field required. It could be a group of checkboxes or radio buttons.
 
 It means that at least one input in the group should be checked/selected.
 
-```
-.addRequiredGroup(
-    groupField: string,
-    errorMessage?: string,
-    config?: {
-      errorFieldStyle: Partial<CSSStyleDeclaration>;
-      errorFieldCssClass: string;
-      errorLabelStyle: Partial<CSSStyleDeclaration>;
-      errorLabelCssClass: string;
-      successFieldStyle?: Partial<CSSStyleDeclaration>;
-      successFieldCssClass: string;
-      successLabelStyle?: Partial<CSSStyleDeclaration>;
-      successLabelCssClass: string;
-      tooltip?: {
-        position: 'left' | 'top' | 'right' | 'bottom';
-      };
-    },
-    successMessage?: string,
-)
-```
+    .addRequiredGroup(
+        groupField: string,
+        errorMessage?: string,
+        config?: {
+          errorFieldStyle: Partial<CSSStyleDeclaration>;
+          errorFieldCssClass: string;
+          errorLabelStyle: Partial<CSSStyleDeclaration>;
+          errorLabelCssClass: string;
+          successFieldStyle?: Partial<CSSStyleDeclaration>;
+          successFieldCssClass: string;
+          successLabelStyle?: Partial<CSSStyleDeclaration>;
+          successLabelCssClass: string;
+          tooltip?: {
+            position: 'left' | 'top' | 'right' | 'bottom';
+          };
+        },
+        successMessage?: string,
+    )
 
 `.onSuccess(event)` - callback if validation success
 
@@ -513,36 +504,34 @@ as we do for error messages.
 
 ## Rule object
 
-```
-{
-  rule: string,
-  errorMessage?: string | (
-      value: string | boolean,
-      context: FieldsInterface
-    ) => string);
-  validator: (
-    value: string | boolean,
-    context: object
- ) => Boolean | Promise;
- value: number | string;
-}
-```
+    {
+      rule: string,
+      errorMessage?: string | (
+          value: string | boolean,
+          context: FieldsInterface
+        ) => string);
+      validator: (
+        value: string | boolean,
+        context: object
+     ) => Boolean | Promise;
+     value: number | string;
+    }
 
 Field `rule` could be one of these values:
 
-- `required` - Required field, not empty
-- `email` - Valid email address
-- `minLength` - Limit the minimum text length
-- `maxLength` - Limit the maximum text length
-- `number` - Value should be a number
-- `minNumber` - Number should be more than defined value
-- `maxNumber` - Number should be less than defined value
-- `password` - Minimum eight characters, at least one letter and one number
-- `strongPassword` - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-- `customRegexp` - Custom regexp expression
-- `minFilesCount` - Uploaded files count should be more than defined value
-- `maxFilesCount` - Uploaded files count should be less than defined value
-- `files` - Uploaded files attributes should be valid, based on `value` config (check details below in Files validation section)
+*   `required` - Required field, not empty
+*   `email` - Valid email address
+*   `minLength` - Limit the minimum text length
+*   `maxLength` - Limit the maximum text length
+*   `number` - Value should be a number
+*   `minNumber` - Number should be more than defined value
+*   `maxNumber` - Number should be less than defined value
+*   `password` - Minimum eight characters, at least one letter and one number
+*   `strongPassword` - Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+*   `customRegexp` - Custom regexp expression
+*   `minFilesCount` - Uploaded files count should be more than defined value
+*   `maxFilesCount` - Uploaded files count should be less than defined value
+*   `files` - Uploaded files attributes should be valid, based on `value` config (check details below in Files validation section)
 
 Field `errorMessage` used for customizing the error message for this rule. It could be a string, or a function which returns a string
 (it helps to create conditional messages, based on the field value).
@@ -806,24 +795,22 @@ validation.addField('#date-between', [
 
 You could define your own translations for different languages. To do that you should define `dictLocale` array, like:
 
-```
-  [
-    {
-      key: 'Name is too short',
-      dict: {
-        ru: 'Имя слишком короткое',
-        es: 'El nombre es muy corto',
-      },
-    },
-    {
-      key: 'Field is required',
-      dict: {
-        ru: 'Обязательное поле',
-        es: 'Se requiere campo',
-      },
-    },
-  ]
-```
+      [
+        {
+          key: 'Name is too short',
+          dict: {
+            ru: 'Имя слишком короткое',
+            es: 'El nombre es muy corto',
+          },
+        },
+        {
+          key: 'Field is required',
+          dict: {
+            ru: 'Обязательное поле',
+            es: 'Se requiere campo',
+          },
+        },
+      ]
 
 Field `key` should be defined as a key string, which also should be defined as `errorMessage` in a rule object.
 
@@ -851,4 +838,4 @@ document.querySelector('#change-lang-btn-es').addEventListener('click', () => {
 
 If you need more custom functionality it is possible to write your own plugin. For now there is one official plugin:
 
-- [JustValidatePluginDate](https://github.com/horprogs/just-validate-plugin-date)
+*   [JustValidatePluginDate](https://github.com/horprogs/just-validate-plugin-date)
