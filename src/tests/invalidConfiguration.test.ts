@@ -9,8 +9,15 @@ import {
 } from '../utils/testingUtils';
 import { screen, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { mockup } from './mockup';
 
 describe('invalidConfiguration', () => {
+  beforeEach(() => {
+    console.warn = jest.fn();
+    console.error = jest.fn();
+
+    document.body.innerHTML = mockup;
+  });
   test('should throw errors if setting invalid', async () => {
     const onSubmit = jest.fn();
     expect(() => {
