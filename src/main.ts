@@ -601,12 +601,8 @@ class JustValidate {
 
         const isFilePropsInvalid = (
           file: File,
-          fileConfig?: FileRuleValueInterface
+          fileConfig: FileRuleValueInterface
         ): boolean => {
-          if (!fileConfig) {
-            return true;
-          }
-
           const minSizeInvalid =
             Number.isFinite(fileConfig.minSize) &&
             file.size < fileConfig.minSize!;
@@ -664,14 +660,6 @@ class JustValidate {
       }
 
       default: {
-        if (!fieldRule.validator) {
-          console.error(
-            `Validator for custom rule for [${field}] field is not defined. This field will be always invalid.`
-          );
-          this.setFieldInvalid(field, fieldRule);
-          return;
-        }
-
         if (typeof fieldRule.validator !== 'function') {
           console.error(
             `Validator for custom rule for [${field}] field should be a function. This field will be always invalid.`
