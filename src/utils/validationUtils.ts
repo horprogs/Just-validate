@@ -9,7 +9,7 @@ const PASSWORD_REGEXP = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 const STRONG_PASSWORD_REGEXP =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-export const isEmpty = (value: ElemValueType) => {
+export const isEmpty = (value: ElemValueType): boolean => {
   let newVal = value;
 
   if (typeof value === 'string') {
@@ -19,34 +19,34 @@ export const isEmpty = (value: ElemValueType) => {
   return !newVal;
 };
 
-export const isEmail = (value: string) => {
+export const isEmail = (value: string): boolean => {
   return EMAIL_REGEXP.test(value);
 };
 
-export const isLengthMoreThanMax = (value: string, len: number) => {
+export const isLengthMoreThanMax = (value: string, len: number): boolean => {
   return value.length > len;
 };
 
-export const isLengthLessThanMin = (value: string, len: number) => {
+export const isLengthLessThanMin = (value: string, len: number): boolean => {
   return value.length < len;
 };
 
-export const isNumber = (value: string) => {
+export const isNumber = (value: string): boolean => {
   return NUMBER_REGEXP.test(value);
 };
 
-export const isPassword = (value: string) => {
+export const isPassword = (value: string): boolean => {
   return PASSWORD_REGEXP.test(value);
 };
 
-export const isStrongPassword = (value: string) => {
+export const isStrongPassword = (value: string): boolean => {
   return STRONG_PASSWORD_REGEXP.test(value);
 };
 
-export const isNumberMoreThanMax = (value: number, len: number) => {
+export const isNumberMoreThanMax = (value: number, len: number): boolean => {
   return value > len;
 };
 
-export const isNumberLessThanMin = (value: number, len: number) => {
+export const isNumberLessThanMin = (value: number, len: number): boolean => {
   return value < len;
 };

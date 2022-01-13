@@ -88,7 +88,7 @@ describe('invalidConfiguration', () => {
     validation.addField('#name', [
       {
         // @ts-ignore
-        validator: () => 1,
+        validator: (): number => 1,
       },
     ]);
     clickBySelector('#submit-btn');
@@ -256,7 +256,7 @@ describe('invalidConfiguration', () => {
       {
         // @ts-ignore
         validator: () => {
-          return () => true;
+          return (): boolean => true;
         },
       },
     ]);

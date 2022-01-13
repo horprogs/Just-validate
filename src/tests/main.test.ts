@@ -430,7 +430,7 @@ describe('Validation', () => {
     validation
       .addField('#name', [
         {
-          validator: (val) => {
+          validator: (val): boolean => {
             switch (val) {
               case 'Z':
               case 'X':
@@ -441,7 +441,7 @@ describe('Validation', () => {
                 return true;
             }
           },
-          errorMessage: (val) => {
+          errorMessage: (val): string => {
             switch (val) {
               case 'Z':
               case 'X':
@@ -634,7 +634,7 @@ describe('Validation', () => {
     validation
       .addField('#name', [
         {
-          validator: (value) => value[0] === '!',
+          validator: (value): boolean => value[0] === '!',
         },
       ])
       .onSuccess(onSubmit);
@@ -686,7 +686,7 @@ describe('Validation', () => {
     validation
       .addField('#name', [
         {
-          validator: (value) => () =>
+          validator: (value) => (): Promise<boolean> =>
             fetch(100, () => {
               return !!value;
             }),
@@ -1788,7 +1788,7 @@ describe('Validation', () => {
     validation
       .addField('#name', [
         {
-          plugin: (value) => value === 'test',
+          plugin: (value): boolean => value === 'test',
         },
       ])
       .onSuccess(onSubmit);

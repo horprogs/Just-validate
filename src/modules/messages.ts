@@ -3,7 +3,7 @@ import { FieldRuleValueType, GroupRules, Rules } from './interfaces';
 export const getDefaultFieldMessage = (
   rule?: Rules,
   ruleValue?: FieldRuleValueType
-) => {
+): string => {
   switch (rule) {
     case Rules.Required:
       return 'The field is required';
@@ -64,7 +64,7 @@ export const getDefaultFieldMessage = (
   }
 };
 
-export const getDefaultGroupMessage = (rule?: GroupRules) => {
+export const getDefaultGroupMessage = (rule?: GroupRules): string => {
   switch (rule) {
     case GroupRules.Required:
       return 'The field is required';

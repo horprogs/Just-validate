@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 
-export const clickBySelector = async (selector: string) => {
+export const clickBySelector = async (selector: string): Promise<void> => {
   const elem = getElem(selector);
 
   if (!elem) {
@@ -10,12 +10,16 @@ export const clickBySelector = async (selector: string) => {
   await userEvent.click(elem);
 };
 
-export const getElem = (selector: string) => document.querySelector(selector);
+export const getElem = (selector: string): Element | null =>
+  document.querySelector(selector);
 
-export const getElemByTestId = (id: string) =>
+export const getElemByTestId = (id: string): Element | null =>
   document.querySelector(`[data-test-id="${id}"]`);
 
-export const changeTextBySelector = async (selector: string, value: string) => {
+export const changeTextBySelector = async (
+  selector: string,
+  value: string
+): Promise<void> => {
   const elem = getElem(selector);
 
   if (!elem) {
@@ -25,7 +29,10 @@ export const changeTextBySelector = async (selector: string, value: string) => {
   await userEvent.type(elem, `{selectall}{del}${value}`);
 };
 
-export const selectBySelector = async (selector: string, value: string) => {
+export const selectBySelector = async (
+  selector: string,
+  value: string
+): Promise<void> => {
   const elem = getElem(selector);
 
   if (!elem) {
@@ -35,13 +42,13 @@ export const selectBySelector = async (selector: string, value: string) => {
   await userEvent.selectOptions(elem, [value]);
 };
 
-export const fetch = (time = 1000, func?: () => boolean) =>
+export const fetch = (time = 1000, func?: () => boolean): Promise<boolean> =>
   new Promise<boolean>((resolve) => {
     setTimeout(() => {
       resolve(func?.() || false);
     }, time);
   });
 
-export const generateFileContent = (size: number) => [
+export const generateFileContent = (size: number): Array<string> => [
   new Array(size).fill('1').join(''),
 ];

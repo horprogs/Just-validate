@@ -15,7 +15,7 @@ We have very precise rules over how our git commit messages can be formatted. Th
 Each commit message consists of a **type** and a **subject**:
 
 ```
-<type>(): <subject>   
+<type>(): <subject>
 ```
 
 ### Type
@@ -45,11 +45,10 @@ The subject contains succinct description of the change:
 
 Here is an example of the release type that will be done based on a commit messages:
 
-| Commit message                          | Release type               |
-|-----------------------------------------| -------------------------- |
-| `fix(): fix validation for number rule` | Patch Release              |
-| `feat(): add onFail callback`           | ~~Minor~~ Feature Release  |
-
+| Commit message                          | Release type              |
+| --------------------------------------- | ------------------------- |
+| `fix(): fix validation for number rule` | Patch Release             |
+| `feat(): add onFail callback`           | ~~Minor~~ Feature Release |
 
 ## Pull requests
 

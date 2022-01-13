@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { defineConfig } from 'vite';
 import path from 'path';
 
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ command }) => {
   if (command === 'serve') {
     return {};
   } else {

@@ -10,7 +10,7 @@ interface MyNamespacedWindow extends Window {
 
 declare const window: MyNamespacedWindow;
 
-const basic = () => {
+const basic = (): void => {
   const validation = new JustValidate('#basic-validation-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -64,7 +64,7 @@ const basic = () => {
     });
 };
 
-const advanced = () => {
+const advanced = (): void => {
   const validation = new JustValidate('#more-fields-validation-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -87,7 +87,7 @@ const advanced = () => {
         rule: 'required' as Rules,
       },
       {
-        validator: (value, fields) => {
+        validator: (value, fields): boolean => {
           if (
             fields['#example2_password'] &&
             fields['#example2_password'].elem
@@ -104,7 +104,7 @@ const advanced = () => {
     ])
     .addField('#example2_message', [
       {
-        validator: (value) => {
+        validator: (value): boolean => {
           return value !== undefined && (value as string).length > 3;
         },
         errorMessage: 'Message should be more than 3 letters.',
@@ -131,7 +131,7 @@ const advanced = () => {
     });
 };
 
-const async = () => {
+const async = (): void => {
   const validation = new JustValidate('#async-validation-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -146,7 +146,7 @@ const async = () => {
     .addField('#example3_name', [
       {
         validator: () => {
-          return () => window.fakeFetch(500);
+          return (): Promise<boolean> => window.fakeFetch(500);
         },
         errorMessage: 'Name already exists',
       },
@@ -157,7 +157,7 @@ const async = () => {
     });
 };
 
-const tooltips = () => {
+const tooltips = (): void => {
   const validation = new JustValidate('#tooltips-validation-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -248,7 +248,7 @@ const tooltips = () => {
     });
 };
 
-const localization = () => {
+const localization = (): void => {
   const validation = new JustValidate(
     '#localization-validation-form',
     {
@@ -341,7 +341,7 @@ const localization = () => {
     });
 };
 
-const conditional = () => {
+const conditional = (): void => {
   const validation = new JustValidate('#conditional-validation-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -372,7 +372,7 @@ const conditional = () => {
     });
 };
 
-const files = () => {
+const files = (): void => {
   const validation = new JustValidate('#files-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -432,7 +432,7 @@ const files = () => {
     });
 };
 
-const dateTextInput = () => {
+const dateTextInput = (): void => {
   const validation = new JustValidate('#date-text-input-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -490,7 +490,7 @@ const dateTextInput = () => {
     });
 };
 
-const dateDateInput = () => {
+const dateDateInput = (): void => {
   const validation = new JustValidate('#date-date-input-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
@@ -535,7 +535,7 @@ const dateDateInput = () => {
     });
 };
 
-const successLabel = () => {
+const successLabel = (): void => {
   const validation = new JustValidate('#success-label-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {

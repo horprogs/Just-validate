@@ -507,9 +507,9 @@ It means that at least one input in the group should be checked/selected.
 
 `.onFail(fields)` - callback if validation failed
 
-If you define `successMessage` argument, this text will be shown if validation (all rules) passes. 
-You could customize it by defining `successFieldStyle`, `successFieldCssClass`, `successLabelStyle`, `successLabelCssClass` 
-as we do for error messages.  
+If you define `successMessage` argument, this text will be shown if validation (all rules) passes.
+You could customize it by defining `successFieldStyle`, `successFieldCssClass`, `successLabelStyle`, `successLabelCssClass`
+as we do for error messages.
 
 ## Rule object
 

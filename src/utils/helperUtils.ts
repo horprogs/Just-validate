@@ -1,1 +1,2 @@
-export const isPromise = (val: any) => !!val && typeof val.then === 'function';
+export const isPromise = (val: any): boolean =>
+  !!val && typeof val.then === 'function';

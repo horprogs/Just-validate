@@ -92,7 +92,7 @@ class JustValidate {
     form: string | Element,
     globalConfig?: Partial<GlobalConfigInterface>,
     dictLocale?: LocaleInterface[]
-  ) {
+  ): void {
     this.form = null;
     this.errors = {};
     this.isValid = false;
@@ -137,13 +137,13 @@ class JustValidate {
     }
   }
 
-  refreshAllTooltips = () => {
+  refreshAllTooltips = (): void => {
     this.tooltips.forEach((item) => {
       item.refresh();
     });
   };
 
-  handleDocumentScroll = () => {
+  handleDocumentScroll = (): void => {
     this.lastScrollPosition = window.scrollY;
 
     if (!this.isScrollTick) {
@@ -155,7 +155,7 @@ class JustValidate {
     }
   };
 
-  getLocalisedString(str?: string) {
+  getLocalisedString(str?: string): string | undefined {
     if (!this.currentLocale || !this.dictLocale.length) {
       return str;
     }
@@ -167,7 +167,10 @@ class JustValidate {
     return localisedStr || str;
   }
 
-  getFieldErrorMessage(fieldRule: FieldRuleInterface, elem: HTMLInputElement) {
+  getFieldErrorMessage(
+    fieldRule: FieldRuleInterface,
+    elem: HTMLInputElement
+  ): string {
     const msg =
       typeof fieldRule.errorMessage === 'function'
         ? fieldRule.errorMessage(this.getElemValue(elem), this.fields)
@@ -182,7 +185,7 @@ class JustValidate {
   getFieldSuccessMessage(
     successMessage: string | CustomMessageFuncType,
     elem: HTMLInputElement
-  ) {
+  ): string | undefined {
     const msg =
       typeof successMessage === 'function'
         ? successMessage(this.getElemValue(elem), this.fields)
@@ -191,18 +194,18 @@ class JustValidate {
     return this.getLocalisedString(msg);
   }
 
-  getGroupErrorMessage(groupRule: GroupRuleInterface) {
+  getGroupErrorMessage(groupRule: GroupRuleInterface): string {
     return (
       this.getLocalisedString(groupRule.errorMessage) ||
       getDefaultGroupMessage(groupRule.rule)
     );
   }
 
-  getGroupSuccessMessage(groupRule: GroupRuleInterface) {
+  getGroupSuccessMessage(groupRule: GroupRuleInterface): string | undefined {
     return this.getLocalisedString(groupRule.successMessage);
   }
 
-  setFieldInvalid(field: string, fieldRule: FieldRuleInterface) {
+  setFieldInvalid(field: string, fieldRule: FieldRuleInterface): void {
     this.fields[field].isValid = false;
     this.fields[field].errorMessage = this.getFieldErrorMessage(
       fieldRule,
@@ -213,7 +216,7 @@ class JustValidate {
   setFieldValid(
     field: string,
     successMessage?: string | CustomMessageFuncType
-  ) {
+  ): void {
     this.fields[field].isValid = true;
     if (successMessage !== undefined) {
       this.fields[field].successMessage = this.getFieldSuccessMessage(
@@ -223,13 +226,13 @@ class JustValidate {
     }
   }
 
-  setGroupInvalid(groupName: string, groupRule: GroupRuleInterface) {
+  setGroupInvalid(groupName: string, groupRule: GroupRuleInterface): void {
     this.groupFields[groupName].isValid = false;
     this.groupFields[groupName].errorMessage =
       this.getGroupErrorMessage(groupRule);
   }
 
-  setGroupValid(groupName: string, groupRule: GroupRuleInterface) {
+  setGroupValid(groupName: string, groupRule: GroupRuleInterface): void {
     this.groupFields[groupName].isValid = true;
     this.groupFields[groupName].successMessage =
       this.getGroupSuccessMessage(groupRule);
@@ -757,7 +760,7 @@ class JustValidate {
     return Promise.allSettled(promises);
   }
 
-  focusInvalidField() {
+  focusInvalidField(): void {
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
       if (!field.isValid) {
@@ -767,7 +770,7 @@ class JustValidate {
     }
   }
 
-  afterSubmitValidation() {
+  afterSubmitValidation(): void {
     this.renderErrors();
 
     if (this.globalConfig.focusInvalidField) {
@@ -809,7 +812,7 @@ class JustValidate {
     });
   }
 
-  formSubmitHandler = (ev: Event) => {
+  formSubmitHandler = (ev: Event): void => {
     ev.preventDefault();
     this.isSubmitted = true;
 
@@ -830,14 +833,14 @@ class JustValidate {
     });
   };
 
-  setForm(form: HTMLFormElement) {
+  setForm(form: HTMLFormElement): void {
     this.form = form;
     this.form.setAttribute('novalidate', 'novalidate');
     this.removeListener('submit', this.form, this.formSubmitHandler);
     this.addListener('submit', this.form, this.formSubmitHandler);
   }
 
-  handleFieldChange = (target: HTMLInputElement) => {
+  handleFieldChange = (target: HTMLInputElement): void => {
     let currentField;
     let currentFieldName;
 
@@ -858,7 +861,7 @@ class JustValidate {
     this.validateField(currentFieldName, currentField, true);
   };
 
-  handleGroupChange = (target: HTMLInputElement) => {
+  handleGroupChange = (target: HTMLInputElement): void => {
     let currentGroup;
     let currentGroupName;
 
@@ -879,7 +882,7 @@ class JustValidate {
     this.validateGroup(currentGroupName, currentGroup);
   };
 
-  handlerChange = (ev: Event) => {
+  handlerChange = (ev: Event): void => {
     if (!ev.target) {
       return;
     }
@@ -894,7 +897,7 @@ class JustValidate {
     type: string,
     elem: HTMLInputElement | Document | HTMLFormElement,
     handler: (ev: Event) => void
-  ) {
+  ): void {
     elem.addEventListener(type, handler);
     this.eventListeners.push({ type, elem, func: handler });
   }
@@ -903,7 +906,7 @@ class JustValidate {
     type: string,
     elem: HTMLInputElement | Document | HTMLFormElement,
     handler: (ev: Event) => void
-  ) {
+  ): void {
     elem.removeEventListener(type, handler);
   }
 
@@ -1041,7 +1044,7 @@ class JustValidate {
     return this;
   }
 
-  getListenerType(type: string) {
+  getListenerType(type: string): 'change' | 'input' | 'keyup' {
     switch (type) {
       case 'checkbox':
       case 'select-one':
@@ -1061,13 +1064,13 @@ class JustValidate {
     }
   }
 
-  setListeners(elem: HTMLInputElement) {
+  setListeners(elem: HTMLInputElement): void {
     const type = this.getListenerType(elem.type);
     this.removeListener(type, elem, this.handlerChange);
     this.addListener(type, elem, this.handlerChange);
   }
 
-  clearErrors() {
+  clearErrors(): void {
     this.errorLabels.forEach((item) => item.remove());
     this.successLabels.forEach((item) => item.remove());
 
@@ -1129,11 +1132,11 @@ class JustValidate {
     this.tooltips = [];
   }
 
-  isTooltip() {
+  isTooltip(): boolean {
     return !!this.globalConfig.tooltip;
   }
 
-  lockForm() {
+  lockForm(): void {
     const elems: NodeListOf<HTMLInputElement> = this.form!.querySelectorAll(
       'input, textarea, button, select'
     );
@@ -1145,7 +1148,7 @@ class JustValidate {
     }
   }
 
-  unlockForm() {
+  unlockForm(): void {
     const elems: NodeListOf<HTMLInputElement> = this.form!.querySelectorAll(
       'input, textarea, button, select'
     );
@@ -1207,7 +1210,7 @@ class JustValidate {
 
     errorLabel.dataset.direction = pos;
 
-    const refresh = () => {
+    const refresh = (): void => {
       this.renderTooltip(elem, errorLabel, position);
     };
 
@@ -1220,7 +1223,7 @@ class JustValidate {
     name: string,
     errorMessage: string,
     config?: FieldConfigInterface
-  ) {
+  ): HTMLDivElement {
     const errorLabel = document.createElement('div');
     errorLabel.innerHTML = errorMessage;
 
@@ -1279,7 +1282,7 @@ class JustValidate {
     return successLabel;
   }
 
-  renderFieldLabel(elem: HTMLInputElement, label: HTMLDivElement) {
+  renderFieldLabel(elem: HTMLInputElement, label: HTMLDivElement): void {
     if (elem.type === 'checkbox' || elem.type === 'radio') {
       const labelElem = document.querySelector(
         `label[for="${elem.getAttribute('id')}"]`
@@ -1297,7 +1300,7 @@ class JustValidate {
     }
   }
 
-  renderErrors() {
+  renderErrors(): void {
     if (!this.isSubmitted) {
       return;
     }
@@ -1406,7 +1409,7 @@ class JustValidate {
     }
   }
 
-  destroy() {
+  destroy(): void {
     this.eventListeners.forEach((event) => {
       this.removeListener(event.type, event.elem, event.func);
     });
@@ -1421,7 +1424,7 @@ class JustValidate {
     }
   }
 
-  refresh() {
+  refresh(): void {
     this.destroy();
 
     if (!this.form) {
@@ -1439,7 +1442,7 @@ class JustValidate {
     }
   }
 
-  setCurrentLocale(locale?: string) {
+  setCurrentLocale(locale?: string): void {
     if (typeof locale !== 'string' && locale !== undefined) {
       console.error('Current locale should be a string');
       return;
