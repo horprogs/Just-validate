@@ -108,6 +108,8 @@ export interface FieldInterface {
   errorMessage?: string;
   successMessage?: string;
   config?: FieldConfigInterface;
+  // flag to show there are pending async rules we have to perform on form submit
+  asyncCheckPending?: boolean;
 }
 
 export type GroupFieldType = 'radio' | 'checkbox';

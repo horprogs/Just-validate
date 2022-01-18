@@ -1778,6 +1778,64 @@ describe('Validation', () => {
     ).not.toBeInTheDocument();
   });
 
+  test('should not show success labels if async func has not finished', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField(
+        '#name',
+        [
+          {
+            rule: 'required' as Rules,
+          },
+          {
+            validator: (val) => (): Promise<boolean> =>
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve(val === 'Georgii');
+                }, 1);
+              }),
+          },
+        ],
+        {
+          successMessage: 'Name looks good',
+        }
+      )
+      .onSuccess(onSubmit);
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    changeTextBySelector('#name', 'Test');
+    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+
+    changeTextBySelector('#name', 'Georgii');
+    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+
+    clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+    expect(getElemByTestId('success-label-#name')).toBeInTheDocument();
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+  });
+
   test('should be able to use plugin', async () => {
     const onSubmit = jest.fn();
 

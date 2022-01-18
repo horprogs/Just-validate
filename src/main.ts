@@ -682,27 +682,32 @@ class JustValidate {
           );
         }
 
-        // we should not call async custom validator on every input change
-        if (typeof result === 'function' && !afterInputChanged) {
-          const promise = result();
+        if (typeof result === 'function') {
+          // we should not call async custom validator on every input change
+          if (afterInputChanged) {
+            this.fields[field].asyncCheckPending = true;
+          } else {
+            this.fields[field].asyncCheckPending = false;
+            const promise = result();
 
-          if (!isPromise(promise)) {
-            console.error(
-              `Validator function for custom rule for [${field}] field should return a Promise. This field will be always invalid.`
-            );
-            this.setFieldInvalid(field, fieldRule);
-            return;
-          }
-
-          return promise
-            .then((resp) => {
-              if (!resp) {
-                this.setFieldInvalid(field, fieldRule);
-              }
-            })
-            .catch(() => {
+            if (!isPromise(promise)) {
+              console.error(
+                `Validator function for custom rule for [${field}] field should return a Promise. This field will be always invalid.`
+              );
               this.setFieldInvalid(field, fieldRule);
-            });
+              return;
+            }
+
+            return promise
+              .then((resp) => {
+                if (!resp) {
+                  this.setFieldInvalid(field, fieldRule);
+                }
+              })
+              .catch(() => {
+                this.setFieldInvalid(field, fieldRule);
+              });
+          }
         }
 
         if (!result) {
@@ -1369,18 +1374,22 @@ class JustValidate {
       const field = this.fields[fieldName];
 
       if (field.isValid) {
-        const successLabel = this.createSuccessLabelElem(
-          fieldName,
-          field.successMessage,
-          field.config
-        );
-        if (successLabel) {
-          this.renderFieldLabel(field.elem, successLabel);
+        // we should not show success labels if there are async rules pending
+        if (!field.asyncCheckPending) {
+          const successLabel = this.createSuccessLabelElem(
+            fieldName,
+            field.successMessage,
+            field.config
+          );
+          if (successLabel) {
+            this.renderFieldLabel(field.elem, successLabel);
+          }
+          field.elem.classList.add(
+            field.config?.successFieldCssClass ||
+              this.globalConfig.successFieldCssClass
+          );
         }
-        field.elem.classList.add(
-          field.config?.successFieldCssClass ||
-            this.globalConfig.successFieldCssClass
-        );
+
         continue;
       }
 
