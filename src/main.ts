@@ -913,6 +913,9 @@ class JustValidate {
     handler: (ev: Event) => void
   ): void {
     elem.removeEventListener(type, handler);
+    this.eventListeners = this.eventListeners.filter(
+      (item) => item.type !== type || item.elem !== elem
+    );
   }
 
   addField(
@@ -988,9 +991,34 @@ class JustValidate {
       return this;
     }
 
-    this.destroy();
+    const type = this.getListenerType(this.fields[field].elem.type);
+    this.removeListener(type, this.fields[field].elem, this.handlerChange);
+    this.clearErrors();
+
     delete this.fields[field];
-    this.refresh();
+    return this;
+  }
+
+  removeGroup(group: string): JustValidate {
+    if (typeof group !== 'string') {
+      throw Error(
+        `Group selector is not valid. Please specify a string selector.`
+      );
+    }
+
+    if (!this.groupFields[group]) {
+      console.error(`Group not found. Check the group selector.`);
+      return this;
+    }
+
+    this.groupFields[group].elems.forEach((elem) => {
+      const type = this.getListenerType(elem.type);
+      this.removeListener(type, elem, this.handlerChange);
+    });
+
+    this.clearErrors();
+
+    delete this.groupFields[group];
     return this;
   }
 
