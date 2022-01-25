@@ -2023,4 +2023,49 @@ describe('Validation', () => {
       validation.addRequiredGroup('#name-group').onSuccess(onSubmit);
     }).toThrow();
   });
+
+  test('should be able to read FormData in onSuccess callback', async () => {
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    let formData: FormData;
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .addField('#email', [
+        {
+          validator: () => (): Promise<boolean> =>
+            new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(true);
+              }, 1);
+            }),
+        },
+      ])
+      .onSuccess((ev) => {
+        ev?.preventDefault();
+        formData = new FormData(ev!.target as HTMLFormElement);
+      });
+
+    changeTextBySelector('#name', 'Georgii');
+    changeTextBySelector('#email', 'test@test.com');
+
+    clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('button')).toBeEnabled();
+    });
+
+    await waitFor(() => {
+      const object: any = {};
+      formData.forEach((value, key) => (object[key] = value));
+      expect(object.name).toBe('Georgii');
+      expect(object.email).toBe('test@test.com');
+    });
+  });
 });

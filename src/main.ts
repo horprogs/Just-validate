@@ -825,15 +825,15 @@ class JustValidate {
       this.lockForm();
     }
 
-    this.validate().then(() => {
+    this.validate().finally(() => {
+      if (this.globalConfig.lockForm) {
+        this.unlockForm();
+      }
+
       if (this.isValid) {
         this.onSuccessCallback?.(ev);
       } else {
         this.onFailCallback?.(this.fields);
-      }
-
-      if (this.globalConfig.lockForm) {
-        this.unlockForm();
       }
     });
   };
