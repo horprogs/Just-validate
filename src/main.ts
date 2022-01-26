@@ -929,7 +929,11 @@ class JustValidate {
       );
     }
 
-    const elem = document.querySelector(field) as HTMLInputElement;
+    if (!this.form) {
+      throw new Error('Form is not init');
+    }
+
+    const elem = this.form.querySelector(field) as HTMLInputElement;
 
     if (!elem) {
       throw Error(
