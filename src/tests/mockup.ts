@@ -145,3 +145,90 @@ export const mockup = `
 
       <button class='btn btn-primary' id="submit-btn">Submit</button>
 `;
+
+export const multipleFormsMockup = `
+<form action='#' class='row g-3' autocomplete='off' id='form1'>
+      <div class='row'>
+        <div class='col-md-6'>
+          <label for='name'>Enter your name</label>
+          <input
+            type='text'
+            class='form__input form-control name'
+            placeholder='Enter your name'
+            autocomplete='off'
+            name='form1_name'
+          />
+        </div>
+      </div>
+      <div class='form-group read_terms_checkbox_group' style='width: 250px'>
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form1_read_terms_checkbox_group_1'
+          />I have read Privacy Policy</label
+        >
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form1_read_terms_checkbox_group_2'
+          />I have read Terms Of Use</label
+        >
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form1_read_terms_checkbox_group_3'
+          />I have read Cookies Policy</label
+        >
+      </div>
+
+      <button class='btn btn-primary' id="form1_submit-btn">Submit</button>
+</form>
+<form action='#' class='row g-3 form' id='form2' autocomplete='off'>
+      <div class='row'>
+        <div class='col-md-6'>
+          <label for='name'>Enter your name</label>
+          <input
+            type='text'
+            class='form__input form-control name'
+            placeholder='Enter your name'
+            autocomplete='off'
+            name='form2_name'
+          />
+        </div>
+      </div>
+      <div class='form-group read_terms_checkbox_group' style='width: 250px'>
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form2_read_terms_checkbox_group_1'
+          />I have read Privacy Policy</label
+        >
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form2_read_terms_checkbox_group_2'
+          />I have read Terms Of Use</label
+        >
+        <label
+          ><input
+            type='checkbox'
+            name='checkbox-group-fruit'
+            class='form__checkbox'
+            id='form2_read_terms_checkbox_group_3'
+          />I have read Cookies Policy</label
+        >
+      </div>
+
+      <button class='btn btn-primary' id="form2_submit-btn">Submit</button>
+</form>
+`;
