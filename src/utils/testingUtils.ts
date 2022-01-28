@@ -13,8 +13,8 @@ export const clickBySelector = async (selector: string): Promise<void> => {
 export const getElem = (selector: string): Element | null =>
   document.querySelector(selector);
 
-export const getElemByTestId = (id: string): Element | null =>
-  document.querySelector(`[data-test-id="${id}"]`);
+export const getElemByTestId = (id: string, parent?: Element): Element | null =>
+  (parent || document).querySelector(`[data-test-id="${id}"]`);
 
 export const changeTextBySelector = async (
   selector: string,
@@ -23,6 +23,7 @@ export const changeTextBySelector = async (
   const elem = getElem(selector);
 
   if (!elem) {
+    new Error(`Element ${selector} not found`);
     return;
   }
 

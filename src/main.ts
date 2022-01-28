@@ -75,7 +75,10 @@ class JustValidate {
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
   onSuccessCallback?: (event: Event) => void;
-  onFailCallback?: (fields: FieldsInterface) => void;
+  onFailCallback?: (
+    fields: FieldsInterface,
+    groups: GroupFieldsInterface
+  ) => void;
   tooltips: TooltipInstance[] = [];
   lastScrollPosition?: number;
   isScrollTick?: boolean;
@@ -833,7 +836,7 @@ class JustValidate {
       if (this.isValid) {
         this.onSuccessCallback?.(ev);
       } else {
-        this.onFailCallback?.(this.fields);
+        this.onFailCallback?.(this.fields, this.groupFields);
       }
     });
   };
@@ -929,11 +932,7 @@ class JustValidate {
       );
     }
 
-    if (!this.form) {
-      throw new Error('Form is not init');
-    }
-
-    const elem = this.form.querySelector(field) as HTMLInputElement;
+    const elem = this.form!.querySelector(field) as HTMLInputElement;
 
     if (!elem) {
       throw Error(
@@ -1038,7 +1037,7 @@ class JustValidate {
       );
     }
 
-    const elem = document.querySelector(groupField) as HTMLElement;
+    const elem = this.form!.querySelector(groupField) as HTMLElement;
 
     if (!elem) {
       throw Error(
@@ -1501,7 +1500,9 @@ class JustValidate {
     return this;
   }
 
-  onFail(callback: (fields: FieldsInterface) => void): JustValidate {
+  onFail(
+    callback: (fields: FieldsInterface, groups: GroupFieldsInterface) => void
+  ): JustValidate {
     this.onFailCallback = callback;
     return this;
   }
