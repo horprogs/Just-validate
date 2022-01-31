@@ -85,10 +85,6 @@
     "ts-node": "10.4.0",
     "typescript": "4.5.5",
     "vite": "2.7.13",
-    "just-validate-plugin-date": "1.1.0"
-  },
-  "engines": {
-    "node": "16.x",
-    "yarn": "1.x"
+    "just-validate-plugin-date": "1.1.1"
   }
 }
