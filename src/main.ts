@@ -1318,7 +1318,76 @@ class JustValidate {
     return successLabel;
   }
 
-  renderFieldLabel(elem: HTMLInputElement, label: HTMLDivElement): void {
+  renderErrorsContainer(
+    label: HTMLDivElement,
+    errorsContainer?: string | null | Element
+  ): boolean {
+    const container = errorsContainer || this.globalConfig.errorsContainer;
+
+    if (typeof container === 'string') {
+      const elem = this.form!.querySelector(container);
+
+      if (elem) {
+        elem.appendChild(label);
+        return true;
+      } else {
+        console.error(
+          `Error container with ${container} selector not found. Errors will be rendered as usual`
+        );
+      }
+    }
+
+    if (container instanceof Element) {
+      container.appendChild(label);
+      return true;
+    }
+
+    if (container !== undefined) {
+      console.error(
+        `Error container not found. It should be a string or existing Element. Errors will be rendered as usual`
+      );
+    }
+
+    return false;
+  }
+
+  renderGroupLabel(
+    elem: HTMLElement,
+    label: HTMLDivElement,
+    errorsContainer?: string | null | Element,
+    isSuccess?: boolean
+  ): void {
+    if (!isSuccess) {
+      const renderedInErrorsContainer = this.renderErrorsContainer(
+        label,
+        errorsContainer
+      );
+
+      if (renderedInErrorsContainer) {
+        return;
+      }
+    }
+
+    elem.appendChild(label);
+  }
+
+  renderFieldLabel(
+    elem: HTMLInputElement,
+    label: HTMLDivElement,
+    errorsContainer?: string | null | Element,
+    isSuccess?: boolean
+  ): void {
+    if (!isSuccess) {
+      const renderedInErrorsContainer = this.renderErrorsContainer(
+        label,
+        errorsContainer
+      );
+
+      if (renderedInErrorsContainer) {
+        return;
+      }
+    }
+
     if (elem.type === 'checkbox' || elem.type === 'radio') {
       const labelElem = document.querySelector(
         `label[for="${elem.getAttribute('id')}"]`
@@ -1365,7 +1434,12 @@ class JustValidate {
           group.config
         );
         if (successLabel) {
-          group.groupElem.appendChild(successLabel);
+          this.renderGroupLabel(
+            group.groupElem,
+            successLabel,
+            group.config?.errorsContainer,
+            true
+          );
         }
         continue;
       }
@@ -1388,7 +1462,11 @@ class JustValidate {
         group.errorMessage!,
         group.config
       );
-      group.groupElem.appendChild(errorLabel);
+      this.renderGroupLabel(
+        group.groupElem,
+        errorLabel,
+        group.config?.errorsContainer
+      );
 
       if (this.isTooltip()) {
         this.tooltips.push(
@@ -1413,7 +1491,12 @@ class JustValidate {
             field.config
           );
           if (successLabel) {
-            this.renderFieldLabel(field.elem, successLabel);
+            this.renderFieldLabel(
+              field.elem,
+              successLabel,
+              field.config?.errorsContainer,
+              true
+            );
           }
           field.elem.classList.add(
             field.config?.successFieldCssClass ||
@@ -1435,7 +1518,11 @@ class JustValidate {
         field.errorMessage!,
         field.config
       );
-      this.renderFieldLabel(field.elem, errorLabel);
+      this.renderFieldLabel(
+        field.elem,
+        errorLabel,
+        field.config?.errorsContainer
+      );
 
       if (this.isTooltip()) {
         this.tooltips.push(

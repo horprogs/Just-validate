@@ -142,7 +142,7 @@ export const mockup = `
           />
         </div>
       </div>
-
+             <div class="errors-container"></div>
       <button class='btn btn-primary' id="submit-btn">Submit</button>
 `;
 
@@ -228,7 +228,6 @@ export const multipleFormsMockup = `
           />I have read Cookies Policy</label
         >
       </div>
-
       <button class='btn btn-primary' id="form2_submit-btn">Submit</button>
 </form>
 `;

@@ -14,7 +14,15 @@ export const getElem = (selector: string): Element | null =>
   document.querySelector(selector);
 
 export const getElemByTestId = (id: string, parent?: Element): Element | null =>
-  (parent || document).querySelector(`[data-test-id="${id}"]`);
+  (parent !== undefined ? parent : document).querySelector(
+    `[data-test-id="${id}"]`
+  );
+
+export const getAllElemsByTestId = (
+  id: string,
+  parent?: Element
+): NodeListOf<Element> =>
+  (parent || document).querySelectorAll(`[data-test-id="${id}"]`);
 
 export const changeTextBySelector = async (
   selector: string,

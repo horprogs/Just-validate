@@ -92,7 +92,7 @@
             Support localization, async validation. <br />
             Error messages tooltips. <br />
             Written in Typescript. <br />
-            Good test coverage.
+            >95% test coverage.
           </div>
         </div>
       </section>
@@ -110,6 +110,7 @@
           <li>custom styles and css classes for invalid fields and error messages</li>
           <li>custom messages</li>
           <li>showing tooltips as error messages</li>
+          <li>custom places for the error labels</li>
           <li>localization (defining error messages for different languages)</li>
           <li>user-friendly setup: console warning messages if something incorrect</li>
           <li>written in Typescript and good test coverage</li>
@@ -427,6 +428,7 @@ validation
      tooltip?: {
        <span class="hljs-built_in">position</span>: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>,
      },
+     errorsContainer?: <span class="hljs-keyword">string</span> | Element,
    },
    dictLocale?: {
      key: <span class="hljs-keyword">string</span>;
@@ -453,6 +455,7 @@ validation
 <span class="hljs-attr">    tooltip:</span> {
 <span class="hljs-attr">      position:</span> <span class="hljs-string">'top'</span>,
     },
+<span class="hljs-attr">    errorContainer:</span> <span class="hljs-string">'.errors-container'</span>,
   },
   [
     {
@@ -479,6 +482,7 @@ validation
           <li><code>tooltip</code> if the field defined, tooltips will be displayed instead of regular error labels.
             It has <code>position</code> field which could be <code>&#39;left&#39; | &#39;top&#39; | &#39;right&#39; | &#39;bottom&#39;</code></li>
           <li>localization object will be explained in Localization section</li>
+          <li><code>errorsContainer</code> custom place where to render the error labels</li>
         </ul>
         <h3 id="methods">Methods</h3>
         <p>Define validation rules for the new field:</p>
@@ -509,33 +513,35 @@ validation
       <span class="hljs-built_in">position</span>: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>;
     };
     successMessage?: <span class="hljs-keyword">string</span>;
+    errorsContainer?: <span class="hljs-keyword">string</span> | Element;
   }
 )
 </code></pre><p>Make the new group field required. It could be a group of checkboxes or radio buttons.</p>
         <p>It means that at least one input in the group should be checked/selected.</p>
-        <pre><code>.addRequiredGroup(
-    groupField: <span class="hljs-keyword">string</span>,
-    errorMessage?: <span class="hljs-keyword">string</span>,
-    <span class="hljs-built_in">config</span>?: {
+        <pre><code><span class="hljs-selector-class">.addRequiredGroup</span>(
+    groupField: string,
+    errorMessage?: string,
+    config?: {
       errorFieldStyle: Partial&lt;CSSStyleDeclaration&gt;;
-      errorFieldCssClass: <span class="hljs-keyword">string</span>;
+      errorFieldCssClass: string;
       errorLabelStyle: Partial&lt;CSSStyleDeclaration&gt;;
-      errorLabelCssClass: <span class="hljs-keyword">string</span>;
+      errorLabelCssClass: string;
       successFieldStyle?: Partial&lt;CSSStyleDeclaration&gt;;
-      successFieldCssClass: <span class="hljs-keyword">string</span>;
+      successFieldCssClass: string;
       successLabelStyle?: Partial&lt;CSSStyleDeclaration&gt;;
-      successLabelCssClass: <span class="hljs-keyword">string</span>;
+      successLabelCssClass: string;
       tooltip?: {
-        <span class="hljs-built_in">position</span>: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>;
+        position: <span class="hljs-string">'left'</span> | <span class="hljs-string">'top'</span> | <span class="hljs-string">'right'</span> | <span class="hljs-string">'bottom'</span>;
       };
+      successMessage?: string;
+      errorsContainer?: string | Element;
     },
-    successMessage?: <span class="hljs-keyword">string</span>,
 )
 </code></pre><p><code>.onSuccess(event)</code> - callback if validation success</p>
         <p><code>.onFail(fields)</code> - callback if validation failed</p>
         <p>If you define <code>successMessage</code> argument, this text will be shown if validation (all rules) passes.
           You could customize it by defining <code>successFieldStyle</code>, <code>successFieldCssClass</code>, <code>successLabelStyle</code>, <code>successLabelCssClass</code>
-          as we do for error messages.  </p>
+          as we do for error messages.</p>
         <h2 id="rule-object">Rule object</h2>
         <pre><code>{
   rule: <span class="hljs-built_in">string</span>,

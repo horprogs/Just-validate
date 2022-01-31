@@ -32,6 +32,7 @@ and you want to quick, simple and powerful solution for validating your form.
 *   custom styles and css classes for invalid fields and error messages
 *   custom messages
 *   showing tooltips as error messages
+*   custom places for the error labels
 *   localization (defining error messages for different languages)
 *   user-friendly setup: console warning messages if something incorrect
 *   written in Typescript and good test coverage
@@ -381,6 +382,7 @@ validation
          tooltip?: {
            position: 'left' | 'top' | 'right' | 'bottom',
          },
+         errorsContainer?: string | Element,
        },
        dictLocale?: {
          key: string;
@@ -410,6 +412,7 @@ const validation = new JustValidate(
     tooltip: {
       position: 'top',
     },
+    errorContainer: '.errors-container',
   },
   [
     {
@@ -436,6 +439,7 @@ const validation = new JustValidate(
 *   `tooltip` if the field defined, tooltips will be displayed instead of regular error labels.
     It has `position` field which could be `'left' | 'top' | 'right' | 'bottom'`
 *   localization object will be explained in Localization section
+*   `errorsContainer` custom place where to render the error labels
 
 ### Methods
 
@@ -468,6 +472,7 @@ Define validation rules for the new field:
           position: 'left' | 'top' | 'right' | 'bottom';
         };
         successMessage?: string;
+        errorsContainer?: string | Element;
       }
     )
 
@@ -490,8 +495,9 @@ It means that at least one input in the group should be checked/selected.
           tooltip?: {
             position: 'left' | 'top' | 'right' | 'bottom';
           };
+          successMessage?: string;
+          errorsContainer?: string | Element;
         },
-        successMessage?: string,
     )
 
 `.onSuccess(event)` - callback if validation success

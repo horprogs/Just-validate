@@ -11,6 +11,7 @@ export interface GlobalConfigInterface {
   testingMode: boolean;
   focusInvalidField?: boolean;
   tooltip?: TooltipConfigInterface;
+  errorsContainer?: string | Element | null;
 }
 
 export enum Rules {
@@ -96,6 +97,7 @@ export interface FieldConfigInterface
       | 'successLabelStyle'
       | 'successLabelCssClass'
       | 'tooltip'
+      | 'errorsContainer'
     >
   > {
   successMessage?: string | CustomMessageFuncType;

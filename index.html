@@ -765,6 +765,113 @@
           </form>
         </section>
       </div>
+      <div class="mt-5 section-shadow" id="errors-container">
+        <h2>
+          <a href="#errors-container" class="example-link">Render errors in the container</a>
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="errors-container-form" autocomplete="off">
+            <div class="row">
+              <div class="col">
+                <label for="example11_name">Enter your name</label>
+                <input
+                    type="text"
+                    class="form__input form-control"
+                    placeholder="Enter your name"
+                    autocomplete="off"
+                    name="example11_name"
+                    id="example11_name"
+                />
+              </div>
+              <div class="col">
+                <label for="example11_email">Enter your email</label>
+                <input
+                    type="email"
+                    class="form__input form-control"
+                    placeholder="Enter your email"
+                    autocomplete="off"
+                    name="example11_email"
+                    id="example11_email"
+                />
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <label for="example11_password">Enter your password</label>
+              <input
+                  type="password"
+                  class="form__input form-control"
+                  placeholder="Enter your password"
+                  autocomplete="off"
+                  name="example11_password"
+                  id="example11_password"
+              />
+            </div>
+            <div class="form-group mt-3">
+              <label for="example11_age">Enter your age</label>
+              <input
+                  type="text"
+                  class="form__input form-control"
+                  placeholder="Enter your age"
+                  autocomplete="off"
+                  name="example11_age"
+                  id="example11_age"
+              />
+            </div>
+            <div
+                class="form-group mt-4"
+                id="example11_read_terms_checkbox_group"
+            >
+              <div id="example11_group-errors-container"></div>
+              <div class="form-check">
+                <label
+                    class="form-check-label"
+                    for="example11_read_terms_checkbox_group_1"
+                >I have read Privacy Policy</label
+                >
+                <input
+                    type="checkbox"
+                    name="checkbox-group-fruit"
+                    id="example11_read_terms_checkbox_group_1"
+                    class="form-check-input"
+                />
+              </div>
+              <div class="form-check">
+                <label
+                    class="form-check-label"
+                    for="example11_read_terms_checkbox_group_2"
+                >I have read Terms Of Use</label
+                >
+                <input
+                    type="checkbox"
+                    name="checkbox-group-fruit"
+                    id="example11_read_terms_checkbox_group_2"
+                    class="form-check-input"
+                />
+              </div>
+              <div class="form-check">
+                <label
+                    class="form-check-label"
+                    for="example11_read_terms_checkbox_group_3"
+                >I have read Cookies Policy</label
+                >
+                <input
+                    type="checkbox"
+                    name="checkbox-group-fruit"
+                    id="example11_read_terms_checkbox_group_3"
+                    class="form-check-input"
+                />
+              </div>
+            </div>
+            <div class="mt-4" id="example11_errors-container"></div>
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example11_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+
     </main>
     <script type="module" src="./src/demo.ts"></script>
   </body>

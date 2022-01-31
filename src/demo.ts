@@ -569,6 +569,56 @@ const successLabel = (): void => {
     });
 };
 
+const errorsContainer = (): void => {
+  const validation = new JustValidate('#errors-container-form', {
+    errorFieldCssClass: 'is-invalid',
+    errorLabelStyle: {
+      fontSize: '14px',
+      color: '#dc3545',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+    errorsContainer: '#example11_errors-container',
+  });
+
+  validation
+    .addField('#example11_name', [
+      {
+        rule: 'required' as Rules,
+        errorMessage: 'Name is required',
+      },
+    ])
+    .addField('#example11_email', [
+      {
+        rule: 'required' as Rules,
+        errorMessage: 'Email is required',
+      },
+    ])
+    .addField('#example11_password', [
+      {
+        rule: 'required' as Rules,
+        errorMessage: 'Password is required',
+      },
+    ])
+    .addField('#example11_age', [
+      {
+        rule: 'required' as Rules,
+        errorMessage: 'Age is required',
+      },
+    ])
+    .addRequiredGroup(
+      '#example11_read_terms_checkbox_group',
+      'You should select at least one communication channel',
+      {
+        errorsContainer: '#example11_group-errors-container',
+      }
+    )
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+      window.showNotification();
+    });
+};
+
 basic();
 advanced();
 async();
@@ -579,3 +629,4 @@ files();
 dateTextInput();
 dateDateInput();
 successLabel();
+errorsContainer();
