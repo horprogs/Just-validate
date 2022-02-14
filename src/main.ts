@@ -20,7 +20,6 @@ import {
   GroupRuleInterface,
   GroupRules,
   Rules,
-  FieldInterface,
   FieldsInterface,
   LocaleInterface,
   CustomStyleTagIds,
@@ -68,13 +67,13 @@ class JustValidate {
   isValid = false;
   isSubmitted = false;
   globalConfig: GlobalConfigInterface = defaultGlobalConfig;
-  errorLabels: HTMLDivElement[] = [];
-  successLabels: HTMLDivElement[] = [];
+  errorLabels: { [name: string]: HTMLDivElement } = {};
+  successLabels: { [name: string]: HTMLDivElement } = {};
   eventListeners: EventListenerInterface[] = [];
   dictLocale: LocaleInterface[] = [];
   currentLocale?: string;
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
-  onSuccessCallback?: (event: Event) => void;
+  onSuccessCallback?: (event?: Event) => void;
   onFailCallback?: (
     fields: FieldsInterface,
     groups: GroupFieldsInterface
@@ -101,7 +100,8 @@ class JustValidate {
     this.isValid = false;
     this.isSubmitted = false;
     this.globalConfig = defaultGlobalConfig;
-    this.errorLabels = [];
+    this.errorLabels = {};
+    this.successLabels = {};
     this.eventListeners = [];
     this.customStyleTags = {};
     this.tooltips = [];
@@ -720,11 +720,9 @@ class JustValidate {
     }
   }
 
-  validateField(
-    fieldName: string,
-    field: FieldInterface,
-    afterInputChanged = false
-  ): Promise<any> | void {
+  validateField(fieldName: string, afterInputChanged = false): Promise<any> {
+    const field = this.fields[fieldName];
+
     field.isValid = true;
     const promises: Promise<any>[] = [];
     [...field.rules].reverse().forEach((rule) => {
@@ -745,6 +743,25 @@ class JustValidate {
     }
 
     return Promise.allSettled(promises);
+  }
+
+  revalidateField(field: string): Promise<any> | void {
+    if (typeof field !== 'string') {
+      throw Error(
+        `Field selector is not valid. Please specify a string selector.`
+      );
+    }
+
+    if (!this.fields[field]) {
+      console.error(`Field not found. Check the field selector.`);
+      return;
+    }
+
+    this.validateField(field, true).finally(() => {
+      this.clearFieldError(field);
+      this.clearFieldLabel(field);
+      this.renderFieldError(field);
+    });
   }
 
   validateGroup(
@@ -778,21 +795,20 @@ class JustValidate {
     }
   }
 
-  afterSubmitValidation(): void {
-    this.renderErrors();
+  afterSubmitValidation(forceRevalidation = false): void {
+    this.renderErrors(forceRevalidation);
 
     if (this.globalConfig.focusInvalidField) {
       this.focusInvalidField();
     }
   }
 
-  validate(): Promise<any> {
+  validate(forceRevalidation = false): Promise<any> {
     return new Promise<boolean>((resolve) => {
       const promises: Promise<any>[] = [];
 
       Object.keys(this.fields).forEach((fieldName) => {
-        const field = this.fields[fieldName];
-        const promise = this.validateField(fieldName, field);
+        const promise = this.validateField(fieldName);
 
         if (isPromise(promise)) {
           promises.push(promise as Promise<any>);
@@ -810,25 +826,30 @@ class JustValidate {
 
       if (promises.length) {
         Promise.allSettled(promises).then(() => {
-          this.afterSubmitValidation();
+          this.afterSubmitValidation(forceRevalidation);
           resolve(true);
         });
       } else {
-        this.afterSubmitValidation();
+        this.afterSubmitValidation(forceRevalidation);
         resolve(false);
       }
     });
   }
 
-  formSubmitHandler = (ev: Event): void => {
-    ev.preventDefault();
-    this.isSubmitted = true;
+  revalidate(): void {
+    this.validateHandler(undefined, true).finally(() => {
+      if (this.globalConfig.focusInvalidField) {
+        this.focusInvalidField();
+      }
+    });
+  }
 
+  validateHandler(ev?: Event, forceRevalidation = false): Promise<any> {
     if (this.globalConfig.lockForm) {
       this.lockForm();
     }
 
-    this.validate().finally(() => {
+    return this.validate(forceRevalidation).finally(() => {
       if (this.globalConfig.lockForm) {
         this.unlockForm();
       }
@@ -839,6 +860,13 @@ class JustValidate {
         this.onFailCallback?.(this.fields, this.groupFields);
       }
     });
+  }
+
+  formSubmitHandler = (ev: Event): void => {
+    ev.preventDefault();
+    this.isSubmitted = true;
+
+    this.validateHandler(ev);
   };
 
   setForm(form: HTMLFormElement): void {
@@ -849,24 +877,22 @@ class JustValidate {
   }
 
   handleFieldChange = (target: HTMLInputElement): void => {
-    let currentField;
     let currentFieldName;
 
     for (const fieldName in this.fields) {
       const field = this.fields[fieldName];
 
       if (field.elem === target) {
-        currentField = field;
         currentFieldName = fieldName;
         break;
       }
     }
 
-    if (!currentField || !currentFieldName) {
+    if (!currentFieldName) {
       return;
     }
 
-    this.validateField(currentFieldName, currentField, true);
+    this.validateField(currentFieldName, true);
   };
 
   handleGroupChange = (target: HTMLInputElement): void => {
@@ -1102,33 +1128,45 @@ class JustValidate {
     this.addListener(type, elem, this.handlerChange);
   }
 
+  clearFieldLabel(fieldName: string): void {
+    this.errorLabels[fieldName]?.remove();
+    this.successLabels[fieldName]?.remove();
+  }
+
+  clearFieldError(fieldName: string): void {
+    const field = this.fields[fieldName];
+
+    const errorStyle =
+      field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
+    Object.keys(errorStyle).forEach((key) => {
+      field.elem.style[key] = '';
+    });
+
+    const successStyle =
+      field.config?.successFieldStyle ||
+      this.globalConfig.successFieldStyle ||
+      {};
+    Object.keys(successStyle).forEach((key) => {
+      field.elem.style[key] = '';
+    });
+
+    field.elem.classList.remove(
+      field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass,
+      field.config?.successFieldCssClass ||
+        this.globalConfig.successFieldCssClass
+    );
+  }
+
   clearErrors(): void {
-    this.errorLabels.forEach((item) => item.remove());
-    this.successLabels.forEach((item) => item.remove());
+    Object.keys(this.errorLabels).forEach((key) =>
+      this.errorLabels[key].remove()
+    );
+    Object.keys(this.successLabels).forEach((key) =>
+      this.successLabels[key].remove()
+    );
 
     for (const fieldName in this.fields) {
-      const field = this.fields[fieldName];
-
-      const errorStyle =
-        field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
-      Object.keys(errorStyle).forEach((key) => {
-        field.elem.style[key] = '';
-      });
-
-      const successStyle =
-        field.config?.successFieldStyle ||
-        this.globalConfig.successFieldStyle ||
-        {};
-      Object.keys(successStyle).forEach((key) => {
-        field.elem.style[key] = '';
-      });
-
-      field.elem.classList.remove(
-        field.config?.errorFieldCssClass ||
-          this.globalConfig.errorFieldCssClass,
-        field.config?.successFieldCssClass ||
-          this.globalConfig.successFieldCssClass
-      );
+      this.clearFieldError(fieldName);
     }
 
     for (const groupName in this.groupFields) {
@@ -1278,7 +1316,7 @@ class JustValidate {
       errorLabel.dataset.testId = `error-label-${name}`;
     }
 
-    this.errorLabels.push(errorLabel);
+    this.errorLabels[name] = errorLabel;
 
     return errorLabel;
   }
@@ -1309,7 +1347,7 @@ class JustValidate {
       successLabel.dataset.testId = `success-label-${name}`;
     }
 
-    this.successLabels.push(successLabel);
+    this.successLabels[name] = successLabel;
 
     return successLabel;
   }
@@ -1401,8 +1439,64 @@ class JustValidate {
     }
   }
 
-  renderErrors(): void {
-    if (!this.isSubmitted) {
+  renderFieldError(fieldName: string): void {
+    const field = this.fields[fieldName];
+
+    if (field.isValid) {
+      // we should not show success labels if there are async rules pending
+      if (!field.asyncCheckPending) {
+        const successLabel = this.createSuccessLabelElem(
+          fieldName,
+          field.successMessage,
+          field.config
+        );
+        if (successLabel) {
+          this.renderFieldLabel(
+            field.elem,
+            successLabel,
+            field.config?.errorsContainer,
+            true
+          );
+        }
+        field.elem.classList.add(
+          field.config?.successFieldCssClass ||
+            this.globalConfig.successFieldCssClass
+        );
+      }
+
+      return;
+    }
+
+    this.isValid = false;
+
+    field.elem.classList.add(
+      field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+    );
+
+    const errorLabel = this.createErrorLabelElem(
+      fieldName,
+      field.errorMessage!,
+      field.config
+    );
+    this.renderFieldLabel(
+      field.elem,
+      errorLabel,
+      field.config?.errorsContainer
+    );
+
+    if (this.isTooltip()) {
+      this.tooltips.push(
+        this.renderTooltip(
+          field.elem,
+          errorLabel,
+          field.config?.tooltip?.position
+        )
+      );
+    }
+  }
+
+  renderErrors(forceRevalidation = false): void {
+    if (!this.isSubmitted && !forceRevalidation) {
       return;
     }
     this.clearErrors();
@@ -1476,59 +1570,7 @@ class JustValidate {
     }
 
     for (const fieldName in this.fields) {
-      const field = this.fields[fieldName];
-
-      if (field.isValid) {
-        // we should not show success labels if there are async rules pending
-        if (!field.asyncCheckPending) {
-          const successLabel = this.createSuccessLabelElem(
-            fieldName,
-            field.successMessage,
-            field.config
-          );
-          if (successLabel) {
-            this.renderFieldLabel(
-              field.elem,
-              successLabel,
-              field.config?.errorsContainer,
-              true
-            );
-          }
-          field.elem.classList.add(
-            field.config?.successFieldCssClass ||
-              this.globalConfig.successFieldCssClass
-          );
-        }
-
-        continue;
-      }
-
-      this.isValid = false;
-
-      field.elem.classList.add(
-        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
-      );
-
-      const errorLabel = this.createErrorLabelElem(
-        fieldName,
-        field.errorMessage!,
-        field.config
-      );
-      this.renderFieldLabel(
-        field.elem,
-        errorLabel,
-        field.config?.errorsContainer
-      );
-
-      if (this.isTooltip()) {
-        this.tooltips.push(
-          this.renderTooltip(
-            field.elem,
-            errorLabel,
-            field.config?.tooltip?.position
-          )
-        );
-      }
+      this.renderFieldError(fieldName);
     }
   }
 

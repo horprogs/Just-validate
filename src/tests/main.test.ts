@@ -2370,4 +2370,52 @@ describe('Validation', () => {
       expect(object.email).toBe('test@test.com');
     });
   });
+
+  test('should revalidate the field', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .addField('#email', [
+        {
+          rule: 'email' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    expect(() => {
+      // @ts-ignore
+      validation.revalidateField(123);
+    }).toThrow();
+
+    validation.revalidateField('.123');
+
+    expect(console.error).toHaveBeenCalled();
+    // @ts-ignore
+    console.error.mockReset();
+
+    changeTextBySelector('#name', 'Test');
+    changeTextBySelector('#email', 'test');
+
+    validation.revalidateField('#email');
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
+    })
+  });
 });
