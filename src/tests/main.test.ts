@@ -2416,6 +2416,6 @@ describe('Validation', () => {
 
     await waitFor(() => {
       expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-    })
+    });
   });
 });
