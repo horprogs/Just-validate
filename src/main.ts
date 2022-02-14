@@ -1089,13 +1089,9 @@ class JustValidate {
         return 'change';
         break;
       }
-      case 'date': {
-        return 'input';
-        break;
-      }
 
       default: {
-        return 'keyup';
+        return 'input';
       }
     }
   }
