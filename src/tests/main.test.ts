@@ -2358,7 +2358,6 @@ describe('Validation', () => {
     changeTextBySelector('#email', 'test@test.com');
 
     clickBySelector('#submit-btn');
-
     await waitFor(() => {
       expect(getElem('button')).toBeEnabled();
     });
@@ -2398,7 +2397,7 @@ describe('Validation', () => {
       validation.revalidateField(123);
     }).toThrow();
 
-    validation.revalidateField('.123');
+    await expect(validation.revalidateField('.123')).rejects.toBe(undefined);
 
     expect(console.error).toHaveBeenCalled();
     // @ts-ignore
@@ -2407,7 +2406,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'Test');
     changeTextBySelector('#email', 'test');
 
-    validation.revalidateField('#email');
+    await expect(validation.revalidateField('#email')).resolves.toBe(false);
 
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
@@ -2417,5 +2416,40 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
     });
+
+    changeTextBySelector('#email', 'test@test.com');
+
+    await expect(validation.revalidateField('#email')).resolves.toBe(true);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+  });
+
+  test('should revalidate the form', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    await expect(validation.revalidate()).resolves.toBe(false);
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    changeTextBySelector('#name', 'Test');
+
+    await expect(validation.revalidate()).resolves.toBe(true);
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
   });
 });

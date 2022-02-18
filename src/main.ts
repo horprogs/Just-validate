@@ -745,7 +745,7 @@ class JustValidate {
     return Promise.allSettled(promises);
   }
 
-  revalidateField(field: string): Promise<any> | void {
+  revalidateField(field: string): Promise<boolean> {
     if (typeof field !== 'string') {
       throw Error(
         `Field selector is not valid. Please specify a string selector.`
@@ -754,13 +754,16 @@ class JustValidate {
 
     if (!this.fields[field]) {
       console.error(`Field not found. Check the field selector.`);
-      return;
+      return Promise.reject();
     }
 
-    this.validateField(field, true).finally(() => {
-      this.clearFieldError(field);
-      this.clearFieldLabel(field);
-      this.renderFieldError(field);
+    return new Promise((resolve) => {
+      this.validateField(field, true).finally(() => {
+        this.clearFieldError(field);
+        this.clearFieldLabel(field);
+        this.renderFieldError(field);
+        resolve(!!this.fields[field].isValid);
+      });
     });
   }
 
@@ -836,11 +839,14 @@ class JustValidate {
     });
   }
 
-  revalidate(): void {
-    this.validateHandler(undefined, true).finally(() => {
-      if (this.globalConfig.focusInvalidField) {
-        this.focusInvalidField();
-      }
+  revalidate(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.validateHandler(undefined, true).finally(() => {
+        if (this.globalConfig.focusInvalidField) {
+          this.focusInvalidField();
+        }
+        resolve(this.isValid);
+      });
     });
   }
 
