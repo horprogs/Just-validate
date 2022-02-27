@@ -1077,11 +1077,13 @@ class JustValidate {
       );
     }
 
-    const inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll('input');
+    const inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll(
+      'input[type=radio],input[type=checkbox]'
+    );
 
-    const isRadio = Array.from(inputs).every((input) => input.type === 'radio');
+    const isRadio = Array.from(inputs).some((input) => input.type === 'radio');
 
-    const isCheckbox = Array.from(inputs).every(
+    const isCheckbox = Array.from(inputs).some(
       (input) => input.type === 'checkbox'
     );
 
