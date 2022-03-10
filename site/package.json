@@ -16,5 +16,9 @@
   "homepage": "https://github.com/horprogs/Just-validate#readme",
   "devDependencies": {
     "vite": "2.6.14"
+  },
+  "engines": {
+    "node": "16.x",
+    "yarn": "1.x"
   }
 }
