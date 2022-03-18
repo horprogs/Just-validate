@@ -110,6 +110,18 @@
             <li class="nav-item">
               <a class="nav-link scrollto" href="#section-5-4">onFail</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-5">revalidateField</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-6">revalidate</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-7">refresh</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-8">destroy</a>
+            </li>
             <li class="nav-item section-title mt-3">
               <a class="nav-link scrollto" href="#section-6">Rules</a>
             </li>
@@ -975,6 +987,26 @@ validation
               <h2 class="section-heading">onFail</h2>
               <p>Callback if validation failed.</p>
               <pre><code class="language-html">.onFail(fields)</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-5">
+              <h2 class="section-heading">revalidateField</h2>
+              <p>Method to trigger a field validation manually. Returns a promise with a boolean value - valid/invalid field.</p>
+              <pre><code class="language-html">.revalidateField(field: string).then(isValid =&gt; {})</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-6">
+              <h2 class="section-heading">revalidate</h2>
+              <p>Method to trigger the whole form validation manually. Returns a promise with a boolean value - validation passes/fails.</p>
+              <pre><code class="language-html">.revalidate().then(isValid =&gt; {})</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-7">
+              <h2 class="section-heading">refresh</h2>
+              <p>Method to refresh the whole form - fields settings, clear errors messages/styles/classes</p>
+              <pre><code class="language-html">.refresh()</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-8">
+              <h2 class="section-heading">destroy</h2>
+              <p>Method to turn off the validation, remove all event listeners/errors/messages/styles/classes</p>
+              <pre><code class="language-html">.destroy()</code></pre>
             </section>
 
             <!--//section-->
