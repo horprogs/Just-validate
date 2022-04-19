@@ -15,6 +15,7 @@ export default defineConfig(({ command }) => {
           fileName: (format) =>
             `just-validate.${format === 'umd' ? 'production.min' : format}.js`,
         },
+        minify: 'terser',
         rollupOptions: {},
       },
     };
