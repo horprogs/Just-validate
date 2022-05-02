@@ -57,7 +57,7 @@ describe('ShowErrors method', () => {
         }, 100);
       });
 
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -68,9 +68,9 @@ describe('ShowErrors method', () => {
       'The field is required'
     );
 
-    changeTextBySelector('#password', '123');
+    await changeTextBySelector('#password', '123');
 
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -84,7 +84,7 @@ describe('ShowErrors method', () => {
     });
 
     // should call onSuccess every time, not just once
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -119,9 +119,9 @@ describe('ShowErrors method', () => {
         }, 100);
       });
 
-    changeTextBySelector('#password', '123');
+    await changeTextBySelector('#password', '123');
 
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });

@@ -35,7 +35,11 @@ export const changeTextBySelector = async (
     return;
   }
 
-  await userEvent.type(elem, `{selectall}{del}${value}`);
+  await userEvent.clear(elem);
+
+  if (value) {
+    await userEvent.type(elem, value);
+  }
 };
 
 export const selectBySelector = async (

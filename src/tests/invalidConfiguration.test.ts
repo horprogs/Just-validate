@@ -98,7 +98,7 @@ describe('invalidConfiguration', () => {
         validator: (): number => 1,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -113,7 +113,7 @@ describe('invalidConfiguration', () => {
         rule: 'maxLength' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -127,7 +127,7 @@ describe('invalidConfiguration', () => {
         value: 'dd',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -140,7 +140,7 @@ describe('invalidConfiguration', () => {
         rule: 'minLength' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -154,7 +154,7 @@ describe('invalidConfiguration', () => {
         value: 'dd',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -167,7 +167,7 @@ describe('invalidConfiguration', () => {
         rule: 'maxNumber' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -181,7 +181,7 @@ describe('invalidConfiguration', () => {
         value: 'dd',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -194,7 +194,7 @@ describe('invalidConfiguration', () => {
         rule: 'minNumber' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -208,7 +208,7 @@ describe('invalidConfiguration', () => {
         value: 'dd',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -221,7 +221,7 @@ describe('invalidConfiguration', () => {
         rule: 'customRegexp' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -229,21 +229,21 @@ describe('invalidConfiguration', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
 
-    changeTextBySelector('#name', 'text');
+    await changeTextBySelector('#name', 'text');
     validation.addField('#name', [
       {
         rule: 'customRegexp' as Rules,
         value: 'dfsdfsdf',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
-    changeTextBySelector('#name', '');
+    await changeTextBySelector('#name', '');
 
     validation.addField('#name', [
       {
@@ -251,7 +251,7 @@ describe('invalidConfiguration', () => {
         validator: '123123',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -267,7 +267,7 @@ describe('invalidConfiguration', () => {
         },
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -292,8 +292,8 @@ describe('invalidConfiguration', () => {
     // @ts-ignore
     console.error.mockRestore();
 
-    changeTextBySelector('#name', '123');
-    clickBySelector('#submit-btn');
+    await changeTextBySelector('#name', '123');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -319,7 +319,7 @@ describe('invalidConfiguration', () => {
       new File(generateFileContent(10), 'file.png', { type: 'image/png' })
     );
 
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -333,7 +333,7 @@ describe('invalidConfiguration', () => {
         rule: 'files' as Rules,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -348,7 +348,7 @@ describe('invalidConfiguration', () => {
         value: {},
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -365,7 +365,7 @@ describe('invalidConfiguration', () => {
         value: '123ds[[/',
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -380,7 +380,7 @@ describe('invalidConfiguration', () => {
         value: {},
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -397,7 +397,7 @@ describe('invalidConfiguration', () => {
         value: {},
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -414,7 +414,7 @@ describe('invalidConfiguration', () => {
         value: 123,
       },
     ]);
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });

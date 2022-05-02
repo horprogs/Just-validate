@@ -34,8 +34,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
-    expect(getElem('#submit-btn')).toBeDisabled();
+    await clickBySelector('#submit-btn');
 
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
@@ -71,8 +70,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
-    expect(getElem('#submit-btn')).toBeDisabled();
+    await clickBySelector('#submit-btn');
 
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
@@ -111,7 +109,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
+    await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
@@ -174,8 +172,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
-    expect(getElem('#submit-btn')).toBeDisabled();
+    await clickBySelector('#submit-btn');
 
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
@@ -289,8 +286,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
-    expect(getElem('#submit-btn')).toBeDisabled();
+    await clickBySelector('#submit-btn');
 
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
@@ -385,8 +381,7 @@ describe('Errors container', () => {
       .onSuccess(onSubmit)
       .onFail(onFail);
 
-    clickBySelector('#submit-btn');
-    expect(getElem('#submit-btn')).toBeDisabled();
+    await clickBySelector('#submit-btn');
 
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();

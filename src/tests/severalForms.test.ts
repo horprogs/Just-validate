@@ -42,7 +42,7 @@ describe('Several forms', () => {
         .onFail(failCallbacks[i]);
     });
 
-    clickBySelector('#form1_submit-btn');
+    await clickBySelector('#form1_submit-btn');
     await waitFor(() => {
       expect(getElem('#form1_submit-btn')).toBeEnabled();
     });
@@ -70,10 +70,10 @@ describe('Several forms', () => {
       getElemByTestId('error-label-.read_terms_checkbox_group', form2)
     ).not.toBeInTheDocument();
 
-    changeTextBySelector('#form1 .name', 'Georgii');
-    clickBySelector('#form1_read_terms_checkbox_group_1');
+    await changeTextBySelector('#form1 .name', 'Georgii');
+    await clickBySelector('#form1_read_terms_checkbox_group_1');
 
-    clickBySelector('#form1_submit-btn');
+    await clickBySelector('#form1_submit-btn');
     await waitFor(() => {
       expect(getElem('#form1_submit-btn')).toBeEnabled();
     });
@@ -96,7 +96,7 @@ describe('Several forms', () => {
       getElemByTestId('error-label-.read_terms_checkbox_group', form2)
     ).not.toBeInTheDocument();
 
-    clickBySelector('#form2_submit-btn');
+    await clickBySelector('#form2_submit-btn');
     await waitFor(() => {
       expect(getElem('#form2_submit-btn')).toBeEnabled();
     });
@@ -121,10 +121,10 @@ describe('Several forms', () => {
       getElemByTestId('error-label-.read_terms_checkbox_group', form1)
     ).not.toBeInTheDocument();
 
-    changeTextBySelector('#form2 .name', 'Georgii');
-    clickBySelector('#form2_read_terms_checkbox_group_1');
+    await changeTextBySelector('#form2 .name', 'Georgii');
+    await clickBySelector('#form2_read_terms_checkbox_group_1');
 
-    clickBySelector('#form2_submit-btn');
+    await clickBySelector('#form2_submit-btn');
     await waitFor(() => {
       expect(getElem('#form2_submit-btn')).toBeEnabled();
     });
