@@ -100,7 +100,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -129,7 +129,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -142,7 +142,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -156,7 +156,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -183,7 +183,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -196,7 +196,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -210,7 +210,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -223,7 +223,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -238,7 +238,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -253,7 +253,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -269,7 +269,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -295,7 +295,7 @@ describe('invalidConfiguration', () => {
     changeTextBySelector('#name', '123');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
@@ -321,7 +321,7 @@ describe('invalidConfiguration', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -335,7 +335,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -350,7 +350,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -367,7 +367,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -382,7 +382,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -399,7 +399,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -416,7 +416,7 @@ describe('invalidConfiguration', () => {
     ]);
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#files')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();

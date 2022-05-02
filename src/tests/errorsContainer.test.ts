@@ -35,10 +35,10 @@ describe('Errors container', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(
@@ -72,10 +72,10 @@ describe('Errors container', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(console.error).toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe('Errors container', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(console.error).toHaveBeenCalled();
@@ -175,10 +175,10 @@ describe('Errors container', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(
@@ -290,10 +290,10 @@ describe('Errors container', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(
@@ -386,10 +386,10 @@ describe('Errors container', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(

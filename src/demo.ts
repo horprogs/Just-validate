@@ -31,6 +31,9 @@ const basic = (): void => {
         rule: 'maxLength' as Rules,
         value: 15,
       },
+      {
+        validator: () => () => window.fakeFetch(2000),
+      },
     ])
     .addField('#example1_email', [
       {

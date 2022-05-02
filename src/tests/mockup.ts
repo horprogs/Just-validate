@@ -144,6 +144,7 @@ export const mockup = `
       </div>
              <div class="errors-container"></div>
       <button class='btn btn-primary' id="submit-btn">Submit</button>
+      <button class='btn btn-primary' id="custom-btn">Custom</button>
 `;
 
 export const multipleFormsMockup = `

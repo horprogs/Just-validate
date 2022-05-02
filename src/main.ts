@@ -1218,6 +1218,10 @@ class JustValidate {
       'input, textarea, button, select'
     );
     for (let i = 0, len = elems.length; i < len; ++i) {
+      elems[i].setAttribute(
+        'data-just-validate-fallback-disabled',
+        elems[i].disabled ? 'true' : 'false'
+      );
       elems[i].setAttribute('disabled', 'disabled');
       elems[i].style.pointerEvents = 'none';
       elems[i].style.webkitFilter = 'grayscale(100%)';
@@ -1230,7 +1234,11 @@ class JustValidate {
       'input, textarea, button, select'
     );
     for (let i = 0, len = elems.length; i < len; ++i) {
-      elems[i].removeAttribute('disabled');
+      if (
+        elems[i].getAttribute('data-just-validate-fallback-disabled') !== 'true'
+      ) {
+        elems[i].removeAttribute('disabled');
+      }
       elems[i].style.pointerEvents = '';
       elems[i].style.webkitFilter = '';
       elems[i].style.filter = '';

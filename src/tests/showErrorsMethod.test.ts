@@ -59,7 +59,7 @@ describe('ShowErrors method', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('ShowErrors method', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe('ShowErrors method', () => {
     // should call onSuccess every time, not just once
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -123,7 +123,7 @@ describe('ShowErrors method', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();

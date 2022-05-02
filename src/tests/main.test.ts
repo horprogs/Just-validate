@@ -36,10 +36,10 @@ describe('Validation', () => {
       .onSuccess(onSubmit);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -52,7 +52,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
@@ -94,10 +94,10 @@ describe('Validation', () => {
     changeTextBySelector('#email', 'test@test.com');
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -155,10 +155,10 @@ describe('Validation', () => {
       .onSuccess(onSubmit);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -174,7 +174,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -184,10 +184,10 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'Georgii');
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
@@ -239,10 +239,10 @@ describe('Validation', () => {
       .onFail(onFail);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -331,7 +331,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -400,7 +400,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -458,7 +458,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'Z');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
       'You cannot use Z/X/C as names'
@@ -469,7 +469,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'X');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
       'You cannot use Z/X/C as names'
@@ -480,7 +480,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'C');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
       'You cannot use Z/X/C as names'
@@ -491,7 +491,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', '.');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
       'Name is invalid'
@@ -502,7 +502,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', '123123123');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
@@ -551,7 +551,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -571,7 +571,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -593,7 +593,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -615,7 +615,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toBeNull();
@@ -642,7 +642,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -656,7 +656,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -668,7 +668,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -697,7 +697,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -711,7 +711,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -745,7 +745,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -759,7 +759,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -773,7 +773,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -784,7 +784,7 @@ describe('Validation', () => {
 
     changeTextBySelector('#name', '50');
 
-    expect(getElem('button')).toBeEnabled();
+    expect(getElem('#submit-btn')).toBeEnabled();
 
     clickBySelector('#submit-btn');
 
@@ -814,7 +814,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -840,7 +840,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -851,7 +851,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '12345678');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     expect(getElemByTestId('error-label-#password')).toHaveTextContent(
@@ -861,7 +861,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '123456d');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     expect(getElemByTestId('error-label-#password')).toHaveTextContent(
@@ -871,7 +871,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '12345678a');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).toHaveBeenCalled();
     expect(getElemByTestId('error-label-#password')).toBeNull();
@@ -895,7 +895,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -906,7 +906,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '12345678a');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     expect(getElemByTestId('error-label-#password')).toHaveTextContent(
@@ -916,7 +916,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '12345678a!');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     expect(getElemByTestId('error-label-#password')).toHaveTextContent(
@@ -926,7 +926,7 @@ describe('Validation', () => {
     changeTextBySelector('#password', '12345678a!A');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#password')).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
@@ -951,7 +951,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -961,7 +961,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'asgda');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
@@ -970,7 +970,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', '123123sdf');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
@@ -979,7 +979,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', '123123sAA');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
@@ -988,7 +988,7 @@ describe('Validation', () => {
     changeTextBySelector('#name', 'AAAA');
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -1011,7 +1011,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1045,10 +1045,10 @@ describe('Validation', () => {
     ]);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1168,7 +1168,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toHaveTextContent(
@@ -1259,10 +1259,10 @@ describe('Validation', () => {
       .onSuccess(onSubmit);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1274,10 +1274,10 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1295,10 +1295,10 @@ describe('Validation', () => {
       .onSuccess(onSubmit);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1314,10 +1314,10 @@ describe('Validation', () => {
     ).not.toBeInTheDocument();
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1349,10 +1349,10 @@ describe('Validation', () => {
       .onSuccess(onSubmit);
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1374,10 +1374,10 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
 
     clickBySelector('#submit-btn');
-    expect(getElem('button')).toBeDisabled();
+    expect(getElem('#submit-btn')).toBeDisabled();
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
@@ -1399,7 +1399,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1428,7 +1428,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(
@@ -1478,7 +1478,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1488,7 +1488,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
@@ -1514,7 +1514,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
@@ -1554,7 +1554,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1571,7 +1571,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(
@@ -1609,7 +1609,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1625,7 +1625,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1638,7 +1638,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1649,7 +1649,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1684,7 +1684,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1699,7 +1699,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1711,7 +1711,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1723,7 +1723,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1735,7 +1735,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1749,7 +1749,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1783,7 +1783,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1801,7 +1801,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1818,7 +1818,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1835,7 +1835,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1850,7 +1850,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1865,7 +1865,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1880,7 +1880,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1913,7 +1913,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1931,7 +1931,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1948,7 +1948,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -1964,7 +1964,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -1979,7 +1979,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -2036,7 +2036,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
     expect(getElemByTestId('success-label-#name')).toHaveTextContent(
@@ -2059,7 +2059,7 @@ describe('Validation', () => {
     clickBySelector('#submit-btn');
 
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(onSubmit).toHaveBeenCalled();
@@ -2111,7 +2111,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     changeTextBySelector('#name', 'Test');
@@ -2120,7 +2120,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
@@ -2132,7 +2132,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('success-label-#name')).toBeInTheDocument();
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
@@ -2155,7 +2155,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
@@ -2165,7 +2165,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
@@ -2189,7 +2189,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Email has invalid format'
@@ -2206,7 +2206,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'The field must contain a maximum of 10 characters'
@@ -2223,7 +2223,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'The field must contain a minimum of 10 characters'
@@ -2239,7 +2239,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Password must contain minimum eight characters, at least one letter and one number'
@@ -2255,7 +2255,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
@@ -2271,7 +2271,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Value should be a number'
@@ -2288,7 +2288,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Number should be less or equal than 10'
@@ -2305,7 +2305,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
       'Number should be more or equal than 10'
@@ -2359,7 +2359,7 @@ describe('Validation', () => {
 
     clickBySelector('#submit-btn');
     await waitFor(() => {
-      expect(getElem('button')).toBeEnabled();
+      expect(getElem('#submit-btn')).toBeEnabled();
     });
 
     await waitFor(() => {
@@ -2451,5 +2451,41 @@ describe('Validation', () => {
     await expect(validation.revalidate()).resolves.toBe(true);
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
+  });
+
+  test('should not reset disabled attr unlockForm', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#password', [
+        {
+          validator: () => (): Promise<boolean> =>
+            fetch(100, () => {
+              return true;
+            }),
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    document.querySelector('#custom-btn')!.setAttribute('disabled', 'true');
+
+    expect(getElem('#submit-btn')).toBeEnabled();
+    expect(getElem('#custom-btn')).toBeDisabled();
+
+    clickBySelector('#submit-btn');
+
+    expect(getElem('#submit-btn')).toBeDisabled();
+    expect(getElem('#custom-btn')).toBeDisabled();
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    expect(getElem('#submit-btn')).toBeEnabled();
+    expect(getElem('#custom-btn')).toBeDisabled();
   });
 });
