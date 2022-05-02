@@ -1,6 +1,6 @@
 {
   "name": "just-validate",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins.",
   "scripts": {
     "lint-md": "remark . --output",
