@@ -29,6 +29,7 @@ import {
   FilesRuleValueInterface,
   ElemValueType,
   CustomMessageFuncType,
+  ShowErrorsInterface,
 } from './modules/interfaces';
 import {
   getDefaultFieldMessage,
@@ -1445,7 +1446,30 @@ class JustValidate {
     }
   }
 
-  renderFieldError(fieldName: string): void {
+  showErrors(errors: ShowErrorsInterface): void {
+    if (typeof errors !== 'object') {
+      throw Error(
+        '[showErrors]: Errors should be an object with key: value format'
+      );
+    }
+
+    Object.keys(errors).forEach((fieldName, i) => {
+      const error = errors[fieldName];
+      const field = this.fields[fieldName];
+
+      field.isValid = false;
+      this.clearFieldError(fieldName);
+      this.clearFieldLabel(fieldName);
+
+      this.renderFieldError(fieldName, error);
+
+      if (i === 0 && this.globalConfig.focusInvalidField) {
+        setTimeout(() => field.elem.focus(), 0);
+      }
+    });
+  }
+
+  renderFieldError(fieldName: string, error?: string): void {
     const field = this.fields[fieldName];
 
     if (field.isValid) {
@@ -1481,7 +1505,7 @@ class JustValidate {
 
     const errorLabel = this.createErrorLabelElem(
       fieldName,
-      field.errorMessage!,
+      error !== undefined ? error : field.errorMessage!,
       field.config
     );
     this.renderFieldLabel(

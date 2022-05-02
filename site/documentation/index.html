@@ -9,7 +9,7 @@
       name="description"
       content="Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins."
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -111,7 +111,9 @@
               <a class="nav-link scrollto" href="#section-5-4">onFail</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link scrollto" href="#section-5-5">revalidateField</a>
+              <a class="nav-link scrollto" href="#section-5-5"
+                >revalidateField</a
+              >
             </li>
             <li class="nav-item">
               <a class="nav-link scrollto" href="#section-5-6">revalidate</a>
@@ -127,6 +129,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link scrollto" href="#section-5-10">removeGroup</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-11">showErrors</a>
             </li>
             <li class="nav-item section-title mt-3">
               <a class="nav-link scrollto" href="#section-6">Rules</a>
@@ -751,8 +756,8 @@ validation
 )</code></pre>
               <br />
               <code>config</code> overrides the global instance config, so you
-              could customize it for each field.
-              <br> <br>
+              could customize it for each field. <br />
+              <br />
               <table class="table table-bordered">
                 <tr>
                   <th>Field</th>
@@ -884,8 +889,7 @@ validation
 )</code></pre>
               <br />
               <code>config</code> overrides the global instance config, so you
-              could customize it for each group.
-              <br><br>
+              could customize it for each group. <br /><br />
               <table class="table table-bordered">
                 <tr>
                   <th>Field</th>
@@ -996,33 +1000,58 @@ validation
             </section>
             <section class="docs-section" id="section-5-5">
               <h2 class="section-heading">revalidateField</h2>
-              <p>Method to trigger a field validation manually. Returns a promise with a boolean value - valid/invalid field.</p>
+              <p>
+                Method to trigger a field validation manually. Returns a promise
+                with a boolean value - valid/invalid field.
+              </p>
               <pre><code class="language-html">.revalidateField(field: string).then(isValid =&gt; {})</code></pre>
             </section>
             <section class="docs-section" id="section-5-6">
               <h2 class="section-heading">revalidate</h2>
-              <p>Method to trigger the whole form validation manually. Returns a promise with a boolean value - validation passes/fails.</p>
+              <p>
+                Method to trigger the whole form validation manually. Returns a
+                promise with a boolean value - validation passes/fails.
+              </p>
               <pre><code class="language-html">.revalidate().then(isValid =&gt; {})</code></pre>
             </section>
             <section class="docs-section" id="section-5-7">
               <h2 class="section-heading">refresh</h2>
-              <p>Method to refresh the whole form - fields settings, clear errors messages/styles/classes</p>
+              <p>
+                Method to refresh the whole form - fields settings, clear errors
+                messages/styles/classes
+              </p>
               <pre><code class="language-html">.refresh()</code></pre>
             </section>
             <section class="docs-section" id="section-5-8">
               <h2 class="section-heading">destroy</h2>
-              <p>Method to turn off the validation, remove all event listeners/errors/messages/styles/classes</p>
+              <p>
+                Method to turn off the validation, remove all event
+                listeners/errors/messages/styles/classes
+              </p>
               <pre><code class="language-html">.destroy()</code></pre>
             </section>
             <section class="docs-section" id="section-5-9">
               <h2 class="section-heading">removeField</h2>
-              <p>Method to remove validation rules/events/errors from the particular field</p>
+              <p>
+                Method to remove validation rules/events/errors from the
+                particular field
+              </p>
               <pre><code class="language-html">.removeField(field: string)</code></pre>
             </section>
             <section class="docs-section" id="section-5-10">
               <h2 class="section-heading">removeGroup</h2>
-              <p>Method to remove validation rules/events/errors from the particular group</p>
+              <p>
+                Method to remove validation rules/events/errors from the
+                particular group
+              </p>
               <pre><code class="language-html">.removeGroup(group: string)</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-11">
+              <h2 class="section-heading">showErrors</h2>
+              <p>Method to show errors programmatically</p>
+              <pre><code class="language-html">.showErrors(errors: {key: message})</code></pre>
+              <p>For example:</p>
+              <pre><code class="language-html">.showErrors({ '#email': 'The email is invalid' })</code></pre>
             </section>
 
             <!--//section-->
@@ -1121,7 +1150,7 @@ validation
                   </tr>
                 </tbody>
               </table>
-              <br>
+              <br />
               <p><code>rule</code> field could be:</p>
               <table class="table table-bordered">
                 <thead>

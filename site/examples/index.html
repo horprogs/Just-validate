@@ -9,7 +9,7 @@
       name="description"
       content="Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins."
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -1509,42 +1509,112 @@
               });
 
               validation
-                  .addField('#example11_name', [
-                    {
-                      rule: 'required',
-                      errorMessage: 'Name is required',
-                    },
-                  ])
-                  .addField('#example11_email', [
-                    {
-                      rule: 'required',
-                      errorMessage: 'Email is required',
-                    },
-                  ])
-                  .addField('#example11_password', [
-                    {
-                      rule: 'required',
-                      errorMessage: 'Password is required',
-                    },
-                  ])
-                  .addField('#example11_age', [
-                    {
-                      rule: 'required',
-                      errorMessage: 'Age is required',
-                    },
-                  ])
-                  .addRequiredGroup(
-                      '#example11_read_terms_checkbox_group',
-                      'You should select at least one communication channel',
-                      {
-                        errorsContainer: '#example11_group-errors-container',
-                      }
-                  )
-                  .onSuccess((ev) => {
-                    ev?.preventDefault();
-                    window.showNotification();
+                .addField('#example11_name', [
+                  {
+                    rule: 'required',
+                    errorMessage: 'Name is required',
+                  },
+                ])
+                .addField('#example11_email', [
+                  {
+                    rule: 'required',
+                    errorMessage: 'Email is required',
+                  },
+                ])
+                .addField('#example11_password', [
+                  {
+                    rule: 'required',
+                    errorMessage: 'Password is required',
+                  },
+                ])
+                .addField('#example11_age', [
+                  {
+                    rule: 'required',
+                    errorMessage: 'Age is required',
+                  },
+                ])
+                .addRequiredGroup(
+                  '#example11_read_terms_checkbox_group',
+                  'You should select at least one communication channel',
+                  {
+                    errorsContainer: '#example11_group-errors-container',
+                  }
+                )
+                .onSuccess((ev) => {
+                  ev?.preventDefault();
+                  window.showNotification();
+                });
+            })();
+          </script>
+        </section>
+      </div>
+      <div class="mt-5 section-shadow" id="show-errors">
+        <h2>
+          <a href="#show-errors" class="example-link"
+            >Programmatically added errors</a
+          >
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form action="#" id="show-errors-form" autocomplete="off">
+            <div class="row">
+              <div class="col">
+                <label for="example12_name">Enter your name</label>
+                <input
+                  type="text"
+                  class="form__input form-control"
+                  placeholder="Enter your name"
+                  autocomplete="off"
+                  name="example12_name"
+                  id="example12_name"
+                />
+              </div>
+            </div>
+            <div class="d-grid gap-2 mt-4">
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="example12_error-btn"
+              >
+                Show email error
+              </button>
+              <button
+                class="btn btn-primary btn-block"
+                id="example12_submit-btn"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate('#show-errors-form', {
+                errorFieldCssClass: 'is-invalid',
+                errorLabelStyle: {
+                  fontSize: '14px',
+                  color: '#dc3545',
+                },
+                focusInvalidField: true,
+                lockForm: true,
+              });
+
+              document
+                .querySelector('#example12_error-btn')
+                ?.addEventListener('click', () => {
+                  validation.showErrors({
+                    '#example12_name': 'The email is invalid!',
                   });
-            })()
+                });
+
+              validation
+                .addField('#example12_name', [
+                  {
+                    rule: 'required',
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev?.preventDefault();
+                });
+            })();
           </script>
         </section>
       </div>

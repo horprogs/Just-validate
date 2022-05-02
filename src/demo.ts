@@ -619,6 +619,36 @@ const errorsContainer = (): void => {
     });
 };
 
+const showErrors = (): void => {
+  const validation = new JustValidate('#show-errors-form', {
+    errorFieldCssClass: 'is-invalid',
+    errorLabelStyle: {
+      fontSize: '14px',
+      color: '#dc3545',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+  });
+
+  document
+    .querySelector('#example12_error-btn')
+    ?.addEventListener('click', () => {
+      validation.showErrors({
+        '#example12_name': 'The email is invalid!',
+      });
+    });
+
+  validation
+    .addField('#example12_name', [
+      {
+        rule: 'required' as Rules,
+      },
+    ])
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+    });
+};
+
 basic();
 advanced();
 async();
@@ -630,3 +660,4 @@ dateTextInput();
 dateDateInput();
 successLabel();
 errorsContainer();
+showErrors();
