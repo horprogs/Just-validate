@@ -12,7 +12,7 @@ declare const window: MyNamespacedWindow;
 
 const basic = (): void => {
   const validation = new JustValidate('#basic-validation-form', {
-    errorFieldCssClass: 'is-invalid',
+    errorFieldCssClass: 'is-invalid custom-class',
     errorLabelStyle: {
       fontSize: '14px',
       color: '#dc3545',
@@ -30,9 +30,6 @@ const basic = (): void => {
       {
         rule: 'maxLength' as Rules,
         value: 15,
-      },
-      {
-        validator: () => () => window.fakeFetch(2000),
       },
     ])
     .addField('#example1_email', [

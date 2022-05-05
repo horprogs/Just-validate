@@ -1,12 +1,14 @@
+export type ClassListType = string | string[];
+
 export interface GlobalConfigInterface {
   errorFieldStyle: Partial<CSSStyleDeclaration>;
-  errorFieldCssClass: string;
+  errorFieldCssClass: ClassListType;
   errorLabelStyle: Partial<CSSStyleDeclaration>;
-  errorLabelCssClass: string;
+  errorLabelCssClass: ClassListType;
   successFieldStyle?: Partial<CSSStyleDeclaration>;
-  successFieldCssClass: string;
+  successFieldCssClass: ClassListType;
   successLabelStyle?: Partial<CSSStyleDeclaration>;
-  successLabelCssClass: string;
+  successLabelCssClass: ClassListType;
   lockForm: boolean;
   testingMode: boolean;
   focusInvalidField?: boolean;

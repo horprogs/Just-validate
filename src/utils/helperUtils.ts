@@ -1,4 +1,5 @@
 import {
+  ClassListType,
   GroupFieldInterface,
   GroupFieldsInterface,
 } from '../modules/interfaces';
@@ -34,4 +35,16 @@ export const getClosestParent = (
   }
 
   return null;
+};
+
+export const getClassList = (classList?: ClassListType): string[] => {
+  const list = [];
+
+  if (Array.isArray(classList)) {
+    list.push(...classList);
+  } else if (typeof classList === 'string' && classList.trim()) {
+    list.push(...classList.trim().split(' '));
+  }
+
+  return list;
 };

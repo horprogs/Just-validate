@@ -35,6 +35,7 @@ import {
   getDefaultGroupMessage,
 } from './modules/messages';
 import {
+  getClassList,
   getClosestParent,
   getNodeParents,
   isPromise,
@@ -1152,9 +1153,13 @@ class JustValidate {
     });
 
     field.elem.classList.remove(
-      field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass,
-      field.config?.successFieldCssClass ||
-        this.globalConfig.successFieldCssClass
+      ...getClassList(
+        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+      ),
+      ...getClassList(
+        field.config?.successFieldCssClass ||
+          this.globalConfig.successFieldCssClass
+      )
     );
   }
 
@@ -1179,8 +1184,10 @@ class JustValidate {
         group.elems.forEach((elem) => {
           elem.style[key] = '';
           elem.classList.remove(
-            group.config?.errorFieldCssClass ||
-              this.globalConfig.errorFieldCssClass
+            ...getClassList(
+              group.config?.errorFieldCssClass ||
+                this.globalConfig.errorFieldCssClass
+            )
           );
         });
       });
@@ -1193,8 +1200,10 @@ class JustValidate {
         group.elems.forEach((elem) => {
           elem.style[key] = '';
           elem.classList.remove(
-            group.config?.successFieldCssClass ||
-              this.globalConfig.successFieldCssClass
+            ...getClassList(
+              group.config?.successFieldCssClass ||
+                this.globalConfig.successFieldCssClass
+            )
           );
         });
       });
@@ -1313,7 +1322,9 @@ class JustValidate {
     Object.assign(errorLabel.style, customErrorLabelStyle);
 
     errorLabel.classList.add(
-      config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass,
+      ...getClassList(
+        config?.errorLabelCssClass || this.globalConfig.errorLabelCssClass
+      ),
       'just-validate-error-label'
     );
 
@@ -1348,7 +1359,9 @@ class JustValidate {
     Object.assign(successLabel.style, customSuccessLabelStyle);
 
     successLabel.classList.add(
-      config?.successLabelCssClass || this.globalConfig.successLabelCssClass,
+      ...getClassList(
+        config?.successLabelCssClass || this.globalConfig.successLabelCssClass
+      ),
       'just-validate-success-label'
     );
 
@@ -1491,8 +1504,10 @@ class JustValidate {
           );
         }
         field.elem.classList.add(
-          field.config?.successFieldCssClass ||
-            this.globalConfig.successFieldCssClass
+          ...getClassList(
+            field.config?.successFieldCssClass ||
+              this.globalConfig.successFieldCssClass
+          )
         );
       }
 
@@ -1502,7 +1517,9 @@ class JustValidate {
     this.isValid = false;
 
     field.elem.classList.add(
-      field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+      ...getClassList(
+        field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
+      )
     );
 
     const errorLabel = this.createErrorLabelElem(
@@ -1546,8 +1563,10 @@ class JustValidate {
               this.globalConfig.successFieldStyle
           );
           elem.classList.add(
-            group.config?.successFieldCssClass ||
-              this.globalConfig.successFieldCssClass
+            ...getClassList(
+              group.config?.successFieldCssClass ||
+                this.globalConfig.successFieldCssClass
+            )
           );
         });
         const successLabel = this.createSuccessLabelElem(
@@ -1574,8 +1593,10 @@ class JustValidate {
           group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle
         );
         elem.classList.add(
-          group.config?.errorFieldCssClass ||
-            this.globalConfig.errorFieldCssClass
+          ...getClassList(
+            group.config?.errorFieldCssClass ||
+              this.globalConfig.errorFieldCssClass
+          )
         );
       });
 

@@ -530,9 +530,9 @@ validation
 &nbsp;&nbsp; form: string | Element,<br />
 &nbsp;&nbsp; globalConfig?: {<br />
 &nbsp;&nbsp; &nbsp; errorFieldStyle: Partial&lt;CSSStyleDeclaration&gt;,<br />
-&nbsp;&nbsp; &nbsp; errorFieldCssClass: string,<br />
+&nbsp;&nbsp; &nbsp; errorFieldCssClass: string | string[],<br />
 &nbsp;&nbsp; &nbsp; errorLabelStyle: Partial&lt;CSSStyleDeclaration&gt;,<br />
-&nbsp;&nbsp; &nbsp; errorLabelCssClass: string,<br />
+&nbsp;&nbsp; &nbsp; errorLabelCssClass: string | string[],<br />
 &nbsp;&nbsp; &nbsp; lockForm: boolean,<br />
 &nbsp;&nbsp; &nbsp; testingMode: boolean,<br />
 &nbsp;&nbsp; &nbsp; focusInvalidField?: boolean,<br />
@@ -602,7 +602,7 @@ validation
                       <code>errorFieldCssClass</code>
                     </td>
                     <td>Custom CSS class for invalid field</td>
-                    <td><code>string</code></td>
+                    <td><code>string | string[]</code></td>
                   </tr>
                   <tr>
                     <td>
@@ -616,7 +616,7 @@ validation
                       <code>errorLabelCssClass</code>
                     </td>
                     <td>Custom CSS class for invalid label</td>
-                    <td><code>string</code></td>
+                    <td><code>string | string[]</code></td>
                   </tr>
                   <tr>
                     <td>
@@ -630,7 +630,7 @@ validation
                       <code>successFieldCssClass</code>
                     </td>
                     <td>Custom CSS class for valid field</td>
-                    <td><code>string</code></td>
+                    <td><code>string | string[]</code></td>
                   </tr>
                   <tr>
                     <td>
@@ -644,7 +644,7 @@ validation
                       <code>successLabelCssClass</code>
                     </td>
                     <td>Custom CSS class for valid label</td>
-                    <td><code>string</code></td>
+                    <td><code>string | string[]</code></td>
                   </tr>
                   <tr>
                     <td>
