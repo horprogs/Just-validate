@@ -2303,18 +2303,6 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should be able to test group with no radio/checkbox', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    expect(() => {
-      validation.addRequiredGroup('#name-group').onSuccess(onSubmit);
-    }).toThrow();
-  });
-
   test('should be able to read FormData in onSuccess callback', async () => {
     const validation = new JustValidate('#form', {
       testingMode: true,

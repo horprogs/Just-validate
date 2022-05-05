@@ -16,7 +16,6 @@ import {
   GlobalConfigInterface,
   GroupFieldInterface,
   GroupFieldsInterface,
-  GroupFieldType,
   GroupRuleInterface,
   GroupRules,
   Rules,
@@ -35,7 +34,11 @@ import {
   getDefaultFieldMessage,
   getDefaultGroupMessage,
 } from './modules/messages';
-import { isPromise } from './utils/helperUtils';
+import {
+  getClosestParent,
+  getNodeParents,
+  isPromise,
+} from './utils/helperUtils';
 import { errorLabelCss } from './modules/inlineStyles.compressed';
 import { TOOLTIP_ARROW_HEIGHT } from './modules/const';
 
@@ -255,18 +258,15 @@ class JustValidate {
 
   validateGroupRule(
     groupName: string,
-    type: GroupFieldType,
     elems: HTMLInputElement[],
     groupRule: GroupRuleInterface
   ): Promise<any> | void {
     switch (groupRule.rule) {
       case GroupRules.Required: {
-        if (type === 'radio' || type === 'checkbox') {
-          if (elems.every((elem) => !elem.checked)) {
-            this.setGroupInvalid(groupName, groupRule);
-          } else {
-            this.setGroupValid(groupName, groupRule);
-          }
+        if (elems.every((elem) => !elem.checked)) {
+          this.setGroupInvalid(groupName, groupRule);
+        } else {
+          this.setGroupValid(groupName, groupRule);
         }
       }
     }
@@ -774,12 +774,7 @@ class JustValidate {
   ): Promise<any> | void {
     const promises: Promise<any>[] = [];
     [...group.rules].reverse().forEach((rule) => {
-      const res = this.validateGroupRule(
-        groupName,
-        group.type,
-        group.elems,
-        rule
-      );
+      const res = this.validateGroupRule(groupName, group.elems, rule);
 
       if (isPromise(res)) {
         promises.push(res as Promise<any>);
@@ -1079,16 +1074,16 @@ class JustValidate {
     }
 
     const inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll('input');
+    // get only children from this particular group (not from parent group)
+    const childrenInputs = Array.from(inputs).filter((input) => {
+      const parent = getClosestParent(this.groupFields, getNodeParents(input));
 
-    const isRadio = Array.from(inputs).every((input) => input.type === 'radio');
+      if (!parent) {
+        return true;
+      }
 
-    const isCheckbox = Array.from(inputs).every(
-      (input) => input.type === 'checkbox'
-    );
-
-    if (!isRadio && !isCheckbox) {
-      throw Error(`Group should contain either or checkboxes or radio buttons`);
-    }
+      return parent[1].elems.find((elem) => elem !== input);
+    });
 
     this.groupFields[groupField] = {
       rules: [
@@ -1099,8 +1094,7 @@ class JustValidate {
         },
       ],
       groupElem: elem,
-      elems: Array.from(inputs),
-      type: isRadio ? 'radio' : 'checkbox',
+      elems: childrenInputs,
       isDirty: false,
       isValid: undefined,
       config,

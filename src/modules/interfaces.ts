@@ -117,7 +117,6 @@ export interface FieldInterface {
 export type GroupFieldType = 'radio' | 'checkbox';
 
 export interface GroupFieldInterface {
-  type: GroupFieldType;
   rules: GroupRuleInterface[];
   groupElem: HTMLElement;
   elems: HTMLInputElement[];
