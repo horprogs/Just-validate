@@ -12,7 +12,7 @@ declare const window: MyNamespacedWindow;
 
 const basic = (): void => {
   const validation = new JustValidate('#basic-validation-form', {
-    errorFieldCssClass: 'is-invalid custom-class',
+    errorFieldCssClass: 'is-invalid  custom-class',
     errorLabelStyle: {
       fontSize: '14px',
       color: '#dc3545',

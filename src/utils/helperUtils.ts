@@ -38,13 +38,13 @@ export const getClosestParent = (
 };
 
 export const getClassList = (classList?: ClassListType): string[] => {
-  const list = [];
-
   if (Array.isArray(classList)) {
-    list.push(...classList);
-  } else if (typeof classList === 'string' && classList.trim()) {
-    list.push(...classList.trim().split(' '));
+    return classList.filter((cls) => cls.length > 0);
   }
 
-  return list;
+  if (typeof classList === 'string' && classList.trim()) {
+    return [...classList.split(' ').filter((cls) => cls.length > 0)];
+  }
+
+  return [];
 };
