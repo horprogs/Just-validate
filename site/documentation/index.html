@@ -133,6 +133,11 @@
             <li class="nav-item">
               <a class="nav-link scrollto" href="#section-5-11">showErrors</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-12"
+                >showSuccessLabels</a
+              >
+            </li>
             <li class="nav-item section-title mt-3">
               <a class="nav-link scrollto" href="#section-6">Rules</a>
             </li>
@@ -717,7 +722,7 @@ validation
             <header class="docs-header">
               <h1 class="docs-heading">
                 Methods
-                <span class="docs-time">Last updated: 2022-03-18</span>
+                <span class="docs-time">Last updated: 2022-05-18</span>
               </h1>
             </header>
             <section class="docs-section" id="section-5-1">
@@ -1053,6 +1058,13 @@ validation
               <p>For example:</p>
               <pre><code class="language-html">.showErrors({ '#email': 'The email is invalid' })</code></pre>
             </section>
+            <section class="docs-section" id="section-5-12">
+              <h2 class="section-heading">showSuccessLabels</h2>
+              <p>Method to show success labels programmatically</p>
+              <pre><code class="language-html">.showSuccessLabels(errors: {key: message})</code></pre>
+              <p>For example:</p>
+              <pre><code class="language-html">.showSuccessLabels({ '#email': 'The email looks good!' })</code></pre>
+            </section>
 
             <!--//section-->
           </article>
@@ -1060,7 +1072,7 @@ validation
             <header class="docs-header">
               <h1 class="docs-heading">
                 Rules
-                <span class="docs-time">Last updated: 2022-03-16</span>
+                <span class="docs-time">Last updated: 2022-05-18</span>
               </h1>
             </header>
             <section class="docs-intro">
@@ -1139,7 +1151,9 @@ validation
                     <td><code>validator</code></td>
                     <td>
                       Used for a custom validation. It should return a boolean
-                      or a function which returns a Promise.
+                      or a function which returns a Promise. To mark the field
+                      as a valid, <code>true</code> should be passed to
+                      <code>resolve</code> callback: <code>resolve(true)</code>
                     </td>
                     <td>
                       <code

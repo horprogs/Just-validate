@@ -619,12 +619,17 @@ const errorsContainer = (): void => {
     });
 };
 
-const showErrors = (): void => {
+const showMessages = (): void => {
   const validation = new JustValidate('#show-errors-form', {
     errorFieldCssClass: 'is-invalid',
     errorLabelStyle: {
       fontSize: '14px',
       color: '#dc3545',
+    },
+    successFieldCssClass: 'is-valid',
+    successLabelStyle: {
+      fontSize: '14px',
+      color: '#20b418',
     },
     focusInvalidField: true,
     lockForm: true,
@@ -635,6 +640,14 @@ const showErrors = (): void => {
     ?.addEventListener('click', () => {
       validation.showErrors({
         '#example12_name': 'The email is invalid!',
+      });
+    });
+
+  document
+    .querySelector('#example12_success-btn')
+    ?.addEventListener('click', () => {
+      validation.showSuccessLabels({
+        '#example12_name': 'The email looks good!',
       });
     });
 
@@ -660,4 +673,4 @@ dateTextInput();
 dateDateInput();
 successLabel();
 errorsContainer();
-showErrors();
+showMessages();

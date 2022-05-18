@@ -1578,6 +1578,13 @@
                 Show email error
               </button>
               <button
+                type="button"
+                class="btn btn-success"
+                id="example12_success-btn"
+              >
+                Show email success
+              </button>
+              <button
                 class="btn btn-primary btn-block"
                 id="example12_submit-btn"
               >
@@ -1593,6 +1600,11 @@
                   fontSize: '14px',
                   color: '#dc3545',
                 },
+                successFieldCssClass: 'is-valid',
+                successLabelStyle: {
+                  fontSize: '14px',
+                  color: '#20b418',
+                },
                 focusInvalidField: true,
                 lockForm: true,
               });
@@ -1602,6 +1614,14 @@
                 ?.addEventListener('click', () => {
                   validation.showErrors({
                     '#example12_name': 'The email is invalid!',
+                  });
+                });
+
+              document
+                .querySelector('#example12_success-btn')
+                ?.addEventListener('click', () => {
+                  validation.showSuccessLabels({
+                    '#example12_name': 'The email looks good!',
                   });
                 });
 

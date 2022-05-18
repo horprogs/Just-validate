@@ -163,6 +163,6 @@ export interface TooltipInstance {
 
 export type ElemValueType = boolean | string | FileList | null;
 
-export interface ShowErrorsInterface {
+export interface ShowLabelsInterface {
   [field: string]: string;
 }

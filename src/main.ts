@@ -28,7 +28,7 @@ import {
   FilesRuleValueInterface,
   ElemValueType,
   CustomMessageFuncType,
-  ShowErrorsInterface,
+  ShowLabelsInterface,
 } from './modules/interfaces';
 import {
   getDefaultFieldMessage,
@@ -761,7 +761,7 @@ class JustValidate {
 
     return new Promise((resolve) => {
       this.validateField(field, true).finally(() => {
-        this.clearFieldError(field);
+        this.clearFieldStyle(field);
         this.clearFieldLabel(field);
         this.renderFieldError(field);
         resolve(!!this.fields[field].isValid);
@@ -1135,7 +1135,7 @@ class JustValidate {
     this.successLabels[fieldName]?.remove();
   }
 
-  clearFieldError(fieldName: string): void {
+  clearFieldStyle(fieldName: string): void {
     const field = this.fields[fieldName];
 
     const errorStyle =
@@ -1172,7 +1172,7 @@ class JustValidate {
     );
 
     for (const fieldName in this.fields) {
-      this.clearFieldError(fieldName);
+      this.clearFieldStyle(fieldName);
     }
 
     for (const groupName in this.groupFields) {
@@ -1461,19 +1461,13 @@ class JustValidate {
     }
   }
 
-  showErrors(errors: ShowErrorsInterface): void {
-    if (typeof errors !== 'object') {
-      throw Error(
-        '[showErrors]: Errors should be an object with key: value format'
-      );
-    }
-
-    Object.keys(errors).forEach((fieldName, i) => {
-      const error = errors[fieldName];
+  showLabels(fields: ShowLabelsInterface, isError: boolean): void {
+    Object.keys(fields).forEach((fieldName, i) => {
+      const error = fields[fieldName];
       const field = this.fields[fieldName];
 
-      field.isValid = false;
-      this.clearFieldError(fieldName);
+      field.isValid = !isError;
+      this.clearFieldStyle(fieldName);
       this.clearFieldLabel(fieldName);
 
       this.renderFieldError(fieldName, error);
@@ -1484,7 +1478,27 @@ class JustValidate {
     });
   }
 
-  renderFieldError(fieldName: string, error?: string): void {
+  showErrors(fields: ShowLabelsInterface): void {
+    if (typeof fields !== 'object') {
+      throw Error(
+        '[showErrors]: Errors should be an object with key: value format'
+      );
+    }
+
+    this.showLabels(fields, true);
+  }
+
+  showSuccessLabels(fields: ShowLabelsInterface): void {
+    if (typeof fields !== 'object') {
+      throw Error(
+        '[showSuccessLabels]: Labels should be an object with key: value format'
+      );
+    }
+
+    this.showLabels(fields, false);
+  }
+
+  renderFieldError(fieldName: string, message?: string): void {
     const field = this.fields[fieldName];
 
     if (field.isValid) {
@@ -1492,7 +1506,7 @@ class JustValidate {
       if (!field.asyncCheckPending) {
         const successLabel = this.createSuccessLabelElem(
           fieldName,
-          field.successMessage,
+          message !== undefined ? message : field.successMessage!,
           field.config
         );
         if (successLabel) {
@@ -1524,7 +1538,7 @@ class JustValidate {
 
     const errorLabel = this.createErrorLabelElem(
       fieldName,
-      error !== undefined ? error : field.errorMessage!,
+      message !== undefined ? message : field.errorMessage!,
       field.config
     );
     this.renderFieldLabel(
