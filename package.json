@@ -5,7 +5,7 @@
   "scripts": {
     "lint-md": "remark . --output",
     "semantic-release": "semantic-release",
-    "dev": "vite --port 3001",
+    "dev": "vite --port 3001 --force",
     "build:vite": "tsc && vite build",
     "build:types": "tsc --project tsconfig.types.json",
     "build": "yarn run build:vite && yarn run build:types",
@@ -78,7 +78,7 @@
     "jest": "28.0.3",
     "jest-environment-jsdom": "^28.0.2",
     "jsdom": "19.0.0",
-    "just-validate-plugin-date": "1.1.1",
+    "just-validate-plugin-date": "1.2.0",
     "path": "0.12.7",
     "prettier": "2.6.2",
     "remark-cli": "10.0.1",

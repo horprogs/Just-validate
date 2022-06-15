@@ -5762,10 +5762,10 @@ just-diff@^5.0.1:
   resolved "https://registry.yarnpkg.com/just-diff/-/just-diff-5.0.1.tgz#db8fe1cfeea1156f2374bfb289826dca28e7e390"
   integrity sha512-X00TokkRIDotUIf3EV4xUm6ELc/IkqhS/vPSHdWnsM5y0HoNMfEqrazizI7g78lpHvnRSRt/PFfKtRqJCOGIuQ==
 
-just-validate-plugin-date@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/just-validate-plugin-date/-/just-validate-plugin-date-1.1.1.tgz#3a1cfaa226de67336fa00fd640b9fb30e8652870"
-  integrity sha512-CAPSaZ3TGtDQjweMymMG1br1wMLUz2y0/T7idH2HqERSdM2abpKFVa5/+uvK2XAPn1AV01Y0n/8P95g6aEx4Ag==
+just-validate-plugin-date@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/just-validate-plugin-date/-/just-validate-plugin-date-1.2.0.tgz#16f46235191e1de3a00f9c6cc99b9eb882f16ee9"
+  integrity sha512-cjnCiXAoRGzvXzVOVOT+XsGAdvA6JIIGAwU4qA7h3oPs5dRZUsDKNfUuHeX4mcQHm7gkLEReZk2h6Aws4ZiwVA==
   dependencies:
     date-fns "2.28.0"
 
@@ -6466,12 +6466,7 @@ minimist-options@4.1.0:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@^1.0.0, minimist@^1.2.0, minimist@^1.2.5:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
-  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
-
-minimist@^1.2.6:
+minimist@^1.0.0, minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
   integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==

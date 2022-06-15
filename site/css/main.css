@@ -120,9 +120,15 @@ pre {
 .head-title {
   font-size: 64px;
 }
+
 .head-text {
+  font-size: 20px;
+}
+
+.head-text--big {
   font-size: 24px;
 }
+
 .head-img {
   position: relative;
   width: 275px;
