@@ -786,6 +786,10 @@
                   name="example11_name"
                   id="example11_name"
                 />
+                <div style="background: #f0f0f0; border-radius: 4px;margin-top: 4px;">
+                  <span style="font-size: 12px; line-height: 1;">Custom error container for the Name field</span>
+                  <div id="example11_name_error_container"></div>
+                </div>
               </div>
               <div class="col">
                 <label for="example11_email">Enter your email</label>
@@ -878,7 +882,9 @@
 
       <div class="mt-5 section-shadow" id="show-errors">
         <h2>
-          <a href="#show-errors" class="example-link">Programmatically added errors</a>
+          <a href="#show-errors" class="example-link"
+            >Programmatically added errors</a
+          >
         </h2>
         <section class="base-example container py-2 px-0">
           <form action="#" id="show-errors-form" autocomplete="off">
@@ -896,13 +902,24 @@
               </div>
             </div>
             <div class="d-grid gap-2 mt-4">
-              <button type="button" class="btn btn-warning" id="example12_error-btn">
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="example12_error-btn"
+              >
                 Show email error
               </button>
-              <button type="button" class="btn btn-success" id="example12_success-btn">
+              <button
+                type="button"
+                class="btn btn-success"
+                id="example12_success-btn"
+              >
                 Show email success
               </button>
-              <button class="btn btn-primary btn-block" id="example12_submit-btn">
+              <button
+                class="btn btn-primary btn-block"
+                id="example12_submit-btn"
+              >
                 Submit
               </button>
             </div>

@@ -582,12 +582,18 @@ const errorsContainer = (): void => {
   });
 
   validation
-    .addField('#example11_name', [
+    .addField(
+      '#example11_name',
+      [
+        {
+          rule: 'required' as Rules,
+          errorMessage: 'Name is required',
+        },
+      ],
       {
-        rule: 'required' as Rules,
-        errorMessage: 'Name is required',
-      },
-    ])
+        errorsContainer: '#example11_name_error_container',
+      }
+    )
     .addField('#example11_email', [
       {
         rule: 'required' as Rules,
