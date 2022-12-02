@@ -1701,3 +1701,4 @@ class JustValidate {
 }
 
 export default JustValidate;
+export * from './modules/interfaces';
