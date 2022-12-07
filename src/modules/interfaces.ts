@@ -14,6 +14,7 @@ export interface GlobalConfigInterface {
   focusInvalidField?: boolean;
   tooltip?: TooltipConfigInterface;
   errorsContainer?: string | Element | null;
+  validateBeforeSubmitting: boolean;
 }
 
 export enum Rules {

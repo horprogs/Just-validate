@@ -4,8 +4,11 @@ import {
   GroupFieldsInterface,
 } from '../modules/interfaces';
 
-export const isPromise = (val: any): boolean =>
-  !!val && typeof val.then === 'function';
+export const isPromise = (val?: unknown): boolean =>
+  typeof val === 'object' &&
+  val !== null &&
+  'then' in val &&
+  typeof val.then === 'function';
 
 export const getNodeParents = (el: HTMLElement): HTMLElement[] => {
   let elem = el;

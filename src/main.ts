@@ -58,6 +58,7 @@ const defaultGlobalConfig: GlobalConfigInterface = {
   focusInvalidField: true,
   lockForm: true,
   testingMode: false,
+  validateBeforeSubmitting: false,
 };
 
 class JustValidate {
@@ -1501,6 +1502,10 @@ class JustValidate {
   renderFieldError(fieldName: string, message?: string): void {
     const field = this.fields[fieldName];
 
+    if (field.isValid === undefined) {
+      return;
+    }
+
     if (field.isValid) {
       // we should not show success labels if there are async rules pending
       if (!field.asyncCheckPending) {
@@ -1558,8 +1563,85 @@ class JustValidate {
     }
   }
 
+  renderGroupError(groupName: string): void {
+    const group = this.groupFields[groupName];
+
+    if (group.isValid === undefined) {
+      return;
+    }
+
+    if (group.isValid) {
+      group.elems.forEach((elem) => {
+        Object.assign(
+          elem.style,
+          group.config?.successFieldStyle || this.globalConfig.successFieldStyle
+        );
+        elem.classList.add(
+          ...getClassList(
+            group.config?.successFieldCssClass ||
+              this.globalConfig.successFieldCssClass
+          )
+        );
+      });
+      const successLabel = this.createSuccessLabelElem(
+        groupName,
+        group.successMessage,
+        group.config
+      );
+      if (successLabel) {
+        this.renderGroupLabel(
+          group.groupElem,
+          successLabel,
+          group.config?.errorsContainer,
+          true
+        );
+      }
+      return;
+    }
+
+    this.isValid = false;
+
+    group.elems.forEach((elem) => {
+      Object.assign(
+        elem.style,
+        group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle
+      );
+      elem.classList.add(
+        ...getClassList(
+          group.config?.errorFieldCssClass ||
+            this.globalConfig.errorFieldCssClass
+        )
+      );
+    });
+
+    const errorLabel = this.createErrorLabelElem(
+      groupName,
+      group.errorMessage!,
+      group.config
+    );
+    this.renderGroupLabel(
+      group.groupElem,
+      errorLabel,
+      group.config?.errorsContainer
+    );
+
+    if (this.isTooltip()) {
+      this.tooltips.push(
+        this.renderTooltip(
+          group.groupElem,
+          errorLabel,
+          group.config?.tooltip?.position
+        )
+      );
+    }
+  }
+
   renderErrors(forceRevalidation = false): void {
-    if (!this.isSubmitted && !forceRevalidation) {
+    if (
+      !this.isSubmitted &&
+      !forceRevalidation &&
+      !this.globalConfig.validateBeforeSubmitting
+    ) {
       return;
     }
     this.clearErrors();
@@ -1567,73 +1649,7 @@ class JustValidate {
     this.isValid = true;
 
     for (const groupName in this.groupFields) {
-      const group = this.groupFields[groupName];
-
-      if (group.isValid) {
-        group.elems.forEach((elem) => {
-          Object.assign(
-            elem.style,
-            group.config?.successFieldStyle ||
-              this.globalConfig.successFieldStyle
-          );
-          elem.classList.add(
-            ...getClassList(
-              group.config?.successFieldCssClass ||
-                this.globalConfig.successFieldCssClass
-            )
-          );
-        });
-        const successLabel = this.createSuccessLabelElem(
-          groupName,
-          group.successMessage,
-          group.config
-        );
-        if (successLabel) {
-          this.renderGroupLabel(
-            group.groupElem,
-            successLabel,
-            group.config?.errorsContainer,
-            true
-          );
-        }
-        continue;
-      }
-
-      this.isValid = false;
-
-      group.elems.forEach((elem) => {
-        Object.assign(
-          elem.style,
-          group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle
-        );
-        elem.classList.add(
-          ...getClassList(
-            group.config?.errorFieldCssClass ||
-              this.globalConfig.errorFieldCssClass
-          )
-        );
-      });
-
-      const errorLabel = this.createErrorLabelElem(
-        groupName,
-        group.errorMessage!,
-        group.config
-      );
-      this.renderGroupLabel(
-        group.groupElem,
-        errorLabel,
-        group.config?.errorsContainer
-      );
-
-      if (this.isTooltip()) {
-        this.tooltips.push(
-          this.renderTooltip(
-            group.groupElem,
-            errorLabel,
-            group.config?.tooltip?.position
-          )
-        );
-      }
+      this.renderGroupError(groupName);
     }
 
     for (const fieldName in this.fields) {

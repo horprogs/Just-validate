@@ -527,7 +527,7 @@ validation
             <header class="docs-header">
               <h1 class="docs-heading">
                 Instance setting
-                <span class="docs-time">Last updated: 2022-03-16</span>
+                <span class="docs-time">Last updated: 2022-12-07</span>
               </h1>
             </header>
             <section class="docs-intro">
@@ -540,6 +540,7 @@ validation
 &nbsp;&nbsp; &nbsp; errorLabelCssClass: string | string[],<br />
 &nbsp;&nbsp; &nbsp; lockForm: boolean,<br />
 &nbsp;&nbsp; &nbsp; testingMode: boolean,<br />
+&nbsp;&nbsp; &nbsp; validateBeforeSubmitting: boolean,<br />
 &nbsp;&nbsp; &nbsp; focusInvalidField?: boolean,<br />
 &nbsp;&nbsp; &nbsp; tooltip?: {<br />
 &nbsp;&nbsp; &nbsp; &nbsp; position: &#039;left&#039; | &#039;top&#039; | &#039;right&#039; | &#039;bottom&#039;,<br />
@@ -570,6 +571,7 @@ validation
 &nbsp;&nbsp; &nbsp;},<br />
 &nbsp;&nbsp; &nbsp;focusInvalidField: true,<br />
 &nbsp;&nbsp; &nbsp;lockForm: true,<br />
+&nbsp;&nbsp; &nbsp;validateBeforeSubmitting: true,<br />
 &nbsp;&nbsp; &nbsp;tooltip: {<br />
 &nbsp;&nbsp; &nbsp; &nbsp;position: &#039;top&#039;,<br />
 &nbsp;&nbsp; &nbsp;},<br />
@@ -703,6 +705,16 @@ validation
                       labels
                     </td>
                     <td><code>string | Element</code></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code>validateBeforeSubmitting</code>
+                    </td>
+                    <td>
+                      If true, it will trigger validation and show errors for
+                      the field before submitting the form
+                    </td>
+                    <td><code>boolean</code></td>
                   </tr>
                   <tr>
                     <td>

@@ -1656,6 +1656,71 @@
           </script>
         </section>
       </div>
+
+      <div class="mt-5 section-shadow" id="validate-before-submitting">
+        <h2>
+          <a href="#validate-before-submitting" class="example-link"
+            >Validate before submitting</a
+          >
+        </h2>
+        <section class="base-example container py-2 px-0">
+          <form
+            action="#"
+            id="validate-before-submitting-form"
+            autocomplete="off"
+          >
+            <div class="row">
+              <div class="col">
+                <label for="example13_email">Enter your email</label>
+                <input
+                  type="email"
+                  class="form__input form-control"
+                  placeholder="Enter your email"
+                  autocomplete="off"
+                  name="example13_email"
+                  id="example13_email"
+                />
+              </div>
+            </div>
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary" id="example13_submit-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+          <script>
+            (() => {
+              const validation = new JustValidate(
+                '#validate-before-submitting-form',
+                {
+                  errorFieldCssClass: 'is-invalid  custom-class',
+                  errorLabelStyle: {
+                    fontSize: '14px',
+                    color: '#dc3545',
+                  },
+                  focusInvalidField: true,
+                  lockForm: true,
+                  validateBeforeSubmitting: true,
+                }
+              );
+
+              validation
+                .addField('#example13_email', [
+                  {
+                    rule: 'required',
+                  },
+                  {
+                    rule: 'email',
+                  },
+                ])
+                .onSuccess((ev) => {
+                  ev?.preventDefault();
+                  window.showNotification();
+                });
+            })();
+          </script>
+        </section>
+      </div>
     </main>
 
     <footer class="footer">

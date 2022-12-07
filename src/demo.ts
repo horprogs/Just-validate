@@ -74,6 +74,7 @@ const advanced = (): void => {
     successFieldCssClass: 'is-valid',
     focusInvalidField: true,
     lockForm: true,
+    validateBeforeSubmitting: true,
   });
 
   validation
@@ -668,6 +669,33 @@ const showMessages = (): void => {
     });
 };
 
+const validateBeforeSubmitting = (): void => {
+  const validation = new JustValidate('#validate-before-submitting-form', {
+    errorFieldCssClass: 'is-invalid  custom-class',
+    errorLabelStyle: {
+      fontSize: '14px',
+      color: '#dc3545',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+    validateBeforeSubmitting: true,
+  });
+
+  validation
+    .addField('#example13_email', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'email' as Rules,
+      },
+    ])
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+      window.showNotification();
+    });
+};
+
 basic();
 advanced();
 async();
@@ -680,3 +708,4 @@ dateDateInput();
 successLabel();
 errorsContainer();
 showMessages();
+validateBeforeSubmitting();

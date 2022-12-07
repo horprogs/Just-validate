@@ -2465,4 +2465,98 @@ describe('Validation', () => {
     expect(getElem('#submit-btn')).toBeEnabled();
     expect(getElem('#custom-btn')).toBeDisabled();
   });
+
+  test('should not show errors before submitting', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#email', [
+        {
+          rule: 'email' as Rules,
+        },
+      ])
+      .addField('#password', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .addRequiredGroup(
+        '#read_terms_checkbox_group',
+        'Invalid',
+        undefined,
+        'Valid'
+      )
+      .onSuccess(onSubmit);
+
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    await changeTextBySelector('#email', 'test');
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+  });
+
+  test('should validate before submitting', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+      validateBeforeSubmitting: true,
+    });
+
+    validation
+      .addField('#email', [
+        {
+          rule: 'email' as Rules,
+        },
+      ])
+      .addField('#password', [
+        {
+          rule: 'required' as Rules,
+        },
+      ])
+      .addRequiredGroup(
+        '#read_terms_checkbox_group',
+        'Invalid',
+        undefined,
+        'Valid'
+      )
+      .onSuccess(onSubmit);
+
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).not.toBeInTheDocument();
+
+    await changeTextBySelector('#email', 'test');
+    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
+    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).not.toBeInTheDocument();
+
+    await changeTextBySelector('#email', 'test@test.com');
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).not.toBeInTheDocument();
+
+    await clickBySelector('#submit-btn');
+
+    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).toBeInTheDocument();
+
+    await changeTextBySelector('#email', 'test');
+    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
+    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
+    expect(
+      getElemByTestId('error-label-#read_terms_checkbox_group')
+    ).toBeInTheDocument();
+  });
 });
