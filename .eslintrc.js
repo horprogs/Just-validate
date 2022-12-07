@@ -15,4 +15,10 @@ module.exports = {
     'no-console': ['error', { allow: ['warn', 'error'] }],
     '@typescript-eslint/explicit-function-return-type': 'error',
   },
+  env: {
+    node: true,
+    commonjs: true,
+    browser: true,
+    es6: true,
+  },
 };
