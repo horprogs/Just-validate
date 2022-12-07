@@ -1,5 +1,10 @@
 # Contributing
 
+## Install
+
+- run `yarn`
+- run `yarn prepare`
+
 ## Suggesting new features
 
 If you are here to suggest a feature, first create an issue if it does not already exist. From there, we will discuss use-cases for the feature and then finally discuss how it could be implemented.
