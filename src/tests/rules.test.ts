@@ -23,10 +23,20 @@ describe('Validate rules', () => {
   test('isPassword', () => {
     expect(isPassword('1234567f')).toBeTruthy();
     expect(isPassword('qqqqqqq1')).toBeTruthy();
+    expect(isPassword('qqqqqqqqqq1')).toBeTruthy();
+    expect(isPassword('123456789a')).toBeTruthy();
+    expect(isPassword('1234567f!')).toBeTruthy();
+    expect(isPassword('1234567f_')).toBeTruthy();
+    expect(isPassword('1234567f%')).toBeTruthy();
+    expect(isPassword('secret1234!')).toBeTruthy();
     expect(isPassword('1234567')).toBeFalsy();
     expect(isPassword('12345678')).toBeFalsy();
+    expect(isPassword('12345678999')).toBeFalsy();
     expect(isPassword('qqqqqqq')).toBeFalsy();
-    expect(isPassword('qqqqqqqw')).toBeFalsy();
+    expect(isPassword('qqqqqqqwwww')).toBeFalsy();
+    expect(isPassword('12345678__')).toBeFalsy();
+    expect(isPassword('!!!')).toBeFalsy();
+    expect(isPassword('!!!!!!!!!!%%__')).toBeFalsy();
     expect(isPassword('')).toBeFalsy();
   });
 
