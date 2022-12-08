@@ -2,25 +2,16 @@ import {
   changeTextBySelector,
   clickBySelector,
   fetch,
-  generateFileContent,
   getElem,
   getElemByTestId,
   selectBySelector,
 } from '../utils/testingUtils';
 import JustValidate from '../main';
 import { Rules } from '../modules/interfaces';
-import { fireEvent, screen, waitFor } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
-import { mockup } from './mockup';
+import { fireEvent, waitFor } from '@testing-library/dom';
 
 describe('Validation', () => {
-  beforeEach(() => {
-    console.warn = jest.fn();
-    console.error = jest.fn();
-
-    document.body.innerHTML = mockup;
-  });
-  test('should set form as Element', async () => {
+  it('should set form as Element', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate(document.querySelector('#form')!, {
@@ -57,7 +48,7 @@ describe('Validation', () => {
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  test('should destroy the instance', async () => {
+  it('should destroy the instance', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate(document.querySelector('#form')!, {
@@ -137,7 +128,7 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  test('should refresh the instance', async () => {
+  it('should refresh the instance', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate(document.querySelector('#form')!, {
@@ -190,7 +181,7 @@ describe('Validation', () => {
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  test('should validate all fields and groups by basic rule', async () => {
+  it('should validate all fields and groups by basic rule', async () => {
     const onSubmit = jest.fn();
     const onFail = jest.fn();
 
@@ -270,7 +261,7 @@ describe('Validation', () => {
     ).toHaveTextContent('The field is required');
   });
 
-  test('should be able submit form if validation passed', async () => {
+  it('should be able submit form if validation passed', async () => {
     const onSubmit = jest.fn();
     const onFail = jest.fn();
 
@@ -356,66 +347,7 @@ describe('Validation', () => {
     expect(getElem('#favorite_animal_select')).toHaveValue('dog');
   });
 
-  test('should be able to show custom error messages', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-          errorMessage: 'Name is required',
-        },
-      ])
-      .addField('#consent_checkbox', [
-        {
-          rule: 'required' as Rules,
-          errorMessage: 'Consent checkbox is required',
-        },
-      ])
-      .addField('#favorite_animal_select', [
-        {
-          rule: 'required' as Rules,
-          errorMessage: 'Animal select is required',
-        },
-      ])
-      .addRequiredGroup(
-        '#read_terms_checkbox_group',
-        'At least one term is required'
-      )
-      .addRequiredGroup(
-        '#communication_radio_group',
-        'Communication channel is required'
-      )
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Name is required'
-    );
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Consent checkbox is required'
-    );
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).toHaveTextContent('At least one term is required');
-    expect(
-      getElemByTestId('error-label-#communication_radio_group')
-    ).toHaveTextContent('Communication channel is required');
-    expect(
-      getElemByTestId('error-label-#favorite_animal_select')
-    ).toHaveTextContent('Animal select is required');
-  });
-
-  test('should be able to show conditional custom error messages', async () => {
+  it('should be able to show conditional custom error messages', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -504,7 +436,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should be able to validate by different rules', async () => {
+  it('should be able to validate by different rules', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -619,7 +551,7 @@ describe('Validation', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
-  test('should be able to validate by custom sync rule', async () => {
+  it('should be able to validate by custom sync rule', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -672,7 +604,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });
 
-  test('should be able to validate by custom async rule', async () => {
+  it('should be able to validate by custom async rule', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -715,381 +647,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).toBeNull();
   });
 
-  test('should be able to validate numbers', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-        },
-        {
-          rule: 'minNumber' as Rules,
-          value: 10,
-        },
-        {
-          rule: 'maxNumber' as Rules,
-          value: 100,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'The field is required'
-    );
-
-    await changeTextBySelector('#name', '4');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Number should be more or equal than 10'
-    );
-
-    await changeTextBySelector('#name', '122');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Number should be less or equal than 100'
-    );
-
-    await changeTextBySelector('#name', '50');
-
-    expect(getElem('#submit-btn')).toBeEnabled();
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledTimes(1);
-    });
-
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-
-    onSubmit.mockReset();
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'minNumber' as Rules,
-          value: 0,
-        },
-        {
-          rule: 'maxNumber' as Rules,
-          value: 100,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await changeTextBySelector('#name', '0');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-  });
-
-  test('should be able to validate password', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#password', [
-        {
-          rule: 'password' as Rules,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
-
-    await changeTextBySelector('#password', '12345678');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password must contain minimum eight characters, at least one letter and one number'
-    );
-
-    await changeTextBySelector('#password', '123456d');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password must contain minimum eight characters, at least one letter and one number'
-    );
-
-    await changeTextBySelector('#password', '12345678a');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toBeNull();
-  });
-
-  test('should be able to validate strong password', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#password', [
-        {
-          rule: 'strongPassword' as Rules,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
-
-    await changeTextBySelector('#password', '12345678a');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    );
-
-    await changeTextBySelector('#password', '12345678a!');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    );
-
-    await changeTextBySelector('#password', '12345678a!A');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(getElemByTestId('error-label-#password')).toBeNull();
-    expect(onSubmit).toHaveBeenCalled();
-  });
-
-  test('should be able to validate custom regexps', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'customRegexp' as Rules,
-          value: /^[A-Z]+$/,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-
-    await changeTextBySelector('#name', 'asgda');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-
-    await changeTextBySelector('#name', '123123sdf');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-
-    await changeTextBySelector('#name', '123123sAA');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-
-    await changeTextBySelector('#name', 'AAAA');
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledTimes(1);
-    });
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-
-    onSubmit.mockReset();
-    validation.addField('#name', [
-      {
-        rule: 'required' as Rules,
-      },
-      {
-        rule: 'customRegexp' as Rules,
-        value: /^[A-Z]+$/,
-      },
-    ]);
-
-    await changeTextBySelector('#name', '');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-  });
-
-  test('should be able to change language', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate(
-      '#form',
-      {
-        testingMode: true,
-      },
-      [
-        {
-          key: 'Name is invalid',
-          dict: {
-            ru: 'Имя некорректно',
-          },
-        },
-      ]
-    );
-
-    validation.addField('#name', [
-      {
-        rule: 'required' as Rules,
-        errorMessage: 'Name is invalid',
-      },
-    ]);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-      'Name is invalid'
-    );
-
-    // @ts-ignore
-    validation.setCurrentLocale(123);
-
-    expect(console.error).toHaveBeenCalled();
-
-    validation.setCurrentLocale('ru');
-
-    await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Имя некорректно'
-      );
-    });
-
-    validation.setCurrentLocale();
-    await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
-    });
-
-    validation.setCurrentLocale('en');
-
-    await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
-    });
-
-    validation.setCurrentLocale('qq');
-
-    await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
-    });
-  });
-
-  test('should be able to render tooltips', async () => {
+  it('should be able to render tooltips', async () => {
     jest
       .spyOn(window, 'requestAnimationFrame')
       .mockImplementation((callback: FrameRequestCallback): number => {
@@ -1238,838 +796,7 @@ describe('Validation', () => {
     window.requestAnimationFrame.mockRestore();
   });
 
-  test('should be able to remove field', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-
-    validation.removeField('#name');
-
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-  });
-
-  test('should be able to remove group', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addRequiredGroup('#read_terms_checkbox_group')
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).toBeInTheDocument();
-
-    validation.removeGroup('#read_terms_checkbox_group');
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).not.toBeInTheDocument();
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-  });
-
-  test('should be able to remove multiple fields', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .addField('#email', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .addField('#password', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
-
-    validation.removeField('#name');
-    validation.removeField('#email');
-
-    expect(console.error).not.toHaveBeenCalled();
-    // @ts-ignore
-    console.error.mockReset();
-
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
-  });
-
-  test('should be able to remove multiple groups', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addRequiredGroup('#read_terms_checkbox_group')
-      .addRequiredGroup('#communication_radio_group')
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).toBeInTheDocument();
-    expect(
-      getElemByTestId('error-label-#communication_radio_group')
-    ).toBeInTheDocument();
-
-    validation.removeGroup('#read_terms_checkbox_group');
-    validation.removeGroup('#communication_radio_group');
-
-    expect(console.error).not.toHaveBeenCalled();
-    // @ts-ignore
-    console.error.mockReset();
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).not.toBeInTheDocument();
-    expect(
-      getElemByTestId('error-label-#communication_radio_group')
-    ).not.toBeInTheDocument();
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).not.toBeInTheDocument();
-    expect(
-      getElemByTestId('error-label-#communication_radio_group')
-    ).not.toBeInTheDocument();
-  });
-
-  test('should be able to remove multiple fields if fields were removed from DOM and add it back', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .addField('#email', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .addField('#password', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    const nameHTML = document.querySelector('#name')!.outerHTML;
-    document.querySelector('#name')!.remove();
-    const emailHTML = document.querySelector('#email')!.outerHTML;
-    document.querySelector('#email')!.remove();
-
-    validation.removeField('#name');
-    validation.removeField('#email');
-
-    expect(console.error).not.toHaveBeenCalled();
-    // @ts-ignore
-    console.error.mockReset();
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    await changeTextBySelector('#password', '123');
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    const form = document.querySelector('#form') as HTMLFormElement;
-
-    form.innerHTML += nameHTML;
-    form.innerHTML += emailHTML;
-
-    validation
-      .addField('#name', [
-        {
-          rule: 'required' as Rules,
-        },
-      ])
-      .addField('#email', [
-        {
-          rule: 'required' as Rules,
-        },
-      ]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-  });
-
-  test('should be able to remove multiple groups if they were removed from DOM and add it back', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addRequiredGroup('#read_terms_checkbox_group')
-      .addRequiredGroup('#communication_radio_group')
-      .onSuccess(onSubmit);
-
-    const group1HTML = document.querySelector(
-      '#read_terms_checkbox_group'
-    )!.outerHTML;
-    document.querySelector('#read_terms_checkbox_group')!.remove();
-    const group2HTML = document.querySelector(
-      '#communication_radio_group'
-    )!.outerHTML;
-    document.querySelector('#communication_radio_group')!.remove();
-
-    validation.removeGroup('#read_terms_checkbox_group');
-    validation.removeGroup('#communication_radio_group');
-
-    expect(console.error).not.toHaveBeenCalled();
-    // @ts-ignore
-    console.error.mockReset();
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    const form = document.querySelector('#form') as HTMLFormElement;
-
-    form.innerHTML += group1HTML;
-    form.innerHTML += group2HTML;
-
-    validation
-      .addRequiredGroup('#read_terms_checkbox_group')
-      .addRequiredGroup('#communication_radio_group');
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).toBeInTheDocument();
-    expect(
-      getElemByTestId('error-label-#communication_radio_group')
-    ).toBeInTheDocument();
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-  });
-
-  test('should be able validate uploaded files count', async () => {
-    const onSubmit = jest.fn();
-
-    const file = new File(['file'], 'file.png', { type: 'image/png' });
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#files', [
-        {
-          rule: 'minFilesCount' as Rules,
-          value: 1,
-        },
-        {
-          rule: 'maxFilesCount' as Rules,
-          value: 3,
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Files count should be more or equal than 1'
-    );
-
-    const input = screen.getByLabelText(
-      /Upload your files/i
-    ) as HTMLInputElement;
-    userEvent.upload(input, [file, file, file, file]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Files count should be less or equal than 3'
-    );
-
-    userEvent.upload(input, [file, file, file]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(input, [file]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-  });
-
-  test('should be able validate files types and extensions', async () => {
-    const onSubmit = jest.fn();
-
-    const filePng = new File(['file'], 'file.png', { type: 'image/png' });
-    const fileJpeg = new File(['file'], 'file.jpeg', { type: 'image/jpeg' });
-    const fileTxt = new File(['file'], 'file.txt', { type: 'text/plain' });
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#files', [
-        {
-          rule: 'files' as Rules,
-          value: {
-            files: {
-              types: ['image/png', 'image/jpeg'],
-              extensions: ['png', 'jpeg'],
-            },
-          },
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    const input = screen.getByLabelText(
-      /Upload your files/i
-    ) as HTMLInputElement;
-    userEvent.upload(input, [filePng]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(input, [fileJpeg]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(input, [fileJpeg, filePng]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(input, [fileJpeg, filePng, fileTxt]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-
-    userEvent.upload(input, [fileTxt]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-  });
-
-  test('should be able validate files sizes', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#files', [
-        {
-          rule: 'files' as Rules,
-          value: {
-            files: {
-              minSize: 1000,
-              maxSize: 2000,
-            },
-          },
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    const input = screen.getByLabelText(
-      /Upload your files/i
-    ) as HTMLInputElement;
-    userEvent.upload(
-      input,
-      new File(generateFileContent(10), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-
-    userEvent.upload(
-      input,
-      new File(generateFileContent(999), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-
-    userEvent.upload(
-      input,
-      new File(generateFileContent(1000), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(
-      input,
-      new File(generateFileContent(1001), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(
-      input,
-      new File(generateFileContent(2000), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(
-      input,
-      new File(generateFileContent(2001), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-  });
-
-  test('should be able validate files names', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField('#files', [
-        {
-          rule: 'files' as Rules,
-          value: {
-            files: {
-              names: ['file.txt'],
-            },
-          },
-        },
-      ])
-      .onSuccess(onSubmit);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    const input = screen.getByLabelText(
-      /Upload your files/i
-    ) as HTMLInputElement;
-    userEvent.upload(
-      input,
-      new File(generateFileContent(10), 'file.png', { type: 'image/png' })
-    );
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-
-    userEvent.upload(input, [
-      new File(generateFileContent(10), 'file.png', { type: 'image/png' }),
-      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
-    ]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).not.toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
-      'Uploaded files have one or several invalid properties (extension/size/type etc)'
-    );
-
-    userEvent.upload(input, [
-      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
-    ]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-
-    userEvent.upload(input, [
-      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
-      new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
-    ]);
-
-    await clickBySelector('#submit-btn');
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-    onSubmit.mockReset();
-
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
-  });
-
-  test('should be able to show success labels', async () => {
-    const onSubmit = jest.fn();
-
-    const validation = new JustValidate('#form', {
-      testingMode: true,
-    });
-
-    validation
-      .addField(
-        '#name',
-        [
-          {
-            rule: 'required' as Rules,
-          },
-        ],
-        {
-          successMessage: 'Name looks good',
-        }
-      )
-      .addField(
-        '#email',
-        [
-          {
-            rule: 'required' as Rules,
-          },
-          {
-            rule: 'email' as Rules,
-            errorMessage: 'Email is invalid',
-          },
-        ],
-        {
-          successMessage: 'Email looks good',
-        }
-      )
-      .addRequiredGroup(
-        '#read_terms_checkbox_group',
-        'Group is invalid',
-        undefined,
-        'Group looks good'
-      )
-      .onSuccess(onSubmit);
-
-    await changeTextBySelector('#name', 'Georgii');
-    await changeTextBySelector('#email', '123');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
-      'Name looks good'
-    );
-    expect(getElemByTestId('success-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
-      'Email is invalid'
-    );
-    expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
-    ).not.toBeInTheDocument();
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).toHaveTextContent('Group is invalid');
-
-    await clickBySelector('#read_terms_checkbox_group_1');
-    await changeTextBySelector('#email', 'test@test.com');
-
-    await clickBySelector('#submit-btn');
-
-    await waitFor(() => {
-      expect(getElem('#submit-btn')).toBeEnabled();
-    });
-
-    expect(onSubmit).toHaveBeenCalled();
-
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('success-label-#email')).toHaveTextContent(
-      'Email looks good'
-    );
-    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
-      'Name looks good'
-    );
-    expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
-    ).toHaveTextContent('Group looks good');
-    expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
-    ).not.toBeInTheDocument();
-  });
-
-  test('should not show success labels if async func has not finished', async () => {
+  it('should not show success labels if async func has not finished', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -2127,7 +854,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
   });
 
-  test('should be able to use plugin', async () => {
+  it('should be able to use plugin', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -2161,7 +888,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should be able to validate non-string value fields', async () => {
+  it('should be able to validate non-string value fields', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -2303,7 +1030,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should be able to read FormData in onSuccess callback', async () => {
+  it('should be able to read FormData in onSuccess callback', async () => {
     const validation = new JustValidate('#form', {
       testingMode: true,
     });
@@ -2347,7 +1074,7 @@ describe('Validation', () => {
     });
   });
 
-  test('should revalidate the field', async () => {
+  it('should revalidate the field', async () => {
     const onSubmit = jest.fn();
     const onFail = jest.fn();
 
@@ -2402,7 +1129,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should revalidate the form', async () => {
+  it('should revalidate the form', async () => {
     const onSubmit = jest.fn();
     const onFail = jest.fn();
 
@@ -2430,7 +1157,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  test('should not reset disabled attr unlockForm', async () => {
+  it('should not reset disabled attr unlockForm', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -2466,7 +1193,7 @@ describe('Validation', () => {
     expect(getElem('#custom-btn')).toBeDisabled();
   });
 
-  test('should not show errors before submitting', async () => {
+  it('should not show errors before submitting', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -2497,7 +1224,7 @@ describe('Validation', () => {
     expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
   });
 
-  test('should validate before submitting', async () => {
+  it('should validate before submitting', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {

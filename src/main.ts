@@ -29,10 +29,11 @@ import {
   ElemValueType,
   CustomMessageFuncType,
   ShowLabelsInterface,
+  FieldRuleValueType,
 } from './modules/interfaces';
 import {
-  getDefaultFieldMessage,
-  getDefaultGroupMessage,
+  DEFAULT_ERROR_FIELD_MESSAGE,
+  defaultDictionary,
 } from './modules/messages';
 import {
   getClassList,
@@ -76,8 +77,8 @@ class JustValidate {
   errorLabels: { [name: string]: HTMLDivElement } = {};
   successLabels: { [name: string]: HTMLDivElement } = {};
   eventListeners: EventListenerInterface[] = [];
-  dictLocale: LocaleInterface[] = [];
-  currentLocale?: string;
+  dictLocale: LocaleInterface[] = defaultDictionary;
+  currentLocale = 'en';
   customStyleTags: { [id: string]: HTMLStyleElement } = {};
   onSuccessCallback?: (event?: Event) => void;
   onFailCallback?: (
@@ -111,6 +112,7 @@ class JustValidate {
     this.eventListeners = [];
     this.customStyleTags = {};
     this.tooltips = [];
+    this.currentLocale = 'en';
 
     if (typeof form === 'string') {
       const elem = document.querySelector(form) as HTMLFormElement;
@@ -132,7 +134,7 @@ class JustValidate {
     this.globalConfig = { ...defaultGlobalConfig, ...globalConfig };
 
     if (dictLocale) {
-      this.dictLocale = dictLocale;
+      this.dictLocale = [...dictLocale, ...defaultDictionary];
     }
 
     if (this.isTooltip()) {
@@ -164,16 +166,36 @@ class JustValidate {
     }
   };
 
-  getLocalisedString(str?: string): string | undefined {
-    if (!this.currentLocale || !this.dictLocale.length) {
-      return str;
+  getLocalisedString(
+    rule?: Rules | GroupRules,
+    ruleValue?: FieldRuleValueType,
+    customMsg?: string
+  ): string {
+    const search = customMsg ?? rule;
+    let localisedStr = this.dictLocale.find((item) => item.key === search)
+      ?.dict[this.currentLocale];
+
+    if (!localisedStr) {
+      if (customMsg) {
+        localisedStr =
+          customMsg ||
+          this.dictLocale.find((item) => item.key === rule)?.dict['en'];
+      }
     }
 
-    const localisedStr = this.dictLocale.find((item) => item.key === str)?.dict[
-      this.currentLocale
-    ];
+    if (localisedStr && ruleValue !== undefined) {
+      switch (rule) {
+        case Rules.MaxLength:
+        case Rules.MinLength:
+        case Rules.MaxNumber:
+        case Rules.MinNumber:
+        case Rules.MinFilesCount:
+        case Rules.MaxFilesCount:
+          localisedStr = localisedStr.replace(':value', String(ruleValue));
+      }
+    }
 
-    return localisedStr || str;
+    return localisedStr || customMsg || DEFAULT_ERROR_FIELD_MESSAGE;
   }
 
   getFieldErrorMessage(
@@ -185,10 +207,7 @@ class JustValidate {
         ? fieldRule.errorMessage(this.getElemValue(elem), this.fields)
         : fieldRule.errorMessage;
 
-    return (
-      this.getLocalisedString(msg) ||
-      getDefaultFieldMessage(fieldRule.rule, fieldRule.value)
-    );
+    return this.getLocalisedString(fieldRule.rule, fieldRule.value, msg);
   }
 
   getFieldSuccessMessage(
@@ -200,18 +219,27 @@ class JustValidate {
         ? successMessage(this.getElemValue(elem), this.fields)
         : successMessage;
 
-    return this.getLocalisedString(msg);
+    return this.getLocalisedString(undefined, undefined, msg);
   }
 
   getGroupErrorMessage(groupRule: GroupRuleInterface): string {
-    return (
-      this.getLocalisedString(groupRule.errorMessage) ||
-      getDefaultGroupMessage(groupRule.rule)
+    return this.getLocalisedString(
+      groupRule.rule,
+      undefined,
+      groupRule.errorMessage
     );
   }
 
   getGroupSuccessMessage(groupRule: GroupRuleInterface): string | undefined {
-    return this.getLocalisedString(groupRule.successMessage);
+    if (!groupRule.successMessage) {
+      return undefined;
+    }
+
+    return this.getLocalisedString(
+      undefined,
+      undefined,
+      groupRule.successMessage
+    );
   }
 
   setFieldInvalid(field: string, fieldRule: FieldRuleInterface): void {
@@ -1696,7 +1724,7 @@ class JustValidate {
       return;
     }
 
-    this.currentLocale = locale;
+    this.currentLocale = locale!;
 
     if (this.isSubmitted) {
       this.validate();
