@@ -4,9 +4,9 @@ import { Rules } from '../modules/interfaces';
 import { waitFor } from '@testing-library/dom';
 import {
   clickBySelector,
-  getAllElemsByTestId,
+  getAllElemsByKey,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 
 describe('ShowSuccessLabels method', () => {
@@ -50,21 +50,23 @@ describe('ShowSuccessLabels method', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
-    );
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('The field is required');
 
     validation.showSuccessLabels({
       '#password': 'Your password valid!',
     });
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+      expect(
+        getElemByKey('error-label', '#password', validation)
+      ).not.toBeInTheDocument();
     });
 
-    expect(getElemByTestId('success-label-#password')).toHaveTextContent(
-      'Your password valid!'
-    );
+    expect(
+      getElemByKey('success-label', '#password', validation)
+    ).toHaveTextContent('Your password valid!');
   });
 
   test('should show empty success label', async () => {
@@ -83,7 +85,9 @@ describe('ShowSuccessLabels method', () => {
     });
 
     await waitFor(() => {
-      expect(getElemByTestId('success-label-#password')).toHaveTextContent('');
+      expect(
+        getElemByKey('success-label', '#password', validation)
+      ).toHaveTextContent('');
     });
   });
 
@@ -106,6 +110,8 @@ describe('ShowSuccessLabels method', () => {
       '#password': 'The password is valid',
     });
 
-    expect(getAllElemsByTestId('success-label-#password').length).toBe(1);
+    expect(
+      getAllElemsByKey('success-label', '#password', validation).length
+    ).toBe(1);
   });
 });

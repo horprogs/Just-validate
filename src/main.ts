@@ -30,7 +30,6 @@ import {
   CustomMessageFuncType,
   ShowLabelsInterface,
   FieldRuleValueType,
-  FieldInterface,
   FieldSelectorType,
 } from './modules/interfaces';
 import {
@@ -167,6 +166,10 @@ class JustValidate {
   };
 
   setKeyByFieldSelector = (field: string | Element): string => {
+    if (this.fieldIds.has(field)) {
+      return this.fieldIds.get(field)!;
+    }
+
     const key = String(this.fieldIds.size + 1);
     this.fieldIds.set(field, key);
     return key;
@@ -201,9 +204,7 @@ class JustValidate {
 
     if (!localisedStr) {
       if (customMsg) {
-        localisedStr =
-          customMsg ||
-          this.dictLocale.find((item) => item.key === rule)?.dict['en'];
+        localisedStr = customMsg;
       }
     }
 
@@ -800,7 +801,7 @@ class JustValidate {
   }
 
   public revalidateField(fieldSelector: FieldSelectorType): Promise<boolean> {
-    if (typeof fieldSelector !== 'string' || !isElement(fieldSelector)) {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
         `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
@@ -1006,7 +1007,7 @@ class JustValidate {
     rules: FieldRuleInterface[],
     config?: FieldConfigInterface
   ): JustValidate {
-    if (typeof fieldSelector !== 'string' || !isElement(fieldSelector)) {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
         `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
@@ -1071,7 +1072,7 @@ class JustValidate {
   }
 
   public removeField(fieldSelector: FieldSelectorType): JustValidate {
-    if (typeof fieldSelector !== 'string' || !isElement(fieldSelector)) {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
         `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
@@ -1106,14 +1107,14 @@ class JustValidate {
       return this;
     }
 
-    this.groupFields[group].elems.forEach((elem) => {
+    this.groupFields[key].elems.forEach((elem) => {
       const type = this.getListenerType(elem.type);
       this.removeListener(type, elem, this.handlerChange);
     });
 
     this.clearErrors();
 
-    delete this.groupFields[group];
+    delete this.groupFields[key];
     return this;
   }
 
@@ -1149,7 +1150,9 @@ class JustValidate {
       return parent[1].elems.find((elem) => elem !== input);
     });
 
-    this.groupFields[groupField] = {
+    const key = this.setKeyByFieldSelector(groupField);
+
+    this.groupFields[key] = {
       rules: [
         {
           rule: GroupRules.Required,
@@ -1193,9 +1196,9 @@ class JustValidate {
     this.addListener(type, elem, this.handlerChange);
   }
 
-  clearFieldLabel(fieldName: string): void {
-    this.errorLabels[fieldName]?.remove();
-    this.successLabels[fieldName]?.remove();
+  clearFieldLabel(key: string): void {
+    this.errorLabels[key]?.remove();
+    this.successLabels[key]?.remove();
   }
 
   clearFieldStyle(key: string): void {
@@ -1238,8 +1241,8 @@ class JustValidate {
       this.clearFieldStyle(key);
     }
 
-    for (const groupName in this.groupFields) {
-      const group = this.groupFields[groupName];
+    for (const key in this.groupFields) {
+      const group = this.groupFields[key];
 
       const errorStyle =
         group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
@@ -1371,7 +1374,7 @@ class JustValidate {
   }
 
   createErrorLabelElem(
-    name: string,
+    key: string,
     errorMessage: string,
     config?: FieldConfigInterface
   ): HTMLDivElement {
@@ -1396,16 +1399,16 @@ class JustValidate {
     }
 
     if (this.globalConfig.testingMode) {
-      errorLabel.dataset.testId = `error-label-${name}`;
+      errorLabel.dataset.testId = `error-label-${key}`;
     }
 
-    this.errorLabels[name] = errorLabel;
+    this.errorLabels[key] = errorLabel;
 
     return errorLabel;
   }
 
   createSuccessLabelElem(
-    name: string,
+    key: string,
     successMessage?: string,
     config?: FieldConfigInterface
   ): HTMLDivElement | null {
@@ -1429,10 +1432,10 @@ class JustValidate {
     );
 
     if (this.globalConfig.testingMode) {
-      successLabel.dataset.testId = `success-label-${name}`;
+      successLabel.dataset.testId = `success-label-${key}`;
     }
 
-    this.successLabels[name] = successLabel;
+    this.successLabels[key] = successLabel;
 
     return successLabel;
   }
@@ -1527,13 +1530,22 @@ class JustValidate {
   showLabels(fields: ShowLabelsInterface, isError: boolean): void {
     Object.keys(fields).forEach((fieldName, i) => {
       const error = fields[fieldName];
-      const field = this.fields[fieldName];
+
+      // supports only string selectors for now
+      const key = this.getKeyByFieldSelector(fieldName);
+
+      if (!key || !this.fields[key]) {
+        console.error(`Field not found. Check the field selector.`);
+        return;
+      }
+
+      const field = this.fields[key];
 
       field.isValid = !isError;
-      this.clearFieldStyle(fieldName);
-      this.clearFieldLabel(fieldName);
+      this.clearFieldStyle(key);
+      this.clearFieldLabel(key);
 
-      this.renderFieldError(fieldName, error);
+      this.renderFieldError(key, error);
 
       if (i === 0 && this.globalConfig.focusInvalidField) {
         setTimeout(() => field.elem.focus(), 0);
@@ -1625,8 +1637,8 @@ class JustValidate {
     }
   }
 
-  renderGroupError(groupName: string): void {
-    const group = this.groupFields[groupName];
+  renderGroupError(key: string): void {
+    const group = this.groupFields[key];
 
     if (group.isValid === undefined) {
       return;
@@ -1646,7 +1658,7 @@ class JustValidate {
         );
       });
       const successLabel = this.createSuccessLabelElem(
-        groupName,
+        key,
         group.successMessage,
         group.config
       );
@@ -1677,7 +1689,7 @@ class JustValidate {
     });
 
     const errorLabel = this.createErrorLabelElem(
-      groupName,
+      key,
       group.errorMessage!,
       group.config
     );

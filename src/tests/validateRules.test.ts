@@ -3,7 +3,7 @@ import {
   changeTextBySelector,
   clickBySelector,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { waitFor } from '@testing-library/dom';
 
@@ -39,7 +39,7 @@ describe('validateRules', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
 
@@ -53,7 +53,7 @@ describe('validateRules', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Number should be more or equal than 10'
     );
 
@@ -67,7 +67,7 @@ describe('validateRules', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Number should be less or equal than 100'
     );
 
@@ -81,7 +81,7 @@ describe('validateRules', () => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
     });
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
 
     onSubmit.mockReset();
 
@@ -108,7 +108,9 @@ describe('validateRules', () => {
 
     expect(onSubmit).toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
   });
 
   it('should be able to validate password', async () => {
@@ -135,7 +137,9 @@ describe('validateRules', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
 
     await changeTextBySelector('#password', '12345678');
     await clickBySelector('#submit-btn');
@@ -143,7 +147,9 @@ describe('validateRules', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent(
       'Password must contain minimum eight characters, at least one letter and one number'
     );
 
@@ -153,7 +159,9 @@ describe('validateRules', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent(
       'Password must contain minimum eight characters, at least one letter and one number'
     );
 
@@ -163,7 +171,7 @@ describe('validateRules', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toBeNull();
+    expect(getElemByKey('error-label', '#password', validation)).toBeNull();
   });
 
   it('should be able to validate strong password', async () => {
@@ -190,7 +198,9 @@ describe('validateRules', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
 
     await changeTextBySelector('#password', '12345678a');
     await clickBySelector('#submit-btn');
@@ -198,7 +208,9 @@ describe('validateRules', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent(
       'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
     );
 
@@ -208,7 +220,9 @@ describe('validateRules', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent(
       'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
     );
 
@@ -217,7 +231,7 @@ describe('validateRules', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#password')).toBeNull();
+    expect(getElemByKey('error-label', '#password', validation)).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
   });
 
@@ -245,7 +259,9 @@ describe('validateRules', () => {
 
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
 
     await changeTextBySelector('#name', 'asgda');
     await clickBySelector('#submit-btn');
@@ -254,7 +270,9 @@ describe('validateRules', () => {
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
 
     await changeTextBySelector('#name', '123123sdf');
     await clickBySelector('#submit-btn');
@@ -263,7 +281,9 @@ describe('validateRules', () => {
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
 
     await changeTextBySelector('#name', '123123sAA');
     await clickBySelector('#submit-btn');
@@ -272,7 +292,9 @@ describe('validateRules', () => {
     });
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
 
     await changeTextBySelector('#name', 'AAAA');
     await clickBySelector('#submit-btn');
@@ -282,7 +304,7 @@ describe('validateRules', () => {
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
     });
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
 
     onSubmit.mockReset();
     validation.addField('#name', [
@@ -305,6 +327,8 @@ describe('validateRules', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
   });
 });

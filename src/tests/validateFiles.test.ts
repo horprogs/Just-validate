@@ -3,7 +3,7 @@ import {
   clickBySelector,
   generateFileContent,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { screen, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -38,7 +38,7 @@ describe('validateFiles', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Files count should be more or equal than 1'
     );
 
@@ -54,7 +54,7 @@ describe('validateFiles', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Files count should be less or equal than 3'
     );
 
@@ -67,7 +67,9 @@ describe('validateFiles', () => {
 
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(input, [file]);
 
@@ -78,7 +80,9 @@ describe('validateFiles', () => {
 
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
   });
 
   it('should be able validate files types and extensions', async () => {
@@ -114,7 +118,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     const input = screen.getByLabelText(
       /Upload your files/i
@@ -129,7 +135,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(input, [fileJpeg]);
 
@@ -141,7 +149,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(input, [fileJpeg, filePng]);
 
@@ -153,7 +163,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(input, [fileJpeg, filePng, fileTxt]);
 
@@ -165,7 +177,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
 
@@ -179,7 +191,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
   });
@@ -213,7 +225,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     const input = screen.getByLabelText(
       /Upload your files/i
@@ -231,7 +245,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
 
@@ -248,7 +262,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
 
@@ -265,7 +279,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(
       input,
@@ -280,7 +296,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(
       input,
@@ -295,7 +313,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(
       input,
@@ -310,7 +330,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
   });
@@ -343,7 +363,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     const input = screen.getByLabelText(
       /Upload your files/i
@@ -361,7 +383,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
 
@@ -378,7 +400,7 @@ describe('validateFiles', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#files', validation)).toHaveTextContent(
       'Uploaded files have one or several invalid properties (extension/size/type etc)'
     );
 
@@ -394,7 +416,9 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
 
     userEvent.upload(input, [
       new File(generateFileContent(10), 'file.txt', { type: 'image/png' }),
@@ -409,6 +433,8 @@ describe('validateFiles', () => {
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#files')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#files', validation)
+    ).not.toBeInTheDocument();
   });
 });

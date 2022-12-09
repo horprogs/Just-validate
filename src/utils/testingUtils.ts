@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event';
+import JustValidate, { FieldSelectorType } from '../main';
 
 export const clickBySelector = async (selector: string): Promise<void> => {
   const elem = getElem(selector);
@@ -13,16 +14,29 @@ export const clickBySelector = async (selector: string): Promise<void> => {
 export const getElem = (selector: string): Element | null =>
   document.querySelector(selector);
 
-export const getElemByTestId = (id: string, parent?: Element): Element | null =>
-  (parent !== undefined ? parent : document).querySelector(
-    `[data-test-id="${id}"]`
-  );
-
-export const getAllElemsByTestId = (
-  id: string,
+export const getAllElemsByKey = (
+  testId: string,
+  fieldSelector: FieldSelectorType,
+  instance: JustValidate,
   parent?: Element
-): NodeListOf<Element> =>
-  (parent || document).querySelectorAll(`[data-test-id="${id}"]`);
+): NodeListOf<Element> => {
+  const key = instance.getKeyByFieldSelector(fieldSelector);
+  return (parent !== undefined ? parent : document).querySelectorAll(
+    `[data-test-id="${testId}-${key}"]`
+  );
+};
+
+export const getElemByKey = (
+  testId: string,
+  fieldSelector: FieldSelectorType,
+  instance: JustValidate,
+  parent?: Element
+): Element | null => {
+  const key = instance.getKeyByFieldSelector(fieldSelector);
+  return (parent !== undefined ? parent : document).querySelector(
+    `[data-test-id="${testId}-${key}"]`
+  );
+};
 
 export const changeTextBySelector = async (
   selector: string,
