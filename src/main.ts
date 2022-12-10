@@ -90,7 +90,7 @@ class JustValidate {
   tooltips: TooltipInstance[] = [];
   lastScrollPosition?: number;
   isScrollTick?: boolean;
-  fieldIds: Map<string | Element, string> = new Map();
+  fieldIds: Map<FieldSelectorType, string> = new Map();
 
   constructor(
     form: string | Element,
@@ -151,11 +151,11 @@ class JustValidate {
     }
   }
 
-  getKeyByFieldSelector = (field: string | Element): string | undefined => {
+  getKeyByFieldSelector = (field: FieldSelectorType): string | undefined => {
     return this.fieldIds.get(field);
   };
 
-  getFieldSelectorByKey = (key: string): string | Element | undefined => {
+  getFieldSelectorByKey = (key: string): FieldSelectorType | undefined => {
     for (const [fieldSelector, k] of this.fieldIds) {
       if (key === k) {
         return fieldSelector;
@@ -165,7 +165,7 @@ class JustValidate {
     return undefined;
   };
 
-  setKeyByFieldSelector = (field: string | Element): string => {
+  setKeyByFieldSelector = (field: FieldSelectorType): string => {
     if (this.fieldIds.has(field)) {
       return this.fieldIds.get(field)!;
     }
