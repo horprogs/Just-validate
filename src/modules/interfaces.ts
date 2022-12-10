@@ -167,3 +167,5 @@ export type ElemValueType = boolean | string | FileList | null;
 export interface ShowLabelsInterface {
   [field: string]: string;
 }
+
+export type FieldSelectorType = string | HTMLInputElement;

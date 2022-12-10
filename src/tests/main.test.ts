@@ -3,7 +3,7 @@ import {
   clickBySelector,
   fetch,
   getElem,
-  getElemByTestId,
+  getElemByKey,
   selectBySelector,
 } from '../utils/testingUtils';
 import JustValidate from '../main';
@@ -34,7 +34,7 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
 
@@ -44,7 +44,7 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
   });
 
@@ -91,39 +91,39 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
     expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
+      getElemByKey('success-label', '#read_terms_checkbox_group', validation)
     ).toHaveTextContent('Valid');
-    expect(getElemByTestId('success-label-#email')).toHaveTextContent(
-      'Looks good'
-    );
+    expect(
+      getElemByKey('success-label', '#email', validation)
+    ).toHaveTextContent('Looks good');
 
     validation.destroy();
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-    expect(getElemByTestId('success-label-#name')).toBeNull();
-    expect(getElemByTestId('error-label-#email')).toBeNull();
-    expect(getElemByTestId('success-label-#email')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('success-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#email', validation)).toBeNull();
+    expect(getElemByKey('success-label', '#email', validation)).toBeNull();
     expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
+      getElemByKey('success-label', '#read_terms_checkbox_group', validation)
     ).toBeNull();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeNull();
 
     await clickBySelector('#submit-btn');
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-    expect(getElemByTestId('success-label-#name')).toBeNull();
-    expect(getElemByTestId('error-label-#email')).toBeNull();
-    expect(getElemByTestId('success-label-#email')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('success-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#email', validation)).toBeNull();
+    expect(getElemByKey('success-label', '#email', validation)).toBeNull();
     expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
+      getElemByKey('success-label', '#read_terms_checkbox_group', validation)
     ).toBeNull();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeNull();
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -151,13 +151,13 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
 
     validation.refresh();
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
 
     await clickBySelector('#submit-btn');
 
@@ -165,7 +165,7 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
 
@@ -177,7 +177,7 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
     expect(onSubmit).toHaveBeenCalled();
   });
 
@@ -235,30 +235,163 @@ describe('Validation', () => {
     expect(onFail).toHaveBeenCalled();
 
     expect(getElem('#form')).toHaveAttribute('novalidate', 'novalidate');
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
-      'The field is required'
-    );
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
-    );
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
-    );
-    expect(getElemByTestId('error-label-#message')).toHaveTextContent(
-      'The field is required'
-    );
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'The field is required'
     );
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#password', validation)
     ).toHaveTextContent('The field is required');
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#password', validation)
     ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '#message', validation)
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '#communication_radio_group', validation)
+    ).toHaveTextContent('The field is required');
+  });
+
+  it('should be able to update the field rules', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: 'minLength' as Rules,
+          value: 3,
+        },
+        {
+          rule: 'maxLength' as Rules,
+          value: 10,
+        },
+      ])
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    await changeTextBySelector('#name', '12');
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
+      'The field must contain a minimum of 3 characters'
+    );
+
+    validation.addField('#name', [
+      {
+        rule: 'minLength' as Rules,
+        value: 5,
+      },
+      {
+        rule: 'maxLength' as Rules,
+        value: 10,
+      },
+    ]);
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
+      'The field must contain a minimum of 5 characters'
+    );
+  });
+
+  it('should be able to pass Element to addField', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField(document.querySelector('#name') as HTMLInputElement, [
+        {
+          rule: 'minLength' as Rules,
+          value: 3,
+        },
+        {
+          rule: 'maxLength' as Rules,
+          value: 10,
+        },
+      ])
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    await changeTextBySelector('#name', '12');
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(
+      getElemByKey(
+        'error-label',
+        document.querySelector('#name') as HTMLInputElement,
+        validation
+      )
+    ).toHaveTextContent('The field must contain a minimum of 3 characters');
+
+    validation.removeField(document.querySelector('#name') as HTMLInputElement);
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField(document.querySelector('#name') as HTMLInputElement, [
+      {
+        rule: 'minLength' as Rules,
+        value: 5,
+      },
+      {
+        rule: 'maxLength' as Rules,
+        value: 10,
+      },
+    ]);
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(
+      getElemByKey(
+        'error-label',
+        document.querySelector('#name') as HTMLInputElement,
+        validation
+      )
+    ).toHaveTextContent('The field must contain a minimum of 5 characters');
+
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('should be able submit form if validation passed', async () => {
@@ -324,17 +457,19 @@ describe('Validation', () => {
     expect(onFail).not.toHaveBeenCalled();
 
     expect(getElem('#form')).toHaveAttribute('novalidate', 'novalidate');
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-    expect(getElemByTestId('error-label-#email')).toBeNull();
-    expect(getElemByTestId('error-label-#password')).toBeNull();
-    expect(getElemByTestId('error-label-#password')).toBeNull();
-    expect(getElemByTestId('error-label-#message')).toBeNull();
-    expect(getElemByTestId('error-label-#consent_checkbox')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#email', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#password', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#password', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#message', validation)).toBeNull();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#consent_checkbox', validation)
     ).toBeNull();
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
+    ).toBeNull();
+    expect(
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).toBeNull();
 
     expect(getElem('#name')).toHaveValue('Georgii');
@@ -387,7 +522,7 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'You cannot use Z/X/C as names'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -398,7 +533,7 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'You cannot use Z/X/C as names'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -409,7 +544,7 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'You cannot use Z/X/C as names'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -420,7 +555,7 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Name is invalid'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -431,7 +566,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
   });
@@ -481,15 +618,15 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'The field is required'
     );
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
-    );
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('The field is required');
 
     await changeTextBySelector('#name', 'Ge');
     await changeTextBySelector('#email', 'testtest.com');
@@ -503,15 +640,15 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field must contain a minimum of 3 characters'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'Email has invalid format'
     );
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Value should be a number'
-    );
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('Value should be a number');
 
     await changeTextBySelector('#name', 'Geooooooooooooooooooo');
     await changeTextBySelector('#email', 'test@testcom');
@@ -525,15 +662,15 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field must contain a maximum of 15 characters'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'Email has invalid format'
     );
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'Value should be a number'
-    );
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('Value should be a number');
 
     await changeTextBySelector('#name', 'Geooooooooo');
     await changeTextBySelector('#email', 'test@test.com');
@@ -545,9 +682,9 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
-    expect(getElemByTestId('error-label-#email')).toBeNull();
-    expect(getElemByTestId('error-label-#password')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#email', validation)).toBeNull();
+    expect(getElemByKey('error-label', '#password', validation)).toBeNull();
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
@@ -575,7 +712,7 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Value is incorrect'
     );
 
@@ -587,7 +724,7 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Value is incorrect'
     );
 
@@ -601,7 +738,7 @@ describe('Validation', () => {
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
   });
 
   it('should be able to validate by custom async rule', async () => {
@@ -630,7 +767,7 @@ describe('Validation', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Value is incorrect'
     );
 
@@ -644,7 +781,7 @@ describe('Validation', () => {
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
 
-    expect(getElemByTestId('error-label-#name')).toBeNull();
+    expect(getElemByKey('error-label', '#name', validation)).toBeNull();
   });
 
   it('should be able to render tooltips', async () => {
@@ -724,61 +861,75 @@ describe('Validation', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
-    expect(getElemByTestId('error-label-#name')).toHaveAttribute(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveAttribute(
       'data-direction',
       'right'
     );
-    expect(getElemByTestId('error-label-#name')).toHaveAttribute(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveAttribute(
       'data-tooltip',
       'true'
     );
-    expect(getElemByTestId('error-label-#name')).toHaveStyle('left:5px');
-    expect(getElemByTestId('error-label-#name')).toHaveStyle('top:0px');
+    expect(getElemByKey('error-label', '#name', validation)).toHaveStyle(
+      'left:5px'
+    );
+    expect(getElemByKey('error-label', '#name', validation)).toHaveStyle(
+      'top:0px'
+    );
 
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'The field is required'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveAttribute(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveAttribute(
       'data-direction',
       'bottom'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveAttribute(
+    expect(getElemByKey('error-label', '#email', validation)).toHaveAttribute(
       'data-tooltip',
       'true'
     );
-    expect(getElemByTestId('error-label-#email')).toHaveStyle('left:0px');
-    expect(getElemByTestId('error-label-#email')).toHaveStyle('top:5px');
+    expect(getElemByKey('error-label', '#email', validation)).toHaveStyle(
+      'left:0px'
+    );
+    expect(getElemByKey('error-label', '#email', validation)).toHaveStyle(
+      'top:5px'
+    );
 
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveAttribute('data-direction', 'left');
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveAttribute('data-tooltip', 'true');
+    expect(getElemByKey('error-label', '#password', validation)).toHaveStyle(
+      'left:-5px'
     );
-    expect(getElemByTestId('error-label-#password')).toHaveAttribute(
-      'data-direction',
-      'left'
+    expect(getElemByKey('error-label', '#password', validation)).toHaveStyle(
+      'top:0px'
     );
-    expect(getElemByTestId('error-label-#password')).toHaveAttribute(
-      'data-tooltip',
-      'true'
-    );
-    expect(getElemByTestId('error-label-#password')).toHaveStyle('left:-5px');
-    expect(getElemByTestId('error-label-#password')).toHaveStyle('top:0px');
 
-    expect(getElemByTestId('error-label-#message')).toHaveTextContent(
-      'The field is required'
-    );
-    expect(getElemByTestId('error-label-#message')).toHaveAttribute(
+    expect(
+      getElemByKey('error-label', '#message', validation)
+    ).toHaveTextContent('The field is required');
+    expect(getElemByKey('error-label', '#message', validation)).toHaveAttribute(
       'data-direction',
       'top'
     );
-    expect(getElemByTestId('error-label-#message')).toHaveAttribute(
+    expect(getElemByKey('error-label', '#message', validation)).toHaveAttribute(
       'data-tooltip',
       'true'
     );
-    expect(getElemByTestId('error-label-#message')).toHaveStyle('left:0px');
-    expect(getElemByTestId('error-label-#message')).toHaveStyle('top:-5px');
+    expect(getElemByKey('error-label', '#message', validation)).toHaveStyle(
+      'left:0px'
+    );
+    expect(getElemByKey('error-label', '#message', validation)).toHaveStyle(
+      'top:-5px'
+    );
 
     validation.tooltips.forEach((item) => {
       item.refresh = jest.fn();
@@ -831,27 +982,43 @@ describe('Validation', () => {
     });
 
     await changeTextBySelector('#name', 'Test');
-    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
 
     await changeTextBySelector('#name', 'Georgii');
-    expect(getElemByTestId('success-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('success-label-#name')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
   });
 
   it('should be able to use plugin', async () => {
@@ -873,7 +1040,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -883,7 +1052,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
   });
@@ -907,9 +1078,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Email has invalid format'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('Email has invalid format');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -924,9 +1095,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'The field must contain a maximum of 10 characters'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('The field must contain a maximum of 10 characters');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -941,9 +1112,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'The field must contain a minimum of 10 characters'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('The field must contain a minimum of 10 characters');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -957,7 +1128,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent(
       'Password must contain minimum eight characters, at least one letter and one number'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -973,7 +1146,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent(
       'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
     );
     expect(onSubmit).not.toHaveBeenCalled();
@@ -989,9 +1164,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Value should be a number'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('Value should be a number');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -1006,9 +1181,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Number should be less or equal than 10'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('Number should be less or equal than 10');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -1023,9 +1198,9 @@ describe('Validation', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Number should be more or equal than 10'
-    );
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('Number should be more or equal than 10');
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
   });
@@ -1115,10 +1290,14 @@ describe('Validation', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
+      expect(
+        getElemByKey('error-label', '#email', validation)
+      ).toBeInTheDocument();
     });
 
     await changeTextBySelector('#email', 'test@test.com');
@@ -1219,9 +1398,13 @@ describe('Validation', () => {
       )
       .onSuccess(onSubmit);
 
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
     await changeTextBySelector('#email', 'test');
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
   });
 
   it('should validate before submitting', async () => {
@@ -1251,39 +1434,59 @@ describe('Validation', () => {
       )
       .onSuccess(onSubmit);
 
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
 
     await changeTextBySelector('#email', 'test');
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
 
     await changeTextBySelector('#email', 'test@test.com');
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
 
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
 
     await changeTextBySelector('#email', 'test');
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
   });
 });

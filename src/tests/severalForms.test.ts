@@ -4,7 +4,7 @@ import {
   changeTextBySelector,
   clickBySelector,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { waitFor } from '@testing-library/dom';
 import { multipleFormsMockup } from './mockup';
@@ -25,6 +25,7 @@ describe('Several forms', () => {
 
     const successCallbacks = [onForm1Submit, onForm2Submit];
     const failCallbacks = [onForm1Fail, onForm2Fail];
+    const validations: JustValidate[] = [];
 
     ['#form1', '#form2'].forEach((selector, i) => {
       const validation = new JustValidate(selector, {
@@ -40,6 +41,8 @@ describe('Several forms', () => {
         .addRequiredGroup('.read_terms_checkbox_group')
         .onSuccess(successCallbacks[i])
         .onFail(failCallbacks[i]);
+
+      validations.push(validation);
     });
 
     await clickBySelector('#form1_submit-btn');
@@ -59,15 +62,27 @@ describe('Several forms', () => {
     const form1 = getElem('#form1') as HTMLFormElement;
     const form2 = getElem('#form2') as HTMLFormElement;
 
-    expect(getElemByTestId('error-label-.name', form1)).toHaveTextContent(
-      'The field is required'
-    );
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form1)
+      getElemByKey('error-label', '.name', validations[0], form1)
     ).toHaveTextContent('The field is required');
-    expect(getElemByTestId('error-label-.name', form2)).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form2)
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[0],
+        form1
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '.name', validations[1], form2)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[1],
+        form2
+      )
     ).not.toBeInTheDocument();
 
     await changeTextBySelector('#form1 .name', 'Georgii');
@@ -87,13 +102,27 @@ describe('Several forms', () => {
     onForm1Fail.mockReset();
     onForm2Fail.mockReset();
 
-    expect(getElemByTestId('error-label-.name', form1)).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form1)
+      getElemByKey('error-label', '.name', validations[0], form1)
     ).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-.name', form2)).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form2)
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[0],
+        form1
+      )
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '.name', validations[1], form2)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[1],
+        form2
+      )
     ).not.toBeInTheDocument();
 
     await clickBySelector('#form2_submit-btn');
@@ -110,15 +139,27 @@ describe('Several forms', () => {
     onForm1Fail.mockReset();
     onForm2Fail.mockReset();
 
-    expect(getElemByTestId('error-label-.name', form2)).toHaveTextContent(
-      'The field is required'
-    );
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form2)
+      getElemByKey('error-label', '.name', validations[1], form2)
     ).toHaveTextContent('The field is required');
-    expect(getElemByTestId('error-label-.name', form1)).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-.read_terms_checkbox_group', form1)
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[1],
+        form2
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getElemByKey('error-label', '.name', validations[0], form1)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey(
+        'error-label',
+        '.read_terms_checkbox_group',
+        validations[0],
+        form1
+      )
     ).not.toBeInTheDocument();
 
     await changeTextBySelector('#form2 .name', 'Georgii');

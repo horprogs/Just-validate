@@ -3,7 +3,7 @@ import {
   changeTextBySelector,
   clickBySelector,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { waitFor } from '@testing-library/dom';
 
@@ -31,11 +31,15 @@ describe('removingFields', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
 
     validation.removeField('#name');
 
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
 
@@ -66,13 +70,13 @@ describe('removingFields', () => {
     expect(onSubmit).not.toHaveBeenCalled();
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
 
     validation.removeGroup('#read_terms_checkbox_group');
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
@@ -118,9 +122,15 @@ describe('removingFields', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
 
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toBeInTheDocument();
 
     validation.removeField('#name');
     validation.removeField('#email');
@@ -129,9 +139,15 @@ describe('removingFields', () => {
     // @ts-ignore
     console.error.mockReset();
 
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
 
@@ -139,9 +155,15 @@ describe('removingFields', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#password')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toBeInTheDocument();
   });
 
   it('should be able to remove multiple groups', async () => {
@@ -165,10 +187,10 @@ describe('removingFields', () => {
     onSubmit.mockReset();
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).toBeInTheDocument();
 
     validation.removeGroup('#read_terms_checkbox_group');
@@ -179,10 +201,10 @@ describe('removingFields', () => {
     console.error.mockReset();
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).not.toBeInTheDocument();
 
     await clickBySelector('#submit-btn');
@@ -191,10 +213,10 @@ describe('removingFields', () => {
     });
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).not.toBeInTheDocument();
   });
 
@@ -250,7 +272,9 @@ describe('removingFields', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#password')).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).not.toBeInTheDocument();
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
@@ -276,8 +300,12 @@ describe('removingFields', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).toBeInTheDocument();
 
     expect(onSubmit).not.toHaveBeenCalled();
     onSubmit.mockReset();
@@ -334,10 +362,10 @@ describe('removingFields', () => {
     });
 
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).toBeInTheDocument();
 
     expect(onSubmit).not.toHaveBeenCalled();

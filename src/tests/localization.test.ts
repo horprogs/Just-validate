@@ -3,7 +3,7 @@ import {
   changeTextBySelector,
   clickBySelector,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { waitFor } from '@testing-library/dom';
 
@@ -41,7 +41,7 @@ describe('localization', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Name is invalid'
     );
 
@@ -53,32 +53,32 @@ describe('localization', () => {
     validation.setCurrentLocale('ru');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Имя некорректно'
-      );
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Имя некорректно');
     });
 
     validation.setCurrentLocale();
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Name is invalid');
     });
 
     validation.setCurrentLocale('en');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Name is invalid');
     });
 
     validation.setCurrentLocale('qq');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'Name is invalid'
-      );
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Name is invalid');
     });
   });
 
@@ -124,20 +124,20 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Name is required'
     );
-    expect(getElemByTestId('error-label-#consent_checkbox')).toHaveTextContent(
-      'Consent checkbox is required'
-    );
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveTextContent('Consent checkbox is required');
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toHaveTextContent('At least one term is required');
     expect(
-      getElemByTestId('error-label-#communication_radio_group')
+      getElemByKey('error-label', '#communication_radio_group', validation)
     ).toHaveTextContent('Communication channel is required');
     expect(
-      getElemByTestId('error-label-#favorite_animal_select')
+      getElemByKey('error-label', '#favorite_animal_select', validation)
     ).toHaveTextContent('Animal select is required');
   });
 
@@ -191,19 +191,23 @@ describe('localization', () => {
     await waitFor(() => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
-      'Name looks good'
-    );
-    expect(getElemByTestId('success-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#email')).toHaveTextContent(
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).toHaveTextContent('Name looks good');
+    expect(
+      getElemByKey('success-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(getElemByKey('error-label', '#email', validation)).toHaveTextContent(
       'Email is invalid'
     );
     expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
+      getElemByKey('success-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toHaveTextContent('Group is invalid');
 
     await clickBySelector('#read_terms_checkbox_group_1');
@@ -217,19 +221,23 @@ describe('localization', () => {
 
     expect(onSubmit).toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#email')).not.toBeInTheDocument();
-    expect(getElemByTestId('error-label-#name')).not.toBeInTheDocument();
-    expect(getElemByTestId('success-label-#email')).toHaveTextContent(
-      'Email looks good'
-    );
-    expect(getElemByTestId('success-label-#name')).toHaveTextContent(
-      'Name looks good'
-    );
     expect(
-      getElemByTestId('success-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    expect(
+      getElemByKey('success-label', '#email', validation)
+    ).toHaveTextContent('Email looks good');
+    expect(
+      getElemByKey('success-label', '#name', validation)
+    ).toHaveTextContent('Name looks good');
+    expect(
+      getElemByKey('success-label', '#read_terms_checkbox_group', validation)
     ).toHaveTextContent('Group looks good');
     expect(
-      getElemByTestId('error-label-#read_terms_checkbox_group')
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).not.toBeInTheDocument();
   });
 
@@ -259,7 +267,7 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field is required'
     );
   });
@@ -290,7 +298,7 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Value is incorrect'
     );
   });
@@ -322,7 +330,7 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Custom error'
     );
   });
@@ -356,14 +364,16 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'Custom error'
     );
 
     validation.setCurrentLocale('ru');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent('Ошибка');
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Ошибка');
     });
   });
 
@@ -398,12 +408,16 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent('Min 3');
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
+      'Min 3'
+    );
 
     validation.setCurrentLocale('ru');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent('Мин 3');
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('Мин 3');
     });
   });
 
@@ -430,16 +444,16 @@ describe('localization', () => {
       expect(getElem('#submit-btn')).toBeEnabled();
     });
 
-    expect(getElemByTestId('error-label-#name')).toHaveTextContent(
+    expect(getElemByKey('error-label', '#name', validation)).toHaveTextContent(
       'The field must contain a minimum of 3 characters'
     );
 
     validation.setCurrentLocale('ru');
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#name')).toHaveTextContent(
-        'The field must contain a minimum of 3 characters'
-      );
+      expect(
+        getElemByKey('error-label', '#name', validation)
+      ).toHaveTextContent('The field must contain a minimum of 3 characters');
     });
   });
 });

@@ -21,6 +21,10 @@ const basic = (): void => {
     lockForm: true,
   });
 
+  const emailElem = document.querySelector(
+    '#example1_email'
+  ) as HTMLInputElement;
+
   validation
     .addField('#example1_name', [
       {
@@ -32,7 +36,7 @@ const basic = (): void => {
         value: 15,
       },
     ])
-    .addField('#example1_email', [
+    .addField(emailElem, [
       {
         rule: 'required' as Rules,
       },
@@ -62,6 +66,17 @@ const basic = (): void => {
       ev?.preventDefault();
       window.showNotification();
     });
+
+  validation.addField('#example1_name', [
+    {
+      rule: 'minLength' as Rules,
+      value: 10,
+    },
+    {
+      rule: 'maxLength' as Rules,
+      value: 15,
+    },
+  ]);
 };
 
 const advanced = (): void => {

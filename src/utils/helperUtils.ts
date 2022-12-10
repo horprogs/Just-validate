@@ -51,3 +51,11 @@ export const getClassList = (classList?: ClassListType): string[] => {
 
   return [];
 };
+
+export const mapToObject = <S, T>(map: Map<S, T>): { [key: string]: T } => {
+  return Object.fromEntries(map);
+};
+
+export const isElement = (element: unknown): boolean => {
+  return element instanceof Element || element instanceof HTMLDocument;
+};

@@ -2,9 +2,9 @@ import JustValidate from '../main';
 import { Rules } from '../modules/interfaces';
 import {
   clickBySelector,
-  getAllElemsByTestId,
+  getAllElemsByKey,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 import { waitFor } from '@testing-library/dom';
 import { mockup } from './mockup';
@@ -41,15 +41,19 @@ describe('Errors container', () => {
     });
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).not.toBeInTheDocument();
     expect(console.error).toHaveBeenCalled();
     // @ts-ignore
     console.error.mockReset();
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
+      1
+    );
   });
 
   test('wrong element', async () => {
@@ -81,13 +85,17 @@ describe('Errors container', () => {
     console.error.mockReset();
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).not.toBeInTheDocument();
 
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
+      1
+    );
   });
 
   test('invalid setting', async () => {
@@ -119,12 +127,16 @@ describe('Errors container', () => {
     console.error.mockReset();
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).not.toBeInTheDocument();
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
+      1
+    );
   });
 
   test('should render errors in the container', async () => {
@@ -179,65 +191,87 @@ describe('Errors container', () => {
     });
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#email',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#email')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#password',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#password')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#message',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#message')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#consent_checkbox',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#consent_checkbox')).toHaveLength(
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
       1
     );
 
     expect(
-      getElemByTestId(
-        'error-label-#read_terms_checkbox_group',
+      getElemByKey(
+        'error-label',
+        '#email',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(getAllElemsByKey('error-label', '#email', validation)).toHaveLength(
+      1
+    );
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#password',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
     expect(
-      getAllElemsByTestId('error-label-#read_terms_checkbox_group')
+      getAllElemsByKey('error-label', '#password', validation)
     ).toHaveLength(1);
 
     expect(
-      getElemByTestId(
-        'error-label-#communication_radio_group',
+      getElemByKey(
+        'error-label',
+        '#message',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
     expect(
-      getAllElemsByTestId('error-label-#communication_radio_group')
+      getAllElemsByKey('error-label', '#message', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#consent_checkbox',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#read_terms_checkbox_group',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#read_terms_checkbox_group', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#communication_radio_group',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#communication_radio_group', validation)
     ).toHaveLength(1);
   });
 
@@ -293,65 +327,87 @@ describe('Errors container', () => {
     });
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#email',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#email')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#password',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#password')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#message',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#message')).toHaveLength(1);
-
-    expect(
-      getElemByTestId(
-        'error-label-#consent_checkbox',
-        document.querySelector('.errors-container')!
-      )
-    ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#consent_checkbox')).toHaveLength(
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
       1
     );
 
     expect(
-      getElemByTestId(
-        'error-label-#read_terms_checkbox_group',
+      getElemByKey(
+        'error-label',
+        '#email',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(getAllElemsByKey('error-label', '#email', validation)).toHaveLength(
+      1
+    );
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#password',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
     expect(
-      getAllElemsByTestId('error-label-#read_terms_checkbox_group')
+      getAllElemsByKey('error-label', '#password', validation)
     ).toHaveLength(1);
 
     expect(
-      getElemByTestId(
-        'error-label-#communication_radio_group',
+      getElemByKey(
+        'error-label',
+        '#message',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
     expect(
-      getAllElemsByTestId('error-label-#communication_radio_group')
+      getAllElemsByKey('error-label', '#message', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#consent_checkbox',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#consent_checkbox', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#read_terms_checkbox_group',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#read_terms_checkbox_group', validation)
+    ).toHaveLength(1);
+
+    expect(
+      getElemByKey(
+        'error-label',
+        '#communication_radio_group',
+        validation,
+        document.querySelector('.errors-container')!
+      )
+    ).toHaveTextContent('The field is required');
+    expect(
+      getAllElemsByKey('error-label', '#communication_radio_group', validation)
     ).toHaveLength(1);
   });
 
@@ -388,21 +444,27 @@ describe('Errors container', () => {
     });
 
     expect(
-      getElemByTestId(
-        'error-label-#name',
+      getElemByKey(
+        'error-label',
+        '#name',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
-    expect(getAllElemsByTestId('error-label-#name')).toHaveLength(1);
+    expect(getAllElemsByKey('error-label', '#name', validation)).toHaveLength(
+      1
+    );
 
     expect(
-      getElemByTestId(
-        'error-label-#read_terms_checkbox_group',
+      getElemByKey(
+        'error-label',
+        '#read_terms_checkbox_group',
+        validation,
         document.querySelector('.errors-container')!
       )
     ).toHaveTextContent('The field is required');
     expect(
-      getAllElemsByTestId('error-label-#read_terms_checkbox_group')
+      getAllElemsByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toHaveLength(1);
   });
 });

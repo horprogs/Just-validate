@@ -5,9 +5,9 @@ import { waitFor } from '@testing-library/dom';
 import {
   changeTextBySelector,
   clickBySelector,
-  getAllElemsByTestId,
+  getAllElemsByKey,
   getElem,
-  getElemByTestId,
+  getElemByKey,
 } from '../utils/testingUtils';
 
 describe('ShowErrors method', () => {
@@ -64,9 +64,9 @@ describe('ShowErrors method', () => {
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-      'The field is required'
-    );
+    expect(
+      getElemByKey('error-label', '#password', validation)
+    ).toHaveTextContent('The field is required');
 
     await changeTextBySelector('#password', '123');
 
@@ -78,9 +78,9 @@ describe('ShowErrors method', () => {
     expect(onSubmit).toHaveBeenCalled();
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-        'Your password invalid!'
-      );
+      expect(
+        getElemByKey('error-label', '#password', validation)
+      ).toHaveTextContent('Your password invalid!');
     });
 
     // should call onSuccess every time, not just once
@@ -91,9 +91,9 @@ describe('ShowErrors method', () => {
 
     expect(onSubmit).toHaveBeenCalled();
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#password')).toHaveTextContent(
-        'Your password invalid!'
-      );
+      expect(
+        getElemByKey('error-label', '#password', validation)
+      ).toHaveTextContent('Your password invalid!');
     });
   });
 
@@ -129,7 +129,9 @@ describe('ShowErrors method', () => {
     expect(onSubmit).toHaveBeenCalled();
 
     await waitFor(() => {
-      expect(getElemByTestId('error-label-#password')).toHaveTextContent('');
+      expect(
+        getElemByKey('error-label', '#password', validation)
+      ).toHaveTextContent('');
     });
   });
 
@@ -152,6 +154,8 @@ describe('ShowErrors method', () => {
       '#password': 'The password is invalid',
     });
 
-    expect(getAllElemsByTestId('error-label-#password').length).toBe(1);
+    expect(
+      getAllElemsByKey('error-label', '#password', validation).length
+    ).toBe(1);
   });
 });

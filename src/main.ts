@@ -30,6 +30,7 @@ import {
   CustomMessageFuncType,
   ShowLabelsInterface,
   FieldRuleValueType,
+  FieldSelectorType,
 } from './modules/interfaces';
 import {
   DEFAULT_ERROR_FIELD_MESSAGE,
@@ -39,6 +40,7 @@ import {
   getClassList,
   getClosestParent,
   getNodeParents,
+  isElement,
   isPromise,
 } from './utils/helperUtils';
 import { errorLabelCss } from './modules/inlineStyles.compressed';
@@ -88,6 +90,7 @@ class JustValidate {
   tooltips: TooltipInstance[] = [];
   lastScrollPosition?: number;
   isScrollTick?: boolean;
+  fieldIds: Map<FieldSelectorType, string> = new Map();
 
   constructor(
     form: string | Element,
@@ -148,6 +151,30 @@ class JustValidate {
     }
   }
 
+  getKeyByFieldSelector = (field: FieldSelectorType): string | undefined => {
+    return this.fieldIds.get(field);
+  };
+
+  getFieldSelectorByKey = (key: string): FieldSelectorType | undefined => {
+    for (const [fieldSelector, k] of this.fieldIds) {
+      if (key === k) {
+        return fieldSelector;
+      }
+    }
+
+    return undefined;
+  };
+
+  setKeyByFieldSelector = (field: FieldSelectorType): string => {
+    if (this.fieldIds.has(field)) {
+      return this.fieldIds.get(field)!;
+    }
+
+    const key = String(this.fieldIds.size + 1);
+    this.fieldIds.set(field, key);
+    return key;
+  };
+
   refreshAllTooltips = (): void => {
     this.tooltips.forEach((item) => {
       item.refresh();
@@ -177,9 +204,7 @@ class JustValidate {
 
     if (!localisedStr) {
       if (customMsg) {
-        localisedStr =
-          customMsg ||
-          this.dictLocale.find((item) => item.key === rule)?.dict['en'];
+        localisedStr = customMsg;
       }
     }
 
@@ -242,36 +267,35 @@ class JustValidate {
     );
   }
 
-  setFieldInvalid(field: string, fieldRule: FieldRuleInterface): void {
-    this.fields[field].isValid = false;
-    this.fields[field].errorMessage = this.getFieldErrorMessage(
+  setFieldInvalid(key: string, fieldRule: FieldRuleInterface): void {
+    this.fields[key].isValid = false;
+    this.fields[key].errorMessage = this.getFieldErrorMessage(
       fieldRule,
-      this.fields[field].elem
+      this.fields[key].elem
     );
   }
 
   setFieldValid(
-    field: string,
+    key: string,
     successMessage?: string | CustomMessageFuncType
   ): void {
-    this.fields[field].isValid = true;
+    this.fields[key].isValid = true;
     if (successMessage !== undefined) {
-      this.fields[field].successMessage = this.getFieldSuccessMessage(
+      this.fields[key].successMessage = this.getFieldSuccessMessage(
         successMessage,
-        this.fields[field].elem
+        this.fields[key].elem
       );
     }
   }
 
-  setGroupInvalid(groupName: string, groupRule: GroupRuleInterface): void {
-    this.groupFields[groupName].isValid = false;
-    this.groupFields[groupName].errorMessage =
-      this.getGroupErrorMessage(groupRule);
+  setGroupInvalid(key: string, groupRule: GroupRuleInterface): void {
+    this.groupFields[key].isValid = false;
+    this.groupFields[key].errorMessage = this.getGroupErrorMessage(groupRule);
   }
 
-  setGroupValid(groupName: string, groupRule: GroupRuleInterface): void {
-    this.groupFields[groupName].isValid = true;
-    this.groupFields[groupName].successMessage =
+  setGroupValid(key: string, groupRule: GroupRuleInterface): void {
+    this.groupFields[key].isValid = true;
+    this.groupFields[key].successMessage =
       this.getGroupSuccessMessage(groupRule);
   }
 
@@ -287,23 +311,23 @@ class JustValidate {
   }
 
   validateGroupRule(
-    groupName: string,
+    key: string,
     elems: HTMLInputElement[],
     groupRule: GroupRuleInterface
   ): Promise<any> | void {
     switch (groupRule.rule) {
       case GroupRules.Required: {
         if (elems.every((elem) => !elem.checked)) {
-          this.setGroupInvalid(groupName, groupRule);
+          this.setGroupInvalid(key, groupRule);
         } else {
-          this.setGroupValid(groupName, groupRule);
+          this.setGroupValid(key, groupRule);
         }
       }
     }
   }
 
   validateFieldRule(
-    field: string,
+    key: string,
     elem: HTMLInputElement,
     fieldRule: FieldRuleInterface,
     afterInputChanged = false
@@ -318,7 +342,7 @@ class JustValidate {
       );
 
       if (!result) {
-        this.setFieldInvalid(field, fieldRule);
+        this.setFieldInvalid(key, fieldRule);
       }
       return;
     }
@@ -326,19 +350,19 @@ class JustValidate {
     switch (fieldRule.rule) {
       case Rules.Required: {
         if (isEmpty(elemValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.Email: {
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (!isEmail(elemValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
@@ -346,22 +370,22 @@ class JustValidate {
       case Rules.MaxLength: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -370,7 +394,7 @@ class JustValidate {
         }
 
         if (isLengthMoreThanMax(elemValue, ruleValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
@@ -378,22 +402,22 @@ class JustValidate {
       case Rules.MinLength: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -402,14 +426,14 @@ class JustValidate {
         }
 
         if (isLengthLessThanMin(elemValue, ruleValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.Password: {
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -418,14 +442,14 @@ class JustValidate {
         }
 
         if (!isPassword(elemValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.StrongPassword: {
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -434,14 +458,14 @@ class JustValidate {
         }
 
         if (!isStrongPassword(elemValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.Number: {
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -450,7 +474,7 @@ class JustValidate {
         }
 
         if (!isNumber(elemValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
@@ -458,22 +482,22 @@ class JustValidate {
       case Rules.MaxNumber: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -484,7 +508,7 @@ class JustValidate {
         const num = +elemValue;
 
         if (Number.isNaN(num) || isNumberMoreThanMax(num, ruleValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
@@ -492,22 +516,22 @@ class JustValidate {
       case Rules.MinNumber: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -518,7 +542,7 @@ class JustValidate {
         const num = +elemValue;
 
         if (Number.isNaN(num) || isNumberLessThanMin(num, ruleValue)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
@@ -526,9 +550,9 @@ class JustValidate {
       case Rules.CustomRegexp: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           return;
         }
 
@@ -538,16 +562,16 @@ class JustValidate {
           regexp = new RegExp(ruleValue as string | RegExp);
         } catch (e) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] should be a valid regexp. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] should be a valid regexp. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         const str = String(elemValue);
 
         if (str !== '' && !regexp.test(str)) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
 
         break;
@@ -556,17 +580,17 @@ class JustValidate {
       case Rules.MinFilesCount: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -574,7 +598,7 @@ class JustValidate {
           Number.isFinite((elemValue as FileList)?.length) &&
           (elemValue as FileList).length < ruleValue
         ) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -584,17 +608,17 @@ class JustValidate {
       case Rules.MaxFilesCount: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
         if (typeof ruleValue !== 'number') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be a number. The field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be a number. The field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -602,7 +626,7 @@ class JustValidate {
           Number.isFinite((elemValue as FileList)?.length) &&
           (elemValue as FileList).length > ruleValue
         ) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           break;
         }
 
@@ -612,17 +636,17 @@ class JustValidate {
       case Rules.Files: {
         if (ruleValue === undefined) {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field is not defined. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field is not defined. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           return;
         }
 
         if (typeof ruleValue !== 'object') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be an object. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be an object. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           return;
         }
 
@@ -630,9 +654,9 @@ class JustValidate {
 
         if (typeof filesConfig !== 'object') {
           console.error(
-            `Value for ${fieldRule.rule} rule for [${field}] field should be an object with files array. This field will be always invalid.`
+            `Value for ${fieldRule.rule} rule for [${key}] field should be an object with files array. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           return;
         }
 
@@ -680,14 +704,14 @@ class JustValidate {
             const file = elemValue.item(fileIdx);
 
             if (!file) {
-              this.setFieldInvalid(field, fieldRule);
+              this.setFieldInvalid(key, fieldRule);
               break;
             }
 
             const filesInvalid = isFilePropsInvalid(file, filesConfig);
 
             if (filesInvalid) {
-              this.setFieldInvalid(field, fieldRule);
+              this.setFieldInvalid(key, fieldRule);
               break;
             }
           }
@@ -699,9 +723,9 @@ class JustValidate {
       default: {
         if (typeof fieldRule.validator !== 'function') {
           console.error(
-            `Validator for custom rule for [${field}] field should be a function. This field will be always invalid.`
+            `Validator for custom rule for [${key}] field should be a function. This field will be always invalid.`
           );
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
           return;
         }
 
@@ -712,53 +736,53 @@ class JustValidate {
 
         if (typeof result !== 'boolean' && typeof result !== 'function') {
           console.error(
-            `Validator return value for [${field}] field should be boolean or function. It will be cast to boolean.`
+            `Validator return value for [${key}] field should be boolean or function. It will be cast to boolean.`
           );
         }
 
         if (typeof result === 'function') {
           // we should not call async custom validator on every input change
           if (afterInputChanged) {
-            this.fields[field].asyncCheckPending = true;
+            this.fields[key].asyncCheckPending = true;
           } else {
-            this.fields[field].asyncCheckPending = false;
+            this.fields[key].asyncCheckPending = false;
             const promise = result();
 
             if (!isPromise(promise)) {
               console.error(
-                `Validator function for custom rule for [${field}] field should return a Promise. This field will be always invalid.`
+                `Validator function for custom rule for [${key}] field should return a Promise. This field will be always invalid.`
               );
-              this.setFieldInvalid(field, fieldRule);
+              this.setFieldInvalid(key, fieldRule);
               return;
             }
 
             return promise
               .then((resp) => {
                 if (!resp) {
-                  this.setFieldInvalid(field, fieldRule);
+                  this.setFieldInvalid(key, fieldRule);
                 }
               })
               .catch(() => {
-                this.setFieldInvalid(field, fieldRule);
+                this.setFieldInvalid(key, fieldRule);
               });
           }
         }
 
         if (!result) {
-          this.setFieldInvalid(field, fieldRule);
+          this.setFieldInvalid(key, fieldRule);
         }
       }
     }
   }
 
-  validateField(fieldName: string, afterInputChanged = false): Promise<any> {
-    const field = this.fields[fieldName];
+  validateField(key: string, afterInputChanged = false): Promise<any> {
+    const field = this.fields[key];
 
     field.isValid = true;
     const promises: Promise<any>[] = [];
     [...field.rules].reverse().forEach((rule) => {
       const res = this.validateFieldRule(
-        fieldName,
+        key,
         field.elem,
         rule,
         afterInputChanged
@@ -770,41 +794,40 @@ class JustValidate {
     });
 
     if (field.isValid) {
-      this.setFieldValid(fieldName, field.config?.successMessage);
+      this.setFieldValid(key, field.config?.successMessage);
     }
 
     return Promise.allSettled(promises);
   }
 
-  revalidateField(field: string): Promise<boolean> {
-    if (typeof field !== 'string') {
+  public revalidateField(fieldSelector: FieldSelectorType): Promise<boolean> {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
-        `Field selector is not valid. Please specify a string selector.`
+        `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
     }
 
-    if (!this.fields[field]) {
+    const key = this.getKeyByFieldSelector(fieldSelector);
+
+    if (!key || !this.fields[key]) {
       console.error(`Field not found. Check the field selector.`);
       return Promise.reject();
     }
 
     return new Promise((resolve) => {
-      this.validateField(field, true).finally(() => {
-        this.clearFieldStyle(field);
-        this.clearFieldLabel(field);
-        this.renderFieldError(field);
-        resolve(!!this.fields[field].isValid);
+      this.validateField(key, true).finally(() => {
+        this.clearFieldStyle(key);
+        this.clearFieldLabel(key);
+        this.renderFieldError(key);
+        resolve(!!this.fields[key].isValid);
       });
     });
   }
 
-  validateGroup(
-    groupName: string,
-    group: GroupFieldInterface
-  ): Promise<any> | void {
+  validateGroup(key: string, group: GroupFieldInterface): Promise<any> | void {
     const promises: Promise<any>[] = [];
     [...group.rules].reverse().forEach((rule) => {
-      const res = this.validateGroupRule(groupName, group.elems, rule);
+      const res = this.validateGroupRule(key, group.elems, rule);
 
       if (isPromise(res)) {
         promises.push(res as Promise<any>);
@@ -815,8 +838,8 @@ class JustValidate {
   }
 
   focusInvalidField(): void {
-    for (const fieldName in this.fields) {
-      const field = this.fields[fieldName];
+    for (const key in this.fields) {
+      const field = this.fields[key];
       if (!field.isValid) {
         setTimeout(() => field.elem.focus(), 0);
         break;
@@ -836,17 +859,17 @@ class JustValidate {
     return new Promise<boolean>((resolve) => {
       const promises: Promise<any>[] = [];
 
-      Object.keys(this.fields).forEach((fieldName) => {
-        const promise = this.validateField(fieldName);
+      Object.keys(this.fields).forEach((key) => {
+        const promise = this.validateField(key);
 
         if (isPromise(promise)) {
           promises.push(promise as Promise<any>);
         }
       });
 
-      Object.keys(this.groupFields).forEach((groupName) => {
-        const group = this.groupFields[groupName];
-        const promise = this.validateGroup(groupName, group);
+      Object.keys(this.groupFields).forEach((key) => {
+        const group = this.groupFields[key];
+        const promise = this.validateGroup(key, group);
 
         if (isPromise(promise)) {
           promises.push(promise as Promise<any>);
@@ -865,7 +888,7 @@ class JustValidate {
     });
   }
 
-  revalidate(): Promise<boolean> {
+  public revalidate(): Promise<boolean> {
     return new Promise((resolve) => {
       this.validateHandler(undefined, true).finally(() => {
         if (this.globalConfig.focusInvalidField) {
@@ -909,43 +932,43 @@ class JustValidate {
   }
 
   handleFieldChange = (target: HTMLInputElement): void => {
-    let currentFieldName;
+    let foundKey;
 
-    for (const fieldName in this.fields) {
-      const field = this.fields[fieldName];
+    for (const key in this.fields) {
+      const field = this.fields[key];
 
       if (field.elem === target) {
-        currentFieldName = fieldName;
+        foundKey = key;
         break;
       }
     }
 
-    if (!currentFieldName) {
+    if (!foundKey) {
       return;
     }
 
-    this.validateField(currentFieldName, true);
+    this.validateField(foundKey, true);
   };
 
   handleGroupChange = (target: HTMLInputElement): void => {
     let currentGroup;
-    let currentGroupName;
+    let foundKey;
 
-    for (const groupName in this.groupFields) {
-      const group = this.groupFields[groupName];
+    for (const key in this.groupFields) {
+      const group = this.groupFields[key];
 
       if (group.elems.find((elem) => elem === target)) {
         currentGroup = group;
-        currentGroupName = groupName;
+        foundKey = key;
         break;
       }
     }
 
-    if (!currentGroup || !currentGroupName) {
+    if (!currentGroup || !foundKey) {
       return;
     }
 
-    this.validateGroup(currentGroupName, currentGroup);
+    this.validateGroup(foundKey, currentGroup);
   };
 
   handlerChange = (ev: Event): void => {
@@ -979,35 +1002,41 @@ class JustValidate {
     );
   }
 
-  addField(
-    field: string,
+  public addField(
+    fieldSelector: FieldSelectorType,
     rules: FieldRuleInterface[],
     config?: FieldConfigInterface
   ): JustValidate {
-    if (typeof field !== 'string') {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
-        `Field selector is not valid. Please specify a string selector.`
+        `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
     }
 
-    const elem = this.form!.querySelector(field) as HTMLInputElement;
+    let elem;
+
+    if (typeof fieldSelector === 'string') {
+      elem = this.form!.querySelector(fieldSelector) as HTMLInputElement | null;
+    } else {
+      elem = fieldSelector;
+    }
 
     if (!elem) {
       throw Error(
-        `Field with ${field} selector not found! Please check the field selector.`
+        `Field doesn't exist in the DOM! Please check the field selector.`
       );
     }
 
     if (!Array.isArray(rules) || !rules.length) {
       throw Error(
-        `Rules argument for the field [${field}] should be an array and should contain at least 1 element.`
+        `Rules argument should be an array and should contain at least 1 element.`
       );
     }
 
     rules.forEach((item) => {
       if (!('rule' in item || 'validator' in item || 'plugin' in item)) {
         throw Error(
-          `Rules argument for the field [${field}] must contain at least one rule or validator property.`
+          `Rules argument must contain at least one rule or validator property.`
         );
       }
 
@@ -1024,7 +1053,9 @@ class JustValidate {
       }
     });
 
-    this.fields[field] = {
+    const key = this.setKeyByFieldSelector(fieldSelector);
+
+    this.fields[key] = {
       elem,
       rules,
       isValid: undefined,
@@ -1040,50 +1071,54 @@ class JustValidate {
     return this;
   }
 
-  removeField(field: string): JustValidate {
-    if (typeof field !== 'string') {
+  public removeField(fieldSelector: FieldSelectorType): JustValidate {
+    if (typeof fieldSelector !== 'string' && !isElement(fieldSelector)) {
       throw Error(
-        `Field selector is not valid. Please specify a string selector.`
+        `Field selector is not valid. Please specify a string selector or a valid DOM element.`
       );
     }
 
-    if (!this.fields[field]) {
+    const key = this.getKeyByFieldSelector(fieldSelector);
+
+    if (!key || !this.fields[key]) {
       console.error(`Field not found. Check the field selector.`);
       return this;
     }
 
-    const type = this.getListenerType(this.fields[field].elem.type);
-    this.removeListener(type, this.fields[field].elem, this.handlerChange);
+    const type = this.getListenerType(this.fields[key].elem.type);
+    this.removeListener(type, this.fields[key].elem, this.handlerChange);
     this.clearErrors();
 
-    delete this.fields[field];
+    delete this.fields[key];
     return this;
   }
 
-  removeGroup(group: string): JustValidate {
+  public removeGroup(group: string): JustValidate {
     if (typeof group !== 'string') {
       throw Error(
         `Group selector is not valid. Please specify a string selector.`
       );
     }
 
-    if (!this.groupFields[group]) {
+    const key = this.getKeyByFieldSelector(group);
+
+    if (!key || !this.groupFields[key]) {
       console.error(`Group not found. Check the group selector.`);
       return this;
     }
 
-    this.groupFields[group].elems.forEach((elem) => {
+    this.groupFields[key].elems.forEach((elem) => {
       const type = this.getListenerType(elem.type);
       this.removeListener(type, elem, this.handlerChange);
     });
 
     this.clearErrors();
 
-    delete this.groupFields[group];
+    delete this.groupFields[key];
     return this;
   }
 
-  addRequiredGroup(
+  public addRequiredGroup(
     groupField: string,
     errorMessage?: string,
     config?: FieldConfigInterface,
@@ -1115,7 +1150,9 @@ class JustValidate {
       return parent[1].elems.find((elem) => elem !== input);
     });
 
-    this.groupFields[groupField] = {
+    const key = this.setKeyByFieldSelector(groupField);
+
+    this.groupFields[key] = {
       rules: [
         {
           rule: GroupRules.Required,
@@ -1159,13 +1196,13 @@ class JustValidate {
     this.addListener(type, elem, this.handlerChange);
   }
 
-  clearFieldLabel(fieldName: string): void {
-    this.errorLabels[fieldName]?.remove();
-    this.successLabels[fieldName]?.remove();
+  clearFieldLabel(key: string): void {
+    this.errorLabels[key]?.remove();
+    this.successLabels[key]?.remove();
   }
 
-  clearFieldStyle(fieldName: string): void {
-    const field = this.fields[fieldName];
+  clearFieldStyle(key: string): void {
+    const field = this.fields[key];
 
     const errorStyle =
       field.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
@@ -1200,12 +1237,12 @@ class JustValidate {
       this.successLabels[key].remove()
     );
 
-    for (const fieldName in this.fields) {
-      this.clearFieldStyle(fieldName);
+    for (const key in this.fields) {
+      this.clearFieldStyle(key);
     }
 
-    for (const groupName in this.groupFields) {
-      const group = this.groupFields[groupName];
+    for (const key in this.groupFields) {
+      const group = this.groupFields[key];
 
       const errorStyle =
         group.config?.errorFieldStyle || this.globalConfig.errorFieldStyle;
@@ -1337,7 +1374,7 @@ class JustValidate {
   }
 
   createErrorLabelElem(
-    name: string,
+    key: string,
     errorMessage: string,
     config?: FieldConfigInterface
   ): HTMLDivElement {
@@ -1362,16 +1399,16 @@ class JustValidate {
     }
 
     if (this.globalConfig.testingMode) {
-      errorLabel.dataset.testId = `error-label-${name}`;
+      errorLabel.dataset.testId = `error-label-${key}`;
     }
 
-    this.errorLabels[name] = errorLabel;
+    this.errorLabels[key] = errorLabel;
 
     return errorLabel;
   }
 
   createSuccessLabelElem(
-    name: string,
+    key: string,
     successMessage?: string,
     config?: FieldConfigInterface
   ): HTMLDivElement | null {
@@ -1395,10 +1432,10 @@ class JustValidate {
     );
 
     if (this.globalConfig.testingMode) {
-      successLabel.dataset.testId = `success-label-${name}`;
+      successLabel.dataset.testId = `success-label-${key}`;
     }
 
-    this.successLabels[name] = successLabel;
+    this.successLabels[key] = successLabel;
 
     return successLabel;
   }
@@ -1493,13 +1530,22 @@ class JustValidate {
   showLabels(fields: ShowLabelsInterface, isError: boolean): void {
     Object.keys(fields).forEach((fieldName, i) => {
       const error = fields[fieldName];
-      const field = this.fields[fieldName];
+
+      // supports only string selectors for now
+      const key = this.getKeyByFieldSelector(fieldName);
+
+      if (!key || !this.fields[key]) {
+        console.error(`Field not found. Check the field selector.`);
+        return;
+      }
+
+      const field = this.fields[key];
 
       field.isValid = !isError;
-      this.clearFieldStyle(fieldName);
-      this.clearFieldLabel(fieldName);
+      this.clearFieldStyle(key);
+      this.clearFieldLabel(key);
 
-      this.renderFieldError(fieldName, error);
+      this.renderFieldError(key, error);
 
       if (i === 0 && this.globalConfig.focusInvalidField) {
         setTimeout(() => field.elem.focus(), 0);
@@ -1507,7 +1553,7 @@ class JustValidate {
     });
   }
 
-  showErrors(fields: ShowLabelsInterface): void {
+  public showErrors(fields: ShowLabelsInterface): void {
     if (typeof fields !== 'object') {
       throw Error(
         '[showErrors]: Errors should be an object with key: value format'
@@ -1517,7 +1563,7 @@ class JustValidate {
     this.showLabels(fields, true);
   }
 
-  showSuccessLabels(fields: ShowLabelsInterface): void {
+  public showSuccessLabels(fields: ShowLabelsInterface): void {
     if (typeof fields !== 'object') {
       throw Error(
         '[showSuccessLabels]: Labels should be an object with key: value format'
@@ -1527,8 +1573,8 @@ class JustValidate {
     this.showLabels(fields, false);
   }
 
-  renderFieldError(fieldName: string, message?: string): void {
-    const field = this.fields[fieldName];
+  renderFieldError(key: string, message?: string): void {
+    const field = this.fields[key];
 
     if (field.isValid === undefined) {
       return;
@@ -1538,7 +1584,7 @@ class JustValidate {
       // we should not show success labels if there are async rules pending
       if (!field.asyncCheckPending) {
         const successLabel = this.createSuccessLabelElem(
-          fieldName,
+          key,
           message !== undefined ? message : field.successMessage!,
           field.config
         );
@@ -1570,7 +1616,7 @@ class JustValidate {
     );
 
     const errorLabel = this.createErrorLabelElem(
-      fieldName,
+      key,
       message !== undefined ? message : field.errorMessage!,
       field.config
     );
@@ -1591,8 +1637,8 @@ class JustValidate {
     }
   }
 
-  renderGroupError(groupName: string): void {
-    const group = this.groupFields[groupName];
+  renderGroupError(key: string): void {
+    const group = this.groupFields[key];
 
     if (group.isValid === undefined) {
       return;
@@ -1612,7 +1658,7 @@ class JustValidate {
         );
       });
       const successLabel = this.createSuccessLabelElem(
-        groupName,
+        key,
         group.successMessage,
         group.config
       );
@@ -1643,7 +1689,7 @@ class JustValidate {
     });
 
     const errorLabel = this.createErrorLabelElem(
-      groupName,
+      key,
       group.errorMessage!,
       group.config
     );
@@ -1676,16 +1722,16 @@ class JustValidate {
 
     this.isValid = true;
 
-    for (const groupName in this.groupFields) {
-      this.renderGroupError(groupName);
+    for (const key in this.groupFields) {
+      this.renderGroupError(key);
     }
 
-    for (const fieldName in this.fields) {
-      this.renderFieldError(fieldName);
+    for (const key in this.fields) {
+      this.renderFieldError(key);
     }
   }
 
-  destroy(): void {
+  public destroy(): void {
     this.eventListeners.forEach((event) => {
       this.removeListener(event.type, event.elem, event.func);
     });
@@ -1700,7 +1746,7 @@ class JustValidate {
     }
   }
 
-  refresh(): void {
+  public refresh(): void {
     this.destroy();
 
     if (!this.form) {
@@ -1709,16 +1755,20 @@ class JustValidate {
       this.initialize(this.form, this.globalConfig);
 
       Object.keys(this.fields).forEach((key) => {
-        this.addField(
-          key,
-          [...this.fields[key].rules],
-          this.fields[key].config
-        );
+        const fieldSelector = this.getFieldSelectorByKey(key);
+
+        if (fieldSelector) {
+          this.addField(
+            fieldSelector,
+            [...this.fields[key].rules],
+            this.fields[key].config
+          );
+        }
       });
     }
   }
 
-  setCurrentLocale(locale?: string): void {
+  public setCurrentLocale(locale?: string): void {
     if (typeof locale !== 'string' && locale !== undefined) {
       console.error('Current locale should be a string');
       return;
@@ -1731,12 +1781,12 @@ class JustValidate {
     }
   }
 
-  onSuccess(callback: (ev?: Event) => void): JustValidate {
+  public onSuccess(callback: (ev?: Event) => void): JustValidate {
     this.onSuccessCallback = callback;
     return this;
   }
 
-  onFail(
+  public onFail(
     callback: (fields: FieldsInterface, groups: GroupFieldsInterface) => void
   ): JustValidate {
     this.onFailCallback = callback;

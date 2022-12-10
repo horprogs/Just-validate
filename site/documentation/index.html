@@ -138,6 +138,11 @@
                 >showSuccessLabels</a
               >
             </li>
+            <li class="nav-item">
+              <a class="nav-link scrollto" href="#section-5-13"
+                >setCurrentLocale</a
+              >
+            </li>
             <li class="nav-item section-title mt-3">
               <a class="nav-link scrollto" href="#section-6">Rules</a>
             </li>
@@ -231,7 +236,7 @@ const validate = new JustValidate('#form');</code></pre>
             <header class="docs-header">
               <h1 class="docs-heading">
                 Quick start
-                <span class="docs-time">Last updated: 2022-03-16</span>
+                <span class="docs-time">Last updated: 2022-12-10</span>
               </h1>
             </header>
             <section class="docs-intro">
@@ -292,6 +297,23 @@ validation
       rule: 'email',
       errorMessage: 'Email is invalid!',
     },
+  ]);</code></pre>
+              <br />
+              Also it is possible to use a DOM element as a field in the
+              <code>.addField()</code> method.
+
+              <pre><code class="language-javascript">
+validation
+  .addField(document.querySelector('#email'), [
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 30,
+    },
+  ])
   ]);</code></pre>
               And that's it! Now our form is validated!
             </section>
@@ -734,7 +756,7 @@ validation
             <header class="docs-header">
               <h1 class="docs-heading">
                 Methods
-                <span class="docs-time">Last updated: 2022-05-18</span>
+                <span class="docs-time">Last updated: 2022-12-09</span>
               </h1>
             </header>
             <section class="docs-section" id="section-5-1">
@@ -742,7 +764,7 @@ validation
               <p>Defines validation rules for the new field.</p>
 
               <pre><code class="language-html">.addField(<br />
-&nbsp;&nbsp;field: string,<br />
+&nbsp;&nbsp;field: string | HTMLInputElement,<br />
 &nbsp;&nbsp;rules: {<br />
 &nbsp;&nbsp; &nbsp;rule?: Rules;<br />
 &nbsp;&nbsp; &nbsp;errorMessage?: string | (<br />
@@ -1021,7 +1043,7 @@ validation
                 Method to trigger a field validation manually. Returns a promise
                 with a boolean value - valid/invalid field.
               </p>
-              <pre><code class="language-html">.revalidateField(field: string).then(isValid =&gt; {})</code></pre>
+              <pre><code class="language-html">.revalidateField(field: string | HTMLInputElement).then(isValid =&gt; {})</code></pre>
             </section>
             <section class="docs-section" id="section-5-6">
               <h2 class="section-heading">revalidate</h2>
@@ -1053,7 +1075,7 @@ validation
                 Method to remove validation rules/events/errors from the
                 particular field
               </p>
-              <pre><code class="language-html">.removeField(field: string)</code></pre>
+              <pre><code class="language-html">.removeField(field: string | HTMLInputElement)</code></pre>
             </section>
             <section class="docs-section" id="section-5-10">
               <h2 class="section-heading">removeGroup</h2>
@@ -1076,6 +1098,13 @@ validation
               <pre><code class="language-html">.showSuccessLabels(errors: {key: message})</code></pre>
               <p>For example:</p>
               <pre><code class="language-html">.showSuccessLabels({ '#email': 'The email looks good!' })</code></pre>
+            </section>
+            <section class="docs-section" id="section-5-13">
+              <h2 class="section-heading">setCurrentLocale</h2>
+              <p>Method to change current locale</p>
+              <pre><code class="language-html">.setCurrentLocale(locale?: string)</code></pre>
+              <p>For example:</p>
+              <pre><code class="language-html">.setCurrentLocale('es')</code></pre>
             </section>
 
             <!--//section-->
