@@ -8,6 +8,7 @@ import {
   isNumber,
   isPassword,
   isStrongPassword,
+  isInvalidOrEmptyString,
 } from './utils/validationUtils';
 import {
   EventListenerInterface,
@@ -356,12 +357,11 @@ class JustValidate {
       }
 
       case Rules.Email: {
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (!isEmail(elemValue)) {
+        if (!isEmail(elemValue as string)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
@@ -384,16 +384,11 @@ class JustValidate {
           break;
         }
 
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        if (isLengthMoreThanMax(elemValue, ruleValue)) {
+        if (isLengthMoreThanMax(elemValue as string, ruleValue)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
@@ -416,64 +411,44 @@ class JustValidate {
           break;
         }
 
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        if (isLengthLessThanMin(elemValue, ruleValue)) {
+        if (isLengthLessThanMin(elemValue as string, ruleValue)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.Password: {
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        if (!isPassword(elemValue)) {
+        if (!isPassword(elemValue as string)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.StrongPassword: {
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        if (!isStrongPassword(elemValue)) {
+        if (!isStrongPassword(elemValue as string)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
       }
 
       case Rules.Number: {
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        if (!isNumber(elemValue)) {
+        if (!isNumber(elemValue as string)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;
@@ -496,16 +471,11 @@ class JustValidate {
           break;
         }
 
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        const num = +elemValue;
+        const num = +(elemValue as string);
 
         if (Number.isNaN(num) || isNumberMoreThanMax(num, ruleValue)) {
           this.setFieldInvalid(key, fieldRule);
@@ -530,16 +500,11 @@ class JustValidate {
           break;
         }
 
-        if (typeof elemValue !== 'string') {
-          this.setFieldInvalid(key, fieldRule);
+        if (isInvalidOrEmptyString(elemValue)) {
           break;
         }
 
-        if (elemValue === '') {
-          break;
-        }
-
-        const num = +elemValue;
+        const num = +(elemValue as string);
 
         if (Number.isNaN(num) || isNumberLessThanMin(num, ruleValue)) {
           this.setFieldInvalid(key, fieldRule);

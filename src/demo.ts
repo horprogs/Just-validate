@@ -136,6 +136,27 @@ const advanced = (): void => {
         rule: 'required' as Rules,
       },
     ])
+    .addField('#example2_input_number', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'number' as Rules,
+      },
+    ])
+    .addField('#example2_input_number_between', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'minNumber' as Rules,
+        value: 10,
+      },
+      {
+        rule: 'maxNumber' as Rules,
+        value: 20,
+      },
+    ])
     .addRequiredGroup(
       '#example2_read_terms_checkbox_group',
       'You should select at least one communication channel'

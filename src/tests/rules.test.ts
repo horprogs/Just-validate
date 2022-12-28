@@ -7,6 +7,7 @@ import {
   isPassword,
   isStrongPassword,
   isNumber,
+  isInvalidOrEmptyString,
 } from '../utils/validationUtils';
 
 describe('Validate rules', () => {
@@ -18,6 +19,8 @@ describe('Validate rules', () => {
     expect(isEmail('ivan@')).toBeFalsy();
     expect(isEmail('ivan')).toBeFalsy();
     expect(isEmail('@gmail.com')).toBeFalsy();
+    expect(isEmail('')).toBeFalsy();
+    expect(isEmail(' ')).toBeFalsy();
   });
 
   test('isPassword', () => {
@@ -91,5 +94,16 @@ describe('Validate rules', () => {
     expect(isStrongPassword('qqqqqqqqq!')).toBeFalsy();
     expect(isStrongPassword('qqqqqqqqqA')).toBeFalsy();
     expect(isStrongPassword('qqqqq_1qA')).toBeFalsy();
+  });
+
+  test('isInvalidOrEmptyString', () => {
+    expect(isInvalidOrEmptyString()).toBeTruthy();
+    expect(isInvalidOrEmptyString(null)).toBeTruthy();
+    expect(isInvalidOrEmptyString(false)).toBeTruthy();
+    expect(isInvalidOrEmptyString(true)).toBeTruthy();
+    expect(isInvalidOrEmptyString('')).toBeTruthy();
+    expect(isInvalidOrEmptyString(' ')).toBeFalsy();
+    expect(isInvalidOrEmptyString('1')).toBeFalsy();
+    expect(isInvalidOrEmptyString('123')).toBeFalsy();
   });
 });

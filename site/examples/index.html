@@ -423,6 +423,29 @@
                 </label>
               </div>
             </div>
+            <div class="form-group mt-3">
+              <label for="example2_input_number">Input any number</label>
+              <input
+                class="form__input form-control"
+                placeholder="Input a number"
+                autocomplete="off"
+                name="example2_input_number"
+                id="example2_input_number"
+              />
+            </div>
+            <div class="form-group mt-3">
+              <label for="example2_input_number_between"
+                >Input a number between 10 and 20</label
+              >
+              <input
+                type="number"
+                class="form__input form-control"
+                placeholder="Input a number"
+                autocomplete="off"
+                name="example2_input_number_between"
+                id="example2_input_number_between"
+              />
+            </div>
 
             <div class="d-grid mt-4">
               <button class="btn btn-primary" id="example2_submit-btn">
@@ -494,6 +517,27 @@
                   '#example2_read_terms_checkbox_group',
                   'You should select at least one communication channel'
                 )
+                .addField('#example2_input_number', [
+                  {
+                    rule: 'required',
+                  },
+                  {
+                    rule: 'number',
+                  },
+                ])
+                .addField('#example2_input_number_between', [
+                  {
+                    rule: 'required',
+                  },
+                  {
+                    rule: 'minNumber',
+                    value: 10,
+                  },
+                  {
+                    rule: 'maxNumber',
+                    value: 20,
+                  },
+                ])
                 .addRequiredGroup('#example2_communication_radio_group')
                 .onSuccess((event) => {
                   event.preventDefault();

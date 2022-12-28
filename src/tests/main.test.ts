@@ -1059,7 +1059,7 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
-  it('should be able to validate non-string value fields', async () => {
+  it('should skip validation for non-string value fields', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -1080,8 +1080,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('Email has invalid format');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1097,8 +1097,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('The field must contain a maximum of 10 characters');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1114,8 +1114,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('The field must contain a minimum of 10 characters');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1130,10 +1130,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent(
-      'Password must contain minimum eight characters, at least one letter and one number'
-    );
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1148,10 +1146,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent(
-      'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    );
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1166,8 +1162,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('Value should be a number');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1183,8 +1179,8 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('Number should be less or equal than 10');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
 
     validation.addField('#consent_checkbox', [
@@ -1200,8 +1196,151 @@ describe('Validation', () => {
     });
     expect(
       getElemByKey('error-label', '#consent_checkbox', validation)
-    ).toHaveTextContent('Number should be more or equal than 10');
-    expect(onSubmit).not.toHaveBeenCalled();
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+  });
+
+  it('should skip validation for empty value fields', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#email', [
+        {
+          rule: Rules.Email,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.MaxLength,
+        value: 10,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.MinLength,
+        value: 10,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.Password,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.StrongPassword,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.Number,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.MaxNumber,
+        value: 10,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.MinNumber,
+        value: 10,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockReset();
   });
 

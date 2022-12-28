@@ -50,3 +50,7 @@ export const isNumberMoreThanMax = (value: number, len: number): boolean => {
 export const isNumberLessThanMin = (value: number, len: number): boolean => {
   return value < len;
 };
+
+export const isInvalidOrEmptyString = (value?: ElemValueType): boolean => {
+  return typeof value !== 'string' || value === '';
+};
