@@ -9,6 +9,7 @@ import {
   isPassword,
   isStrongPassword,
   isInvalidOrEmptyString,
+  isInteger,
 } from './utils/validationUtils';
 import {
   EventListenerInterface,
@@ -449,6 +450,17 @@ class JustValidate {
         }
 
         if (!isNumber(elemValue as string)) {
+          this.setFieldInvalid(key, fieldRule);
+        }
+        break;
+      }
+
+      case Rules.Integer: {
+        if (isInvalidOrEmptyString(elemValue)) {
+          break;
+        }
+
+        if (!isInteger(elemValue as string)) {
           this.setFieldInvalid(key, fieldRule);
         }
         break;

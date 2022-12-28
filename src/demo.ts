@@ -144,6 +144,14 @@ const advanced = (): void => {
         rule: 'number' as Rules,
       },
     ])
+    .addField('#example2_input_integer_number', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'integer' as Rules,
+      },
+    ])
     .addField('#example2_input_number_between', [
       {
         rule: 'required' as Rules,

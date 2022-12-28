@@ -24,6 +24,7 @@ export enum Rules {
   MaxLength = 'maxLength',
   Password = 'password',
   Number = 'number',
+  Integer = 'integer',
   MaxNumber = 'maxNumber',
   MinNumber = 'minNumber',
   StrongPassword = 'strongPassword',

@@ -8,6 +8,7 @@ import {
   isStrongPassword,
   isNumber,
   isInvalidOrEmptyString,
+  isInteger,
 } from '../utils/validationUtils';
 
 describe('Validate rules', () => {
@@ -47,12 +48,49 @@ describe('Validate rules', () => {
     expect(isNumber('10')).toBeTruthy();
     expect(isNumber('01')).toBeTruthy();
     expect(isNumber('00')).toBeTruthy();
+    expect(isNumber('-10')).toBeTruthy();
+    expect(isNumber('-10.10')).toBeTruthy();
     expect(isNumber('d1')).toBeFalsy();
     expect(isNumber('1d')).toBeFalsy();
     expect(isNumber('1d1')).toBeFalsy();
     expect(isNumber('f11')).toBeFalsy();
-    expect(isNumber('11.')).toBeFalsy();
-    expect(isNumber('.11')).toBeFalsy();
+    expect(isNumber('11.')).toBeTruthy();
+    expect(isNumber('11.1.1')).toBeFalsy();
+    expect(isNumber('-11.')).toBeTruthy();
+    expect(isNumber('.11')).toBeTruthy();
+    expect(isNumber('1.1f')).toBeFalsy();
+    expect(isNumber('100,10')).toBeFalsy();
+    expect(isNumber('-')).toBeFalsy();
+    // @ts-ignore
+    expect(isNumber(null)).toBeFalsy();
+    expect(isNumber('1.0')).toBeTruthy();
+    expect(isNumber('100.10')).toBeTruthy();
+  });
+
+  test('isInteger', () => {
+    expect(isInteger('10')).toBeTruthy();
+    expect(isInteger('0')).toBeTruthy();
+    expect(isInteger('10')).toBeTruthy();
+    expect(isInteger('01')).toBeTruthy();
+    expect(isInteger('00')).toBeTruthy();
+    expect(isInteger('-10')).toBeTruthy();
+    expect(isInteger('-10.10')).toBeFalsy();
+    expect(isInteger('d1')).toBeFalsy();
+    expect(isInteger('1d')).toBeFalsy();
+    expect(isInteger('1d1')).toBeFalsy();
+    expect(isInteger('f11')).toBeFalsy();
+    expect(isInteger('11.')).toBeFalsy();
+    expect(isInteger('11.1.1')).toBeFalsy();
+    expect(isInteger('-11.')).toBeFalsy();
+    expect(isInteger('.11')).toBeFalsy();
+    expect(isInteger('1.1f')).toBeFalsy();
+    expect(isInteger('100,10')).toBeFalsy();
+    // @ts-ignore
+    expect(isInteger(null)).toBeFalsy();
+    expect(isInteger('1.0')).toBeFalsy();
+    expect(isInteger('100.10')).toBeFalsy();
+    expect(isInteger('')).toBeFalsy();
+    expect(isInteger('-')).toBeFalsy();
   });
 
   test('isMinLength', () => {

@@ -434,6 +434,18 @@
               />
             </div>
             <div class="form-group mt-3">
+              <label for="example2_input_integer_number"
+                >Input an integer number</label
+              >
+              <input
+                class="form__input form-control"
+                placeholder="Input a number"
+                autocomplete="off"
+                name="example2_input_integer_number"
+                id="example2_input_integer_number"
+              />
+            </div>
+            <div class="form-group mt-3">
               <label for="example2_input_number_between"
                 >Input a number between 10 and 20</label
               >
@@ -523,6 +535,14 @@
                   },
                   {
                     rule: 'number',
+                  },
+                ])
+                .addField('#example2_input_integer_number', [
+                  {
+                    rule: 'required',
+                  },
+                  {
+                    rule: 'integer',
                   },
                 ])
                 .addField('#example2_input_number_between', [

@@ -8,7 +8,7 @@ import {
 import { waitFor } from '@testing-library/dom';
 
 describe('validateRules', () => {
-  it('should be able to validate numbers', async () => {
+  it('should be able to validate number range', async () => {
     const onSubmit = jest.fn();
 
     const validation = new JustValidate('#form', {
@@ -111,6 +111,110 @@ describe('validateRules', () => {
     expect(
       getElemByKey('error-label', '#name', validation)
     ).not.toBeInTheDocument();
+  });
+
+  it('should be able to validate numbers', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.Number,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    await changeTextBySelector('#name', '-10.2');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    onSubmit.mockReset();
+
+    await changeTextBySelector('#name', '-10.2f');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
+    onSubmit.mockReset();
+  });
+
+  it('should be able to validate numbers', async () => {
+    const onSubmit = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#name', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.Integer,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    await changeTextBySelector('#name', '-10.2');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
+    onSubmit.mockReset();
+
+    await changeTextBySelector('#name', '10.2');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).toBeInTheDocument();
+    onSubmit.mockReset();
+
+    await changeTextBySelector('#name', '-10');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    onSubmit.mockReset();
+
+    await changeTextBySelector('#name', '10');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(onSubmit).toHaveBeenCalled();
+    expect(
+      getElemByKey('error-label', '#name', validation)
+    ).not.toBeInTheDocument();
+    onSubmit.mockReset();
   });
 
   it('should be able to validate password', async () => {

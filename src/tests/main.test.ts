@@ -1168,6 +1168,22 @@ describe('Validation', () => {
 
     validation.addField('#consent_checkbox', [
       {
+        rule: Rules.Integer,
+      },
+    ]);
+
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#consent_checkbox', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#consent_checkbox', [
+      {
         rule: Rules.MaxNumber,
         value: 10,
       },
@@ -1296,6 +1312,22 @@ describe('Validation', () => {
     validation.addField('#email', [
       {
         rule: Rules.Number,
+      },
+    ]);
+    await changeTextBySelector('#email', '');
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+    expect(
+      getElemByKey('error-label', '#email', validation)
+    ).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    validation.addField('#email', [
+      {
+        rule: Rules.Integer,
       },
     ]);
     await changeTextBySelector('#email', '');
