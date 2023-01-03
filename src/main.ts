@@ -167,6 +167,22 @@ class JustValidate {
     return undefined;
   };
 
+  getCompatibleFields = (): FieldsInterface => {
+    const fields = {};
+
+    Object.keys(this.fields).forEach((key) => {
+      let newKey = key;
+      const fieldSelector = this.getFieldSelectorByKey(key);
+
+      if (typeof fieldSelector === 'string') {
+        newKey = fieldSelector;
+      }
+      fields[newKey] = { ...this.fields[key] };
+    });
+
+    return fields;
+  };
+
   setKeyByFieldSelector = (field: FieldSelectorType): string => {
     if (this.fieldIds.has(field)) {
       return this.fieldIds.get(field)!;
@@ -708,7 +724,7 @@ class JustValidate {
 
         const result = fieldRule.validator(
           elemValue as string | boolean,
-          this.fields
+          this.getCompatibleFields()
         );
 
         if (typeof result !== 'boolean' && typeof result !== 'function') {
@@ -889,7 +905,7 @@ class JustValidate {
       if (this.isValid) {
         this.onSuccessCallback?.(ev);
       } else {
-        this.onFailCallback?.(this.fields, this.groupFields);
+        this.onFailCallback?.(this.getCompatibleFields(), this.groupFields);
       }
     });
   }

@@ -1660,4 +1660,100 @@ describe('Validation', () => {
       getElemByKey('error-label', '#read_terms_checkbox_group', validation)
     ).toBeInTheDocument();
   });
+
+  it('should be able to pass context to the callbacks', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+    const validator = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#email', [
+        {
+          rule: Rules.Required,
+        },
+      ])
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    await changeTextBySelector('#email', '12');
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        isTrusted: true,
+      })
+    );
+    onSubmit.mockReset();
+
+    validation.addField(document.querySelector('#name') as HTMLInputElement, [
+      {
+        validator,
+      },
+    ]);
+
+    await changeTextBySelector('#name', 'test');
+
+    await clickBySelector('#submit-btn');
+
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(validator).toHaveBeenCalledWith('test', {
+      '#email': {
+        config: undefined,
+        elem: new DOMParser().parseFromString(
+          `<input autocomplete="off" class="form__input form-control just-validate-success-field" data-just-validate-fallback-disabled="false" id="email" name="email" placeholder="Enter your email" style="" type="email" />`,
+          'text/html'
+        ).body.childNodes[0],
+        isValid: true,
+        rules: [{ rule: 'required' }],
+      },
+      '2': {
+        config: undefined,
+        elem: new DOMParser().parseFromString(
+          `<input autocomplete="off" class="form__input form-control just-validate-error-field" data-just-validate-fallback-disabled="false" id="name" name="name" placeholder="Enter your name" style="" type="text" />`,
+          'text/html'
+        ).body.childNodes[0],
+        isValid: true,
+        rules: [{ validator }],
+        errorMessage: 'Value is incorrect',
+      },
+    });
+    expect(onFail).toHaveBeenCalledWith(
+      {
+        '#email': {
+          config: undefined,
+          elem: new DOMParser().parseFromString(
+            `<input autocomplete="off" class="form__input form-control just-validate-success-field" data-just-validate-fallback-disabled="false" id="email" name="email" placeholder="Enter your email" style="" type="email" />`,
+            'text/html'
+          ).body.childNodes[0],
+          isValid: true,
+          rules: [{ rule: 'required' }],
+        },
+        '2': {
+          config: undefined,
+          elem: new DOMParser().parseFromString(
+            `<input autocomplete="off" class="form__input form-control just-validate-error-field" data-just-validate-fallback-disabled="false" id="name" name="name" placeholder="Enter your name" style="" type="text" />`,
+            'text/html'
+          ).body.childNodes[0],
+          isValid: false,
+          rules: [{ validator }],
+          errorMessage: 'Value is incorrect',
+        },
+      },
+      {}
+    );
+    onFail.mockReset();
+    validator.mockReset();
+  });
 });
