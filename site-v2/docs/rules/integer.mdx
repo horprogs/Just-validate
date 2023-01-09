@@ -1,0 +1,26 @@
+---
+sidebar_position: 6
+---
+
+import Integer from '../../src/components/Rules/Integer';
+import NotRequiredWarning from '../../src/components/Admonitions/NotRequiredWarning';
+
+# integer
+
+An integer number.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#name', [
+  {
+    rule: 'integer',
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<Integer />

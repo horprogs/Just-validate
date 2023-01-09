@@ -1,0 +1,313 @@
+---
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import QuickStart from '../src/components/Demos/QuickStart';
+import AdvancedUsage from '../src/components/Demos/AdvancedUsage';
+
+# Getting Started
+
+Install JustValidate using your favorite package manager:
+
+<Tabs>
+  <TabItem value="npm" label="NPM" default>
+    <pre>npm install just-validate --save</pre>
+  </TabItem>
+  <TabItem value="yarn" label="Yarn">
+    <pre>yarn add just-validate</pre>
+  </TabItem>
+</Tabs>
+
+### Using code bundlers
+
+Use it as an imported module
+
+```js
+import JustValidate from 'just-validate';
+
+const validate = new JustValidate('#form');
+```
+
+### Without code bundlers
+
+Include JustValidate script on your page from CDN and call it as `window.JustValidate`
+
+```html
+<script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
+```
+
+```html
+<body>
+  <script>
+    const validate = new window.JustValidate('#form');
+  </script>
+</body>
+```
+
+## Quick start
+
+Let's say we have a basic HTML layout:
+
+```html
+<form id="form">
+  <label for="name">Enter your name</label>
+  <input type="text" placeholder="Enter your name" id="name" />
+  <label for="email">Enter your email</label>
+  <input type="email" placeholder="Enter your email" id="email" />
+  <button>Submit</button>
+</form>
+```
+
+Next, let's add JustValidate to our layout and define some simple rules.
+
+First, we should create the instance `new JustValidate('#form')` by passing a form selector, or the element as an argument.
+Second, we call `.addField()` with a field selector as the first argument and an array of rules as the second argument.
+
+The instance constructor takes 3 arguments:
+
+```js
+new JustValidate(form, globalConfig, dictLocale);
+```
+
+where:
+
+`form` - a string or DOM selector to the form element
+
+`globalConfig` - settings, described [here](instance)
+
+```js
+const validation = new JustValidate('#form');
+
+validation
+  .addField('#name', [
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 30,
+    },
+  ])
+  .addField('#email', [
+    {
+      rule: 'required',
+      errorMessage: 'Email is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid!',
+    },
+  ]);
+```
+
+It is possible to use DOM elements, instead of string selectors:
+
+```js
+const validation = new JustValidate(document.querySelector('#form'));
+
+validation
+  .addField(document.querySelector('#name'), [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 30,
+    },
+  ])
+  .addField(document.querySelector('#email'), [
+    {
+      rule: 'required',
+      errorMessage: 'Email is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid!',
+    },
+  ]);
+```
+
+And that's it! Now our form is validated!
+
+### Demo
+
+<QuickStart />
+
+## Advanced usage
+
+Now we'll go through more comprehensive example. Let's say we have a bigger form:
+
+```html
+<form action="#" id="form" autocomplete="off">
+  <div>
+    <label for="password">Enter your password</label>
+    <input type="password" autocomplete="off" id="password" />
+  </div>
+  <div>
+    <label for="password">Repeat your password</label>
+    <input type="password" autocomplete="off" id="repeat-password" />
+  </div>
+  <div>
+    <label for="password">Enter your message</label>
+    <textarea id="message"></textarea>
+  </div>
+  <div>
+    <label for="favorite_animal_select">Select you favorite animal</label>
+    <select id="favorite_animal_select">
+      <option value="">--Please choose an option--</option>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="hamster">Hamster</option>
+      <option value="parrot">Parrot</option>
+      <option value="spider">Spider</option>
+      <option value="goldfish">Goldfish</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="consent_checkbox">I agree to provide the information</label>
+    <input type="checkbox" id="consent_checkbox" />
+  </div>
+  <div id="communication_checkbox_group">
+    <div>
+      <label for="communication_checkbox_group_1"
+        >I have read Privacy Policy</label
+      >
+      <input type="checkbox" id="communication_checkbox_group_1" />
+    </div>
+    <div>
+      <label for="communication_checkbox_group_2"
+        >I have read Terms Of Use</label
+      >
+      <input type="checkbox" id="communication_checkbox_group_2" />
+    </div>
+    <div>
+      <label for="communication_checkbox_group_3"
+        >I have read Cookies Policy</label
+      >
+      <input type="checkbox" id="communication_checkbox_group_3" />
+    </div>
+  </div>
+  <div>
+    <div>Please select the preferred way for communication</div>
+    <div id="communication_radio_group">
+      <input type="radio" id="communication_radio_group_1" />
+      <label for="communication_radio_group_1"> Email </label>
+      <input type="radio" id="communication_radio_group_2" />
+      <label for="communication_radio_group_2"> SMS </label>
+    </div>
+  </div>
+
+  <button>Submit</button>
+</form>
+```
+
+For this form we will use the setup:
+
+```js
+const validation = new JustValidate('#form', {
+  errorFieldCssClass: 'is-invalid',
+});
+
+validation
+  .addField('#password', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addField('#repeat-password', [
+    {
+      rule: 'required',
+    },
+    {
+      validator: (value, fields) => {
+        if (fields['#password'] && fields['#password'].elem) {
+          const repeatPasswordValue = fields['#password'].elem.value;
+
+          return value === repeatPasswordValue;
+        }
+
+        return true;
+      },
+      errorMessage: 'Passwords should be the same',
+    },
+  ])
+  .addField('#message', [
+    {
+      validator: (value) => {
+        return value !== undefined && (value as string).length > 3;
+      },
+      errorMessage: 'Message should be more than 3 letters.',
+    },
+  ])
+  .addField(
+    '#consent_checkbox',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      errorsContainer: '#consent_checkbox-errors-container',
+    }
+  )
+  .addField('#favorite_animal_select', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addRequiredGroup(
+    '#communication_checkbox_group',
+    'You should select at least one communication channel'
+  )
+  .addField('#input_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+  ])
+  .addField('#input_integer_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'integer',
+    },
+  ])
+  .addField('#input_number_between', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minNumber',
+      value: 10,
+    },
+    {
+      rule: 'maxNumber',
+      value: 20,
+    },
+  ])
+  .addRequiredGroup('#communication_radio_group')
+  .onSuccess((event) => {
+    event.preventDefault();
+  });
+```
+
+### Demo
+
+<AdvancedUsage />
+
+## What's next?
+
+To discover all features you could go through our [tutorial](/docs/category/tutorial), check all possible [rules with demo](/docs/category/rules) and [methods](/docs/category/methods).
+
+Let's just validate!

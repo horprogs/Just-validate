@@ -1,0 +1,46 @@
+---
+sidebar_position: 5
+---
+
+# Localization
+
+You could define your own translations for different languages.
+To do that you should define `dictLocale` array, like:
+
+```js
+[
+    {
+      key: 'Name is too short',
+      dict: {
+        ru: 'Имя слишком короткое',
+        es: 'El nombre es muy corto',
+      },
+    },
+    {
+      key: 'Field is required',
+      dict: {
+        ru: 'Обязательное поле',
+        es: 'Se requiere campo',
+      },
+    },
+  ]
+```
+
+Field `key` should be defined as a key string, which also should be defined as `errorMessage` in a rule object.
+
+`dict` should be an object with languages keys with their translations. To switch a language you should call `validation.setCurrentLocale('es');`.
+The argument for `setCurrentLocale()` ([docs](/docs/methods/setCurrentLocale)) method you should pass the key, which you defined in `dict` object, or you could call with empty argument to set the default language (strings defined in `key` field).
+
+```html
+document.querySelector('#change-lang-btn-en').addEventListener('click', () => {
+  validation.setCurrentLocale();
+});
+
+document.querySelector('#change-lang-btn-ru').addEventListener('click', () => {
+  validation.setCurrentLocale('ru');
+});
+
+document.querySelector('#change-lang-btn-es').addEventListener('click', () => {
+  validation.setCurrentLocale('es');
+});
+```

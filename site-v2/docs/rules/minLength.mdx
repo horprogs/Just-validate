@@ -1,0 +1,26 @@
+---
+sidebar_position: 3
+---
+import MinLength from '../../src/components/Rules/MinLength';
+import NotRequiredWarning from "../../src/components/Admonitions/NotRequiredWarning";
+
+# minLength
+
+Limit the minimum text length.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#name', [
+  {
+    rule: 'minLength',
+    value: 3,
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<MinLength />

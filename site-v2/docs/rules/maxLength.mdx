@@ -1,0 +1,26 @@
+---
+sidebar_position: 4
+---
+import MaxLength from '../../src/components/Rules/MaxLength';
+import NotRequiredWarning from "../../src/components/Admonitions/NotRequiredWarning";
+
+# maxLength
+
+Limit the maximum text length.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#name', [
+  {
+    rule: 'maxLength',
+    value: 10,
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<MaxLength />

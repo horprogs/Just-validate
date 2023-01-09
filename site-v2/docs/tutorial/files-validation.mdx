@@ -1,0 +1,69 @@
+---
+sidebar_position: 3
+---
+
+# Files validation
+
+It's possible to validate min/max count of uploaded files and check for type, extension, min/max size and name of uploaded files.
+
+## Uploaded files count
+
+```html
+<input type="file" name="file" id="file" multiple />
+```
+
+```js
+validation.addField('#file', [
+  {
+    rule: 'minFilesCount',
+    value: 1,
+  },
+  {
+    rule: 'maxFilesCount',
+    value: 3,
+  },
+]);
+```
+
+## File attributes validation
+
+```html
+<input type="file" name="file" id="file" />
+```
+
+```js
+validation.addField('#file', [
+  {
+    rule: 'file',
+    value: {
+      files: {
+        extensions: ['jpeg', 'png'],
+        maxSize: 25000,
+        minSize: 1000,
+        types: ['image/jpeg', 'image/png'],
+        names: ['file1.jpeg', 'file2.png'],
+      },
+    },
+  },
+]);
+```
+
+where `files` field in `value` could be:
+
+```js
+{
+  files: {
+    extensions?: string[],
+    types?: string[],
+    minSize?: number,
+    maxSize?: number,
+    names?: string[],
+  }
+}
+```
+
+:::info
+
+`minSize` and `maxSize` should be defined in bytes.
+
+:::

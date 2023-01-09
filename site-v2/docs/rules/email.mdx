@@ -1,0 +1,25 @@
+---
+sidebar_position: 2
+---
+import Email from '../../src/components/Rules/Email';
+import NotRequiredWarning from "../../src/components/Admonitions/NotRequiredWarning";
+
+# email
+
+A valid email.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#email', [
+  {
+    rule: 'email',
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<Email />

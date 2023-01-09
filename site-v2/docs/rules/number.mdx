@@ -1,0 +1,26 @@
+---
+sidebar_position: 5
+---
+
+import Number from '../../src/components/Rules/Number';
+import NotRequiredWarning from '../../src/components/Admonitions/NotRequiredWarning';
+
+# number
+
+A number (integer or float).
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#name', [
+  {
+    rule: 'number',
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<Number />

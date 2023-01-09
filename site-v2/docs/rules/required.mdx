@@ -1,0 +1,22 @@
+---
+sidebar_position: 1
+---
+import Required from '../../src/components/Rules/Required';
+
+# required
+
+Required field, not empty.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#name', [
+  {
+    rule: 'required',
+  },
+]);
+```
+
+### Demo
+
+<Required />
