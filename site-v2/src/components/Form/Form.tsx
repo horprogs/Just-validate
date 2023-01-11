@@ -1,24 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@site/src/components/UI/Button';
+import { toast, ToastContainer } from 'react-toastify';
 
 type Props = {
   children: React.ReactNode;
-  init: () => void;
+  init: (onSuccess: () => void) => void;
   id?: string;
   valid?: boolean;
 };
 
 const Form = ({ children, init, id = 'form', valid }: Props) => {
   useEffect(() => {
-    init();
+    init(() => {
+      toast.success('Success!', {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    });
   }, []);
 
   return (
-    <form id={id} autoComplete="off">
-      {children}
+    <div className="form-wrapper">
+      <form id={id} autoComplete="off">
+        {children}
 
-      <Button data-valid={valid}>{valid ? 'Success!' : 'Submit'}</Button>
-    </form>
+        <Button>Submit</Button>
+      </form>
+      <ToastContainer />
+    </div>
   );
 };
 

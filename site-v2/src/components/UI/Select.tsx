@@ -3,24 +3,60 @@ import React from 'react';
 type Props = {
   id: string;
   label: string;
+  options?: { label: string }[];
+  onChange?: (val: string) => void;
+  defaultValue?: string;
 };
 
-const Input = ({ id, label }: Props) => {
+const defaultOptions = [
+  {
+    label: 'Dog',
+  },
+  {
+    label: 'Cat',
+  },
+  {
+    label: 'Hamster',
+  },
+  {
+    label: 'Parrot',
+  },
+  {
+    label: 'Spider',
+  },
+  {
+    label: 'Goldfish',
+  },
+];
+
+const Input = ({
+  id,
+  label,
+  options = defaultOptions,
+  onChange,
+  defaultValue,
+}: Props) => {
   return (
     <div className="control-wrapper">
       <label className="input-label" htmlFor={id}>
         {label}
       </label>
       <div className="input-wrapper">
-          <select className="select minimal" id={id}>
-              <option value="">--Please choose an option--</option>
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-              <option value="hamster">Hamster</option>
-              <option value="parrot">Parrot</option>
-              <option value="spider">Spider</option>
-              <option value="goldfish">Goldfish</option>
-          </select>
+        <select
+          className="select minimal"
+          id={id}
+          onChange={(e) => {
+            onChange?.(e.target.value);
+          }}
+          defaultValue={defaultValue}
+        >
+          <option value="">--Please select an option--</option>
+          {options.map((item) => (
+            <option key={item.label} value={item.label}>
+              {item.label}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

@@ -2,6 +2,10 @@
 sidebar_position: 5
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import LocalisationExample from '../../src/components/Demos/LocalisationExample';
+
 # Localization
 
 You could define your own translations for different languages.
@@ -9,21 +13,42 @@ To do that you should define `dictLocale` array, like:
 
 ```js
 [
-    {
-      key: 'Name is too short',
-      dict: {
-        ru: 'Имя слишком короткое',
-        es: 'El nombre es muy corto',
-      },
+  {
+    key: 'Name is required',
+    dict: {
+      Spanish: 'Se requiere el nombre',
+      French: 'Le nom est requis',
     },
-    {
-      key: 'Field is required',
-      dict: {
-        ru: 'Обязательное поле',
-        es: 'Se requiere campo',
-      },
+  },
+  {
+    key: 'Name is too short',
+    dict: {
+      Spanish: 'El nombre es muy corto',
+      French: 'Le nom est trop court',
     },
-  ]
+  },
+  {
+    key: 'Name is too long',
+    dict: {
+      Spanish: 'El nombre es demasiado largo',
+      French: 'Le nom est trop long',
+    },
+  },
+  {
+    key: 'Email is required',
+    dict: {
+      Spanish: 'Correo electronico es requerido',
+      French: "L'e-mail est requis",
+    },
+  },
+  {
+    key: 'Email is invalid',
+    dict: {
+      Spanish: 'El correo electrónico es invalido',
+      French: 'Le courriel est invalide',
+    },
+  },
+];
 ```
 
 Field `key` should be defined as a key string, which also should be defined as `errorMessage` in a rule object.
@@ -31,16 +56,158 @@ Field `key` should be defined as a key string, which also should be defined as `
 `dict` should be an object with languages keys with their translations. To switch a language you should call `validation.setCurrentLocale('es');`.
 The argument for `setCurrentLocale()` ([docs](/docs/methods/setCurrentLocale)) method you should pass the key, which you defined in `dict` object, or you could call with empty argument to set the default language (strings defined in `key` field).
 
-```html
+```js
 document.querySelector('#change-lang-btn-en').addEventListener('click', () => {
   validation.setCurrentLocale();
 });
-
 document.querySelector('#change-lang-btn-ru').addEventListener('click', () => {
   validation.setCurrentLocale('ru');
 });
-
 document.querySelector('#change-lang-btn-es').addEventListener('click', () => {
   validation.setCurrentLocale('es');
 });
 ```
+
+## Demo
+
+<LocalisationExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="localisation_form" autocomplete="off" novalidate="novalidate">
+  <div>
+    <div class="control-wrapper">
+      <label class="input-label" for="localisation_language"
+        >Change error messages language</label
+      >
+      <div class="input-wrapper">
+        <select class="select minimal" id="localisation_language">
+          <option value="">--Please select an option--</option>
+          <option value="English" selected="">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="localisation_form_name">Name</label>
+        <div class="input-wrapper">
+          <input
+            id="localisation_form_name"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="localisation_form_email">Email</label>
+        <div class="input-wrapper">
+          <input
+            id="localisation_form_email"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your email"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+import JustValidate from 'just-validate';
+
+const validator = new JustValidate('#localisation_form', undefined, [
+  {
+    key: 'Name is required',
+    dict: {
+      Spanish: 'Se requiere el nombre',
+      French: 'Le nom est requis',
+    },
+  },
+  {
+    key: 'Name is too short',
+    dict: {
+      Spanish: 'El nombre es muy corto',
+      French: 'Le nom est trop court',
+    },
+  },
+  {
+    key: 'Name is too long',
+    dict: {
+      Spanish: 'El nombre es demasiado largo',
+      French: 'Le nom est trop long',
+    },
+  },
+  {
+    key: 'Email is required',
+    dict: {
+      Spanish: 'Correo electronico es requerido',
+      French: "L'e-mail est requis",
+    },
+  },
+  {
+    key: 'Email is invalid',
+    dict: {
+      Spanish: 'El correo electrónico es invalido',
+      French: 'Le courriel est invalide',
+    },
+  },
+]);
+
+validator
+  .addField('#localisation_form_name', [
+    {
+      rule: 'required',
+      errorMessage: 'Name is required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+      errorMessage: 'Name is too short',
+    },
+    {
+      rule: 'maxLength',
+      value: 15,
+      errorMessage: 'Name is too long',
+    },
+  ])
+  .addField('#localisation_form_email', [
+    {
+      rule: 'required',
+      errorMessage: 'Email is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid',
+    },
+  ]);
+
+validator.setCurrentLocale('English');
+```
+
+</TabItem>
+</Tabs>
+</details>

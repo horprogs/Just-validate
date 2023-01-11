@@ -2,7 +2,6 @@ import React from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
-import { defaultJustValidateConfig } from '@site/src/utils';
 import Textarea from '@site/src/components/UI/Textarea';
 import Select from '@site/src/components/UI/Select';
 import Checkbox from '@site/src/components/UI/Checkbox';
@@ -12,21 +11,18 @@ const AdvancedUsage = () => {
   return (
     <Form
       id="advanced-usage_form"
-      init={() => {
-        const validator = new JustValidate(
-          '#advanced-usage_form',
-          defaultJustValidateConfig
-        );
+      init={(onSuccess) => {
+        const validator = new JustValidate('#advanced-usage_form');
 
         validator
           .addField('#advanced-usage_password', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
           ])
           .addField('#advanced-usage_repeat-password', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
             {
               validator: (value, fields) => {
@@ -57,7 +53,7 @@ const AdvancedUsage = () => {
             '#advanced-usage_consent_checkbox',
             [
               {
-                rule: 'required' as Rules,
+                rule: 'required',
               },
             ],
             {
@@ -67,32 +63,33 @@ const AdvancedUsage = () => {
           )
           .addField('#advanced-usage_favorite_animal_select', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
           ])
           .addRequiredGroup(
             '#advanced-usage_communication_checkbox_group',
             'You should select at least one communication channel'
           )
+          .addRequiredGroup('#advanced-usage_communication_radio_group')
           .addField('#advanced-usage_input_number', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
             {
-              rule: 'number' as Rules,
+              rule: 'number',
             },
           ])
           .addField('#advanced-usage_input_integer_number', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
             {
-              rule: 'integer' as Rules,
+              rule: 'integer',
             },
           ])
           .addField('#advanced-usage_input_number_between', [
             {
-              rule: 'required' as Rules,
+              rule: 'required',
             },
             {
               rule: 'minNumber' as Rules,
@@ -103,10 +100,7 @@ const AdvancedUsage = () => {
               value: 20,
             },
           ])
-          .addRequiredGroup('#advanced-usage_communication_radio_group')
-          .onSuccess((event) => {
-            event.preventDefault();
-          });
+          .onSuccess(onSuccess);
       }}
     >
       <Input

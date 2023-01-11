@@ -26,11 +26,9 @@ where:
 ### Example
 
 ```js
-{
-  const validation = new JustValidate('#form');
+const validation = new JustValidate('#form');
 
-  validation.addRequiredGroup('#radio-group', 'Select at lease one option!', {
-    successMessage: 'Everything looks good',
-  });
-}
+validation.addRequiredGroup('#radio-group', 'Select at lease one option!', {
+  successMessage: 'Everything looks good',
+});
 ```
