@@ -13,7 +13,11 @@ const Textarea = ({ id, placeholder, label }: Props) => {
         {label}
       </label>
       <div className="input-wrapper">
-        <textarea id={id} className="input textarea" placeholder={placeholder} />
+        <textarea
+          id={id}
+          className="input textarea"
+          placeholder={placeholder}
+        />
       </div>
     </div>
   );

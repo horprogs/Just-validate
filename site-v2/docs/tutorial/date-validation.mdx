@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 ---
+import NotRequiredWarning from "../../src/components/Admonitions/NotRequiredWarning";
 
 # Date validation
 
@@ -20,10 +21,13 @@ JustValidatePluginDate((fields) => ({
   format: string,
   isBefore: Date | string,
   isAfter: Date | string,
+  isBeforeOrEqual: Date | string,
+  isAfterOrEqual: Date | string,
+  isEqual: Date | string,
 }));
 ```
 
-If it's not required, validation will pass if the value is empty.
+<NotRequiredWarning />
 
 ## Validate for the given format
 

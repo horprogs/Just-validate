@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
@@ -33,7 +33,7 @@ const ConditionalExample = () => {
             if (checked) {
               validatorRef.current.addField('#conditional_name', [
                 {
-                  rule: 'required',
+                  rule: 'required' as Rules,
                 },
               ]);
             } else {

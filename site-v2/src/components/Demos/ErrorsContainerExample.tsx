@@ -19,7 +19,7 @@ const ErrorsContainerExample = () => {
             '#errors-container_name',
             [
               {
-                rule: 'required',
+                rule: 'required' as Rules,
               },
             ],
             {
@@ -28,10 +28,10 @@ const ErrorsContainerExample = () => {
           )
           .addField('#errors-container_email', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'email',
+              rule: 'email' as Rules,
             },
           ])
           .addRequiredGroup(

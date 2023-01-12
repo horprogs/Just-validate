@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
@@ -13,10 +13,10 @@ const AsyncExample = () => {
         validator
           .addField('#async_email', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              validator: (value) => () =>
+              validator: () => () =>
                 new Promise((resolve) => {
                   setTimeout(() => {
                     resolve(false);

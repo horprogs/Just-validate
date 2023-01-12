@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
@@ -15,25 +15,25 @@ const FilesExample = () => {
         validator
           .addField('#files_minmax', [
             {
-              rule: 'minFilesCount',
+              rule: 'minFilesCount' as Rules,
               value: 1,
             },
             {
-              rule: 'maxFilesCount',
+              rule: 'maxFilesCount' as Rules,
               value: 3,
             },
           ])
           .addField('#files_png', [
             {
-              rule: 'minFilesCount',
+              rule: 'minFilesCount' as Rules,
               value: 1,
             },
             {
-              rule: 'maxFilesCount',
+              rule: 'maxFilesCount' as Rules,
               value: 1,
             },
             {
-              rule: 'files',
+              rule: 'files' as Rules,
               value: {
                 files: {
                   types: ['image/png'],
@@ -44,11 +44,11 @@ const FilesExample = () => {
           ])
           .addField('#files_attr', [
             {
-              rule: 'minFilesCount',
+              rule: 'minFilesCount' as Rules,
               value: 1,
             },
             {
-              rule: 'files',
+              rule: 'files' as Rules,
               value: {
                 files: {
                   extensions: ['jpeg', 'jpg', 'png'],

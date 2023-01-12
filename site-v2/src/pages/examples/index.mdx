@@ -972,6 +972,155 @@ document
 <br />
 <br />
 
+## Date validation using text input
+
+<DateTextExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="date-text_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_start_date">Start date</label>
+      <div class="input-wrapper">
+        <input
+          id="date-text_start_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter start date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_between_date"
+        >Between date</label
+      >
+      <div class="input-wrapper">
+        <input
+          id="date-text_between_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter between date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_end_date">End date</label>
+      <div class="input-wrapper">
+        <input
+          id="date-text_end_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter end date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_format"
+        >Check for dd MMM yyyy format</label
+      >
+      <div class="input-wrapper">
+        <input
+          id="date-text_format"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter a valid date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#date-text_form');
+
+validator
+  .addField('#date-text_start_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+  ])
+  .addField('#date-text_between_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+    {
+      plugin: JustValidatePluginDate((fields) => {
+        return {
+          format: 'dd/MM/yyyy',
+          isAfter: fields['#date-text_start_date'].elem.value,
+          isBefore: fields['#date-text_end_date'].elem.value,
+        };
+      }),
+      errorMessage: 'Date should be between start and end dates',
+    },
+  ])
+  .addField('#date-text_end_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+  ])
+  .addField('#date-text_format', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd MMM yyyy',
+      })),
+      errorMessage: 'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
+    },
+  ]);
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
 ## Files validation
 
 <FilesExample />

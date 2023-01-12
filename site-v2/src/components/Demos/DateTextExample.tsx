@@ -1,22 +1,23 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import JustValidatePluginDate from 'just-validate-plugin-date';
 import Input from '@site/src/components/UI/Input';
 
 const DateTextExample = () => {
-  const [valid, setValid] = useState(false);
   const validatorRef = useRef<JustValidate>();
 
   return (
     <Form
       id="date-text_form"
-      valid={valid}
-      init={() => {
+      init={(onSuccess) => {
         const validator = new JustValidate('#date-text_form');
 
         validator
           .addField('#date-text_start_date', [
+            {
+              rule: 'required' as Rules,
+            },
             {
               plugin: JustValidatePluginDate(() => ({
                 format: 'dd/MM/yyyy',
@@ -26,6 +27,9 @@ const DateTextExample = () => {
             },
           ])
           .addField('#date-text_between_date', [
+            {
+              rule: 'required' as Rules,
+            },
             {
               plugin: JustValidatePluginDate(() => ({
                 format: 'dd/MM/yyyy',
@@ -39,12 +43,15 @@ const DateTextExample = () => {
                   format: 'dd/MM/yyyy',
                   isAfter: fields['#date-text_start_date'].elem.value,
                   isBefore: fields['#date-text_end_date'].elem.value,
-                }
+                };
               }),
               errorMessage: 'Date should be between start and end dates',
             },
           ])
           .addField('#date-text_end_date', [
+            {
+              rule: 'required' as Rules,
+            },
             {
               plugin: JustValidatePluginDate(() => ({
                 format: 'dd/MM/yyyy',
@@ -55,6 +62,9 @@ const DateTextExample = () => {
           ])
           .addField('#date-text_format', [
             {
+              rule: 'required' as Rules,
+            },
+            {
               plugin: JustValidatePluginDate(() => ({
                 format: 'dd MMM yyyy',
               })),
@@ -62,12 +72,7 @@ const DateTextExample = () => {
                 'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
             },
           ])
-          .onSuccess(() => {
-            setValid(true);
-          })
-          .onFail(() => {
-            setValid(false);
-          });
+          .onSuccess(onSuccess);
 
         validatorRef.current = validator;
       }}

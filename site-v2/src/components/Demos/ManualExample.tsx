@@ -16,7 +16,7 @@ const ManualExample = () => {
         validator
           .addField('#manual_name', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
           ])
           .onSuccess(onSuccess);

@@ -17,11 +17,13 @@
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
+  --white-background: #fff;
   --grey: #ccc;
   --main-color: #4f46e5;
   --secondary-color: #271dd7;
   --error-color: #b81111;
   --green: #198754;
+  --shadow: #0D013B19;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -34,6 +36,8 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --white-background: #ccc;
+  --shadow: #3f3d3d;
 }
 
 .input {
@@ -95,7 +99,7 @@
 
 .button {
   background: var(--main-color);
-  color: #fff;
+  color: var(--white-background);
   padding: 8px 22px;
   border: 0;
   cursor: pointer;
@@ -139,10 +143,10 @@
 }
 
 .input::file-selector-button {
-  background: var(--main-color);
-  color: #fff;
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  background-color: var(--white-background);
   padding: 8px 22px;
-  border: 0;
   cursor: pointer;
   border-radius: 4px;
   font-weight: 400;
@@ -150,7 +154,7 @@
 }
 
 .select {
-  background-color: white;
+  /*background-color: var(--white-background);*/
   border: 1px solid var(--grey);
   border-radius: 4px;
   display: inline-block;
@@ -259,7 +263,6 @@
 .radio {
   -webkit-appearance: none;
   appearance: none;
-  background-color: #fff;
   margin: 0;
   font: inherit;
   color: currentColor;
@@ -293,7 +296,7 @@
 }
 
 .form-wrapper {
-  box-shadow: 0 0 20px #0d003d1a;
+  box-shadow: 0 0 20px var(--shadow);
   border-radius: 43px;
   padding: 26px;
 }

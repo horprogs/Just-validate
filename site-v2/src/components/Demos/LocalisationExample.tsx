@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
@@ -52,27 +52,27 @@ const LocalisationExample = () => {
         validator
           .addField('#localisation_form_name', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
               errorMessage: 'Name is required',
             },
             {
-              rule: 'minLength',
+              rule: 'minLength' as Rules,
               value: 3,
               errorMessage: 'Name is too short',
             },
             {
-              rule: 'maxLength',
+              rule: 'maxLength' as Rules,
               value: 15,
               errorMessage: 'Name is too long',
             },
           ])
           .addField('#localisation_form_email', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
               errorMessage: 'Email is required',
             },
             {
-              rule: 'email',
+              rule: 'email' as Rules,
               errorMessage: 'Email is invalid',
             },
           ])

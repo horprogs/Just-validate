@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import Button from '@site/src/components/UI/Button';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -6,10 +6,9 @@ type Props = {
   children: React.ReactNode;
   init: (onSuccess: () => void) => void;
   id?: string;
-  valid?: boolean;
 };
 
-const Form = ({ children, init, id = 'form', valid }: Props) => {
+const Form = ({ children, init, id = 'form' }: Props) => {
   useEffect(() => {
     init(() => {
       toast.success('Success!', {

@@ -17,12 +17,12 @@ const AdvancedUsage = () => {
         validator
           .addField('#advanced-usage_password', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
           ])
           .addField('#advanced-usage_repeat-password', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
               validator: (value, fields) => {
@@ -53,7 +53,7 @@ const AdvancedUsage = () => {
             '#advanced-usage_consent_checkbox',
             [
               {
-                rule: 'required',
+                rule: 'required' as Rules,
               },
             ],
             {
@@ -63,7 +63,7 @@ const AdvancedUsage = () => {
           )
           .addField('#advanced-usage_favorite_animal_select', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
           ])
           .addRequiredGroup(
@@ -73,23 +73,23 @@ const AdvancedUsage = () => {
           .addRequiredGroup('#advanced-usage_communication_radio_group')
           .addField('#advanced-usage_input_number', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'number',
+              rule: 'number' as Rules,
             },
           ])
           .addField('#advanced-usage_input_integer_number', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'integer',
+              rule: 'integer' as Rules,
             },
           ])
           .addField('#advanced-usage_input_number_between', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
               rule: 'minNumber' as Rules,

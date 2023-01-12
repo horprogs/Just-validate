@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from '../Form/Form';
 import JustValidate, { Rules } from 'just-validate';
 import Input from '@site/src/components/UI/Input';
@@ -13,46 +13,46 @@ const BasicExample = () => {
         validator
           .addField('#basic_name', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'minLength',
+              rule: 'minLength' as Rules,
               value: 3,
             },
             {
-              rule: 'maxLength',
+              rule: 'maxLength' as Rules,
               value: 15,
             },
           ])
           .addField('#basic_email', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'email',
+              rule: 'email' as Rules,
             },
           ])
           .addField('#basic_password', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'password',
+              rule: 'password' as Rules,
             },
           ])
           .addField('#basic_age', [
             {
-              rule: 'required',
+              rule: 'required' as Rules,
             },
             {
-              rule: 'number',
+              rule: 'number' as Rules,
             },
             {
-              rule: 'minNumber',
+              rule: 'minNumber' as Rules,
               value: 18,
             },
             {
-              rule: 'maxNumber',
+              rule: 'maxNumber' as Rules,
               value: 150,
             },
           ])
