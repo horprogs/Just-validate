@@ -1059,6 +1059,72 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
+  it('should pass proper arguments to plugins', async () => {
+    const onSubmit = jest.fn();
+    const plugin = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addField('#email', [
+        {
+          rule: Rules.Email,
+        },
+      ])
+      .addField('#password', [
+        {
+          plugin,
+        },
+      ])
+      .onSuccess(onSubmit);
+
+    await clickBySelector('#submit-btn');
+    await waitFor(() => {
+      expect(getElem('#submit-btn')).toBeEnabled();
+    });
+
+    expect(plugin).toHaveBeenCalledWith('', {
+      '#email': {
+        config: undefined,
+        elem: new DOMParser().parseFromString(
+          `<input
+            autocomplete="off"
+            class="form__input form-control just-validate-success-field"
+            data-just-validate-fallback-disabled="false"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            style=""
+            type="email"
+          />`,
+          'text/html'
+        ).body.childNodes[0],
+        isValid: true,
+        rules: [{ rule: 'email' }],
+      },
+      '#password': {
+        config: undefined,
+        elem: new DOMParser().parseFromString(
+          `<input
+            autocomplete="off"
+            class="form__input form-control just-validate-error-field"
+            data-just-validate-fallback-disabled="false"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            style=""
+            type="password"
+          />`,
+          'text/html'
+        ).body.childNodes[0],
+        isValid: true,
+        rules: [{ plugin: plugin }],
+      },
+    });
+  });
+
   it('should skip validation for non-string value fields', async () => {
     const onSubmit = jest.fn();
 

@@ -356,7 +356,7 @@ class JustValidate {
     if (fieldRule.plugin) {
       const result = fieldRule.plugin(
         elemValue as string | boolean,
-        this.fields
+        this.getCompatibleFields()
       );
 
       if (!result) {
