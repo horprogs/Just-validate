@@ -143,4 +143,4 @@ And that's it! Now our form is validated!
 
 ## More
 
-Please, check out the [examples](https://just-validate.dev/examples/) and [documentation](https://just-validate.dev/documentation/).
+Please, check out the [examples](https://just-validate.dev/examples/) and [documentation](https://just-validate.dev/docs/intro/). Or try the [playground](https://just-validate.dev/playground/).
