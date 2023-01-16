@@ -5,6 +5,8 @@ type Props = {
   onClick?: () => void;
   variant?: string;
   type?: 'button' | 'submit' | 'reset';
+  use?: string;
+  href?: string;
 };
 
 const Button = ({
