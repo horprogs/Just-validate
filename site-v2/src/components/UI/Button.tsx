@@ -12,19 +12,23 @@ const Button = ({
   onClick,
   variant,
   type = 'submit',
+  use = 'button',
   ...props
 }: Props) => {
+  const commonProps = {
+    type,
+    className: 'button',
+    onClick,
+    'data-variant': variant,
+    ...props,
+  };
   return (
     <div className="control-wrapper">
-      <button
-        type={type}
-        className="button"
-        onClick={onClick}
-        data-variant={variant}
-        {...props}
-      >
-        {children}
-      </button>
+      {use === 'a' ? (
+        <a {...commonProps}>{children}</a>
+      ) : (
+        <button {...commonProps}>{children}</button>
+      )}
     </div>
   );
 };

@@ -17,6 +17,7 @@
   "dependencies": {
     "@docusaurus/core": "2.2.0",
     "@docusaurus/preset-classic": "2.2.0",
+    "@docusaurus/theme-live-codeblock": "^2.2.0",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.2.1",
     "just-validate": "^4.0.2",
@@ -29,9 +30,9 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.2.0",
     "@tsconfig/docusaurus": "^1.0.5",
+    "eslint": "^8.31.0",
     "prettier": "^2.8.1",
-    "typescript": "^4.7.4",
-    "eslint": "^8.31.0"
+    "typescript": "^4.7.4"
   },
   "browserslist": {
     "production": [

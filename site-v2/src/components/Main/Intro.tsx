@@ -13,7 +13,9 @@ const Intro = () => {
           and has no dependencies (no JQuery!).
         </div>
         <div className="mt-30">
-          <Button variant="secondary">Check it out</Button>
+          <Button variant="secondary" use="a" href="/examples">
+            Check it out
+          </Button>
         </div>
       </div>
       <div className="intro-right"></div>

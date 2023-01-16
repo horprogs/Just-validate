@@ -22,6 +22,7 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  themes: ['@docusaurus/theme-live-codeblock'],
   presets: [
     [
       'classic',
@@ -62,6 +63,7 @@ const config = {
             label: 'Docs',
           },
           { to: '/examples', label: 'Examples', position: 'left' },
+          { to: '/playground', label: 'Playground', position: 'left' },
           {
             href: 'https://github.com/horprogs/Just-validate',
             label: 'GitHub',
@@ -92,7 +94,8 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} JustValidate. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} JustValidate. Built with Docusaurus. Thanks to 
+          <a href="https://margaritaperepecho.com/" target="_blank">Margarita Perepecho</a> for the fresh main's page design. 🔥`,
       },
       prism: {
         theme: lightCodeTheme,

@@ -1,0 +1,139 @@
+---
+title: Playground
+---
+
+# Playground
+
+:::tip
+
+Here you could play with the code, try settings, different rules.
+Just start changing something and check it out in real time!
+
+:::
+
+```jsx live
+function Clock(props) {
+  onLoad(() => {
+    const validator = new JustValidate('#basic_form');
+
+    validator
+      .addField('#basic_name', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 3,
+        },
+        {
+          rule: 'maxLength',
+          value: 15,
+        },
+      ])
+      .addField('#basic_email', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'email',
+        },
+      ])
+      .addField('#basic_password', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'password',
+        },
+      ])
+      .addField('#basic_age', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'number',
+        },
+        {
+          rule: 'minNumber',
+          value: 18,
+        },
+        {
+          rule: 'maxNumber',
+          value: 150,
+        },
+      ]);
+  });
+
+  return (
+    <form id="basic_form" autocomplete="off" novalidate="novalidate">
+      <div class="control-wrapper">
+        <label class="input-label" for="basic_name">
+          Name
+        </label>
+        <div class="input-wrapper">
+          <input
+            id="basic_name"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label" for="basic_email">
+          Email
+        </label>
+        <div class="input-wrapper">
+          <input
+            id="basic_email"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your email"
+          />
+        </div>
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label" for="basic_password">
+          Password
+        </label>
+        <div class="input-wrapper">
+          <input
+            id="basic_password"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your password"
+          />
+        </div>
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label" for="basic_age">
+          Age
+        </label>
+        <div class="input-wrapper">
+          <input
+            id="basic_age"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your age"
+          />
+        </div>
+      </div>
+      <div class="control-wrapper">
+        <button type="submit" class="button">
+          Submit
+        </button>
+      </div>
+    </form>
+  );
+}
+```
+
+:::info
+
+If you feel that something works not right or if you have any suggestions about JustValidate or this website, please create an issue in our Github [here](https://github.com/horprogs/Just-validate).
+
+:::
