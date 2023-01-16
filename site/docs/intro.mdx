@@ -1,0 +1,506 @@
+---
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import BasicExample from '../src/components/Demos/BasicExample';
+import AdvancedUsage from '../src/components/Demos/AdvancedUsage';
+
+# Getting Started
+
+Install JustValidate using your favorite package manager:
+
+<Tabs>
+  <TabItem value="npm" label="NPM" default>
+    <pre>npm install just-validate --save</pre>
+  </TabItem>
+  <TabItem value="yarn" label="Yarn">
+    <pre>yarn add just-validate</pre>
+  </TabItem>
+</Tabs>
+
+### Using code bundlers
+
+Use it as an imported module
+
+```js
+import JustValidate from 'just-validate';
+
+const validate = new JustValidate('#form');
+```
+
+### Without code bundlers
+
+Include JustValidate script on your page from CDN and call it as `window.JustValidate`
+
+```html
+<script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
+```
+
+```html
+<body>
+  <script>
+    const validate = new window.JustValidate('#form');
+  </script>
+</body>
+```
+
+## Quick start
+
+Let's say we have a basic HTML layout:
+
+```html
+<form id="basic_form">
+  <input id="basic_name" type="text" placeholder="Enter your name" />
+  <input id="basic_email" type="text" placeholder="Enter your email" />
+  <input id="basic_password" type="text" placeholder="Enter your password" />
+  <input id="basic_age" type="text" placeholder="Enter your age" />
+  <button type="submit">Submit</button>
+</form>
+```
+
+Next, let's add JustValidate to our layout and define some simple rules.
+
+First, we should create the instance `new JustValidate('#form')` by passing a form selector, or the element as an argument.
+Second, we call `.addField()` with a field selector as the first argument and an array of rules as the second argument.
+
+The instance constructor takes 3 arguments:
+
+```js
+new JustValidate(form, globalConfig, dictLocale);
+```
+
+where:
+
+`form` - a string or DOM selector to the form element
+
+`globalConfig` - settings, described [here](instance)
+
+```js
+const validator = new JustValidate('#basic_form');
+
+validator
+  .addField('#basic_name', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 15,
+    },
+  ])
+  .addField('#basic_email', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'email',
+    },
+  ])
+  .addField('#basic_password', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'password',
+    },
+  ])
+  .addField('#basic_age', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+    {
+      rule: 'minNumber',
+      value: 18,
+    },
+    {
+      rule: 'maxNumber',
+      value: 150,
+    },
+  ]);
+```
+
+It is possible to use DOM elements, instead of string selectors:
+
+```js
+const validator = new JustValidate(document.querySelector('#basic_form'));
+
+validator
+  .addField(document.querySelector('#basic_name'), [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 15,
+    },
+  ])
+  .addField(document.querySelector('#basic_email'), [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'email',
+    },
+  ])
+  .addField(document.querySelector('#basic_password'), [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'password',
+    },
+  ])
+  .addField(document.querySelector('#basic_age'), [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+    {
+      rule: 'minNumber',
+      value: 18,
+    },
+    {
+      rule: 'maxNumber',
+      value: 150,
+    },
+  ]);
+```
+
+And that's it! Now our form is validated!
+
+### Demo
+
+<BasicExample />
+
+## Advanced usage
+
+Now we'll go through more comprehensive example. Let's say we have a bigger form:
+
+```html
+<form id="advanced-usage_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_password">Password</label>
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_password"
+        class="input"
+        autocomplete="off"
+        type="password"
+        placeholder="Enter password"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_repeat-password"
+      >Repeat password</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_repeat-password"
+        class="input"
+        autocomplete="off"
+        type="password"
+        placeholder="Repeat password"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_message">Message</label>
+    <div class="input-wrapper">
+      <textarea
+        id="advanced-usage_message"
+        class="input textarea"
+        placeholder="Enter message"
+      ></textarea>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_favorite_animal_select"
+      >Select you favorite animal</label
+    >
+    <div class="input-wrapper">
+      <select class="select minimal" id="advanced-usage_favorite_animal_select">
+        <option value="">--Please select an option--</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Hamster">Hamster</option>
+        <option value="Parrot">Parrot</option>
+        <option value="Spider">Spider</option>
+        <option value="Goldfish">Goldfish</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-wrapper mb-32">
+    <div class="label mb-8">You should give us your consent</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_consent_checkbox"
+          class="checkbox"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_consent_checkbox"
+          >I agree to provide the information</label
+        >
+      </div>
+      <div id="advanced-usage_consent_checkbox-errors-container"></div>
+    </div>
+  </div>
+  <div
+    class="control-wrapper mb-32"
+    id="advanced-usage_communication_checkbox_group"
+  >
+    <div class="label mb-8">Please select at least 1 option</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_1"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_1"
+          >I'd like to receive news by email</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_1-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_2"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_2"
+          >I'd like to receive news by post</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_2-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_3"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_3"
+          >I'd like to receive news by text phone</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_3-errors-container"
+      ></div>
+    </div>
+  </div>
+  <div class="control-wrapper mb-16">
+    <div class="label mb-8">
+      Please select the preferred way for communication
+    </div>
+    <div id="advanced-usage_communication_radio_group">
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="advanced-usage_communication_radio_group_1"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Email</span></label
+        >
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="advanced-usage_communication_radio_group_2"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Text message</span></label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_number"
+      >Input any number</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_number"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input any number"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_integer_number"
+      >Input an integer number</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_integer_number"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input an integer number"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_number_between"
+      >Input a number between 10 and 20</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_number_between"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input a number between 10 and 20"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+For this form we will use the setup:
+
+```js
+const validator = new JustValidate('#advanced-usage_form');
+
+validator
+  .addField('#advanced-usage_password', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addField('#advanced-usage_repeat-password', [
+    {
+      rule: 'required',
+    },
+    {
+      validator: (value, fields) => {
+        if (
+          fields['#advanced-usage_password'] &&
+          fields['#advanced-usage_password'].elem
+        ) {
+          const repeatPasswordValue =
+            fields['#advanced-usage_password'].elem.value;
+
+          return value === repeatPasswordValue;
+        }
+
+        return true;
+      },
+      errorMessage: 'Passwords should be the same',
+    },
+  ])
+  .addField('#advanced-usage_message', [
+    {
+      validator: (value) => {
+        return value !== undefined && (value as string).length > 3;
+      },
+      errorMessage: 'Message should be more than 3 letters.',
+    },
+  ])
+  .addField(
+    '#advanced-usage_consent_checkbox',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      errorsContainer: '#advanced-usage_consent_checkbox-errors-container',
+    }
+  )
+  .addField('#advanced-usage_favorite_animal_select', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addRequiredGroup(
+    '#advanced-usage_communication_checkbox_group',
+    'You should select at least one communication channel'
+  )
+  .addRequiredGroup('#advanced-usage_communication_radio_group')
+  .addField('#advanced-usage_input_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+  ])
+  .addField('#advanced-usage_input_integer_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'integer',
+    },
+  ])
+  .addField('#advanced-usage_input_number_between', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minNumber',
+      value: 10,
+    },
+    {
+      rule: 'maxNumber',
+      value: 20,
+    },
+  ]);
+```
+
+### Demo
+
+<AdvancedUsage />
+
+## What's next?
+
+To discover all features you could go through our [tutorial](/docs/category/tutorial), check all possible [rules with demo](/docs/category/rules) and [methods](/docs/category/methods).
+
+Don't forget to check out our handy [examples](/examples).
+
+And of course you could try our [playground](/playground) where you could discover features in real time!
+
+Just let's validate!

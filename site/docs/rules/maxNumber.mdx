@@ -1,0 +1,27 @@
+---
+sidebar_position: 8
+---
+
+import MaxNumber from '../../src/components/Rules/MaxNumber';
+import NotRequiredWarning from '../../src/components/Admonitions/NotRequiredWarning';
+
+# maxNumber
+
+Number should be less than defined value.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#number', [
+  {
+    rule: 'maxNumber',
+    value: 100,
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<MaxNumber />

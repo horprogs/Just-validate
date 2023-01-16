@@ -1,0 +1,24 @@
+---
+sidebar_position: 11
+---
+
+import CustomRegexp from '../../src/components/Rules/CustomRegexp';
+
+# customRegexp
+
+A custom regexp expression.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#regexp', [
+  {
+    rule: 'customRegexp',
+    value: /[a-z]/gi,
+  },
+]);
+```
+
+### Demo
+
+<CustomRegexp />

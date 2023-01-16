@@ -1,0 +1,27 @@
+---
+sidebar_position: 7
+---
+
+import MinNumber from '../../src/components/Rules/MinNumber';
+import NotRequiredWarning from '../../src/components/Admonitions/NotRequiredWarning';
+
+# minNumber
+
+Number should be more than defined value.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#number', [
+  {
+    rule: 'minNumber',
+    value: 5,
+  },
+]);
+```
+
+<NotRequiredWarning />
+
+### Demo
+
+<MinNumber />

@@ -1,0 +1,34 @@
+---
+sidebar_position: 2
+---
+
+# addRequiredGroup
+
+Makes the new fields group required. It could be a group of checkboxes or radio buttons.
+It means that at least one input in the group should be checked/selected.
+
+The method return a JustValidate instance, so it could be used as a chain (like `.addRequiredGroup().addRequiredGroup()...`).
+
+The method takes 3 arguments:
+
+```js
+addRequiredGroup(groupField, errorMessage, config);
+```
+
+where:
+
+`groupField` - a string selector or DOM element of the fields group
+
+`errorMessage` - a custom error message
+
+`config` - some specific settings applied to this particular group (the same as described [here](/docs/methods/addField)).
+
+### Example
+
+```js
+const validation = new JustValidate('#form');
+
+validation.addRequiredGroup('#radio-group', 'Select at lease one option!', {
+  successMessage: 'Everything looks good',
+});
+```

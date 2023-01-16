@@ -1,0 +1,140 @@
+---
+sidebar_position: 4
+---
+import NotRequiredWarning from "../../src/components/Admonitions/NotRequiredWarning";
+
+# Date validation
+
+Date validation is performed by a separate plugin `JustValidatePluginDate` ([github](https://github.com/horprogs/just-validate-plugin-date)) to avoid extending the library size.
+The plugin uses `date-fns` for operating with dates.
+
+It is possible to validate for defined `format`, `isAfter`, `isBefore` dates.
+It works both for text input and for date input.
+
+## Configuration
+
+`JustValidatePluginDate` takes 1 argument: function which returns a config object:
+
+```js
+JustValidatePluginDate((fields) => ({
+  required: boolean,
+  format: string,
+  isBefore: Date | string,
+  isAfter: Date | string,
+  isBeforeOrEqual: Date | string,
+  isAfterOrEqual: Date | string,
+  isEqual: Date | string,
+}));
+```
+
+<NotRequiredWarning />
+
+## Validate for the given format
+
+`JustValidatePluginDate` takes 1 argument: function which returns a config object:
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation.addField('#date', [
+  {
+    plugin: JustValidatePluginDate(() => ({
+      format: 'dd MMM yyyy',
+    })),
+    errorMessage: 'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
+  },
+]);
+```
+
+## Validate for isBefore/isAfter
+
+To be able to validate `isBefore`/`isAfter` it's important to define the same format which supposed to use in `isBefore`/`isAfter`, otherwise the library will not be able to parse this date string correctly.
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation.addField('#date', [
+  {
+    plugin: JustValidatePluginDate(() => ({
+      format: 'dd/MM/yyyy',
+      isBefore: '15/12/2021',
+      isAfter: '10/12/2021',
+    })),
+    errorMessage: 'Date should be between 10/12/2021 and 15/12/2021',
+  },
+]);
+```
+
+Also, you could perform validation depends on other fields:
+
+```js
+import JustValidatePluginDate from 'just-validate-plugin-date';
+
+validation
+  .addField('#date-start', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+  ])
+  .addField('#date-between', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+    {
+      plugin: JustValidatePluginDate((fields) => ({
+        format: 'dd/MM/yyyy',
+        isAfter: fields['#date-start'].elem.value,
+        isBefore: fields['#date-end'].elem.value,
+      })),
+      errorMessage: 'Date should be between start and end dates',
+    },
+  ])
+  .addField('#date-between-required', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        required: true,
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+    {
+      plugin: JustValidatePluginDate((fields) => ({
+        required: true,
+        format: 'dd/MM/yyyy',
+        isAfter: fields['#date-start'].elem.value,
+        isBefore: fields['#date-end'].elem.value,
+      })),
+      errorMessage: 'Date should be between start and end dates',
+    },
+  ])
+  .addField('#date-end', [
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 15/10/2021)',
+    },
+  ]);
+```
+
+## Using with date input
+
+If you use date input, you don't need to define format field, because it's always in `yyyy-mm-dd` format, you just should define `isBefore`/`isAfter`:
+
+```js
+validation.addField('#date-between', [
+  {
+    plugin: JustValidatePluginDate((fields) => ({
+      isAfter: document.querySelector('#date-start').value,
+      isBefore: document.querySelector('#date-end').value,
+    })),
+    errorMessage: 'Date should be between start and end dates',
+  },
+]);
+```

@@ -1,0 +1,24 @@
+---
+sidebar_position: 13
+---
+
+import MaxFilesCount from '../../src/components/Rules/MaxFilesCount';
+
+# maxFilesCount
+
+Uploaded files count should be less than defined value.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#files', [
+  {
+    rule: 'maxFilesCount',
+    value: 2,
+  },
+]);
+```
+
+### Demo
+
+<MaxFilesCount />

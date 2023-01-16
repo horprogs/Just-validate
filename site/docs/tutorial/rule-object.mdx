@@ -1,0 +1,98 @@
+---
+sidebar_position: 2
+---
+
+# Rule object
+
+Describes how to validate the field. This object is supposed to be passed in `addField` method. All possible rules listed [here](/docs/category/rules).
+
+The object contains several properties/methods:
+
+#### rule
+
+A rule string (listed [here](/docs/category/rules)).
+
+Type: `string`
+
+Example:
+
+```js
+{
+  rule: 'required',
+}
+```
+
+#### value
+
+For some rules (like `minLength`, `minNumber`, `customRegexp` etc.) it's required to define some value to check against.
+
+Type:
+
+- `number`
+- `string`
+- RegExp
+- `{ files: object }` (needed for files validation, please check [here](/docs/tutorial/files-validation))
+
+Example:
+
+```js
+[
+  {
+    rule: 'minLength',
+    value: 3,
+  },
+  {
+    rule: 'maxLength',
+    value: 15,
+  },
+];
+```
+
+#### errorMessage
+
+Error string or a function
+
+Type:
+
+- `string`
+- function, returning a string: `(value, context) => string`
+
+Example:
+
+```js
+{
+    errorMessage: 'Invalid field',
+}
+```
+
+#### validator
+
+A validator makes it possible to write your own custom validation rule.
+For general sync validation this is just a function that returns if the field valid or not (`true` or `false`), based on a field's value.
+For async validations you could return a function, that should return a promise with `true` or `false` value.
+
+Type:
+
+- `(value, context) => boolean`
+- `(value, context) => () => Promise<boolean>`
+
+Example:
+
+```js
+{
+    validator: (value, context) => value === '20' ? false : true,
+}
+```
+
+or
+
+```js
+{
+  validator: (value, context) => () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(false);
+      }, 1000);
+    }),
+}
+```

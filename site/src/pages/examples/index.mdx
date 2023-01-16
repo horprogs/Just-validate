@@ -1,0 +1,1554 @@
+---
+title: Examples
+toc_min_heading_level: 2
+toc_max_heading_level: 5
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import BasicExample from '../../components/Demos/BasicExample';
+import AdvancedUsage from '../../components/Demos/AdvancedUsage';
+import AsyncExample from '../../components/Demos/AsyncExample';
+import TooltipsExample from '../../components/Demos/TooltipsExample';
+import LocalisationExample from '../../components/Demos/LocalisationExample';
+import ConditionalExample from '../../components/Demos/ConditionalExample';
+import FilesExample from '../../components/Demos/FilesExample';
+import DateTextExample from '../../components/Demos/DateTextExample';
+import ErrorsContainerExample from '../../components/Demos/ErrorsContainerExample';
+import ManualExample from '../../components/Demos/ManualExample';
+import BeforeSubmitExample from '../../components/Demos/BeforeSubmitExample';
+
+# Examples
+
+## Basic
+
+<BasicExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="basic_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="basic_name">Name</label>
+    <div class="input-wrapper">
+      <input
+        id="basic_name"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your name"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="basic_email">Email</label>
+    <div class="input-wrapper">
+      <input
+        id="basic_email"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your email"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="basic_password">Password</label>
+    <div class="input-wrapper">
+      <input
+        id="basic_password"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your password"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="basic_age">Age</label>
+    <div class="input-wrapper">
+      <input
+        id="basic_age"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your age"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#basic_form');
+
+validator
+  .addField('#basic_name', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 15,
+    },
+  ])
+  .addField('#basic_email', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'email',
+    },
+  ])
+  .addField('#basic_password', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'password',
+    },
+  ])
+  .addField('#basic_age', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+    {
+      rule: 'minNumber',
+      value: 18,
+    },
+    {
+      rule: 'maxNumber',
+      value: 150,
+    },
+  ]);
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Advanced
+
+<AdvancedUsage />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="advanced-usage_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_password">Password</label>
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_password"
+        class="input"
+        autocomplete="off"
+        type="password"
+        placeholder="Enter password"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_repeat-password"
+      >Repeat password</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_repeat-password"
+        class="input"
+        autocomplete="off"
+        type="password"
+        placeholder="Repeat password"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_message">Message</label>
+    <div class="input-wrapper">
+      <textarea
+        id="advanced-usage_message"
+        class="input textarea"
+        placeholder="Enter message"
+      ></textarea>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_favorite_animal_select"
+      >Select you favorite animal</label
+    >
+    <div class="input-wrapper">
+      <select class="select minimal" id="advanced-usage_favorite_animal_select">
+        <option value="">--Please select an option--</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Hamster">Hamster</option>
+        <option value="Parrot">Parrot</option>
+        <option value="Spider">Spider</option>
+        <option value="Goldfish">Goldfish</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-wrapper mb-32">
+    <div class="label mb-8">You should give us your consent</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_consent_checkbox"
+          class="checkbox"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_consent_checkbox"
+          >I agree to provide the information</label
+        >
+      </div>
+      <div id="advanced-usage_consent_checkbox-errors-container"></div>
+    </div>
+  </div>
+  <div
+    class="control-wrapper mb-32"
+    id="advanced-usage_communication_checkbox_group"
+  >
+    <div class="label mb-8">Please select at least 1 option</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_1"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_1"
+          >I'd like to receive news by email</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_1-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_2"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_2"
+          >I'd like to receive news by post</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_2-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="advanced-usage_communication_checkbox_group_3"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="advanced-usage_communication_checkbox_group_3"
+          >I'd like to receive news by text phone</label
+        >
+      </div>
+      <div
+        id="advanced-usage_communication_checkbox_group_3-errors-container"
+      ></div>
+    </div>
+  </div>
+  <div class="control-wrapper mb-16">
+    <div class="label mb-8">
+      Please select the preferred way for communication
+    </div>
+    <div id="advanced-usage_communication_radio_group">
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="advanced-usage_communication_radio_group_1"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Email</span></label
+        >
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="advanced-usage_communication_radio_group_2"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Text message</span></label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_number"
+      >Input any number</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_number"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input any number"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_integer_number"
+      >Input an integer number</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_integer_number"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input an integer number"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="advanced-usage_input_number_between"
+      >Input a number between 10 and 20</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="advanced-usage_input_number_between"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Input a number between 10 and 20"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#advanced-usage_form');
+
+validator
+  .addField('#advanced-usage_password', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addField('#advanced-usage_repeat-password', [
+    {
+      rule: 'required',
+    },
+    {
+      validator: (value, fields) => {
+        if (
+          fields['#advanced-usage_password'] &&
+          fields['#advanced-usage_password'].elem
+        ) {
+          const repeatPasswordValue =
+            fields['#advanced-usage_password'].elem.value;
+
+          return value === repeatPasswordValue;
+        }
+
+        return true;
+      },
+      errorMessage: 'Passwords should be the same',
+    },
+  ])
+  .addField('#advanced-usage_message', [
+    {
+      validator: (value) => {
+        return value !== undefined && (value as string).length > 3;
+      },
+      errorMessage: 'Message should be more than 3 letters.',
+    },
+  ])
+  .addField(
+    '#advanced-usage_consent_checkbox',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      errorsContainer: '#advanced-usage_consent_checkbox-errors-container',
+    }
+  )
+  .addField('#advanced-usage_favorite_animal_select', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addRequiredGroup(
+    '#advanced-usage_communication_checkbox_group',
+    'You should select at least one communication channel'
+  )
+  .addRequiredGroup('#advanced-usage_communication_radio_group')
+  .addField('#advanced-usage_input_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'number',
+    },
+  ])
+  .addField('#advanced-usage_input_integer_number', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'integer',
+    },
+  ])
+  .addField('#advanced-usage_input_number_between', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'minNumber',
+      value: 10,
+    },
+    {
+      rule: 'maxNumber',
+      value: 20,
+    },
+  ]);
+
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Async validation
+
+<AsyncExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="async_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="async_email">Email</label>
+    <div class="input-wrapper">
+      <input
+        id="async_email"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your email"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#async_form');
+
+validator.addField('#async_email', [
+  {
+    rule: 'required',
+  },
+  {
+    validator: (value) => () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(false);
+        }, 1000);
+      }),
+    errorMessage: 'Email already exists!',
+  },
+]);
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Tooltips
+
+<TooltipsExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="tooltips_form" autocomplete="off" novalidate="novalidate">
+  <div class="row">
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="tooltips_name">Name</label>
+        <div class="input-wrapper">
+          <input
+            id="tooltips_name"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="tooltips_email">Email</label>
+        <div class="input-wrapper">
+          <input
+            id="tooltips_email"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your email"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <label class="input-label" for="tooltips_favorite_animal_select"
+      >Select you favorite animal</label
+    >
+    <div class="input-wrapper">
+      <select class="select minimal" id="tooltips_favorite_animal_select">
+        <option value="">--Please select an option--</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Hamster">Hamster</option>
+        <option value="Parrot">Parrot</option>
+        <option value="Spider">Spider</option>
+        <option value="Goldfish">Goldfish</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-wrapper mb-32">
+    <div class="label mb-8">Please confirm you agree</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="tooltips_consent_checkbox"
+          class="checkbox"
+        /><label class="input-label ml-8 pb-0" for="tooltips_consent_checkbox"
+          >I agree to provide the information</label
+        >
+      </div>
+      <div id="tooltips_consent_checkbox-errors-container"></div>
+    </div>
+  </div>
+  <div class="control-wrapper mb-32" id="tooltips_communication_checkbox_group">
+    <div class="label mb-8">Please select at least 1 option</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="tooltips_communication_checkbox_group_1"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="tooltips_communication_checkbox_group_1"
+          >I'd like to receive news by email</label
+        >
+      </div>
+      <div id="tooltips_communication_checkbox_group_1-errors-container"></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="tooltips_communication_checkbox_group_2"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="tooltips_communication_checkbox_group_2"
+          >I'd like to receive news by post</label
+        >
+      </div>
+      <div id="tooltips_communication_checkbox_group_2-errors-container"></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="tooltips_communication_checkbox_group_3"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="tooltips_communication_checkbox_group_3"
+          >I'd like to receive news by text phone</label
+        >
+      </div>
+      <div id="tooltips_communication_checkbox_group_3-errors-container"></div>
+    </div>
+  </div>
+  <div class="control-wrapper mb-16">
+    <div class="label mb-8">Please select your preferred contact method</div>
+    <div id="tooltips_communication_radio_group">
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="tooltips_communication_radio_group_1"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Email</span></label
+        >
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="tooltips_communication_radio_group_2"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Text message</span></label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#tooltips_form', {
+  tooltip: {
+    position: 'top',
+  },
+});
+
+validator
+  .addField('#tooltips_name', [
+    {
+      rule: 'required',
+    },
+  ])
+  .addField('#tooltips_email', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'email',
+    },
+  ])
+  .addField(
+    '#tooltips_consent_checkbox',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      errorsContainer: '#tooltips_consent_checkbox-errors-container',
+    }
+  )
+  .addField(
+    '#tooltips_favorite_animal_select',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      tooltip: {
+        position: 'right',
+      },
+    }
+  )
+  .addRequiredGroup(
+    '#tooltips_communication_checkbox_group',
+    'You should select at least one communication channel',
+    {
+      tooltip: {
+        position: 'bottom',
+      },
+    }
+  )
+  .addRequiredGroup('#tooltips_communication_radio_group', undefined, {
+    tooltip: {
+      position: 'bottom',
+    },
+  });
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Localisation
+
+<LocalisationExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="localisation_form" autocomplete="off" novalidate="novalidate">
+  <div>
+    <div class="control-wrapper">
+      <label class="input-label" for="localisation_language"
+        >Change error messages language</label
+      >
+      <div class="input-wrapper">
+        <select class="select minimal" id="localisation_language">
+          <option value="">--Please select an option--</option>
+          <option value="English" selected="">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="localisation_form_name">Name</label>
+        <div class="input-wrapper">
+          <input
+            id="localisation_form_name"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="localisation_form_email">Email</label>
+        <div class="input-wrapper">
+          <input
+            id="localisation_form_email"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your email"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+import JustValidate from 'just-validate';
+
+const validator = new JustValidate('#localisation_form', undefined, [
+  {
+    key: 'Name is required',
+    dict: {
+      Spanish: 'Se requiere el nombre',
+      French: 'Le nom est requis',
+    },
+  },
+  {
+    key: 'Name is too short',
+    dict: {
+      Spanish: 'El nombre es muy corto',
+      French: 'Le nom est trop court',
+    },
+  },
+  {
+    key: 'Name is too long',
+    dict: {
+      Spanish: 'El nombre es demasiado largo',
+      French: 'Le nom est trop long',
+    },
+  },
+  {
+    key: 'Email is required',
+    dict: {
+      Spanish: 'Correo electronico es requerido',
+      French: "L'e-mail est requis",
+    },
+  },
+  {
+    key: 'Email is invalid',
+    dict: {
+      Spanish: 'El correo electrónico es invalido',
+      French: 'Le courriel est invalide',
+    },
+  },
+]);
+
+validator
+  .addField('#localisation_form_name', [
+    {
+      rule: 'required',
+      errorMessage: 'Name is required',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+      errorMessage: 'Name is too short',
+    },
+    {
+      rule: 'maxLength',
+      value: 15,
+      errorMessage: 'Name is too long',
+    },
+  ])
+  .addField('#localisation_form_email', [
+    {
+      rule: 'required',
+      errorMessage: 'Email is required',
+    },
+    {
+      rule: 'email',
+      errorMessage: 'Email is invalid',
+    },
+  ]);
+
+validator.setCurrentLocale('English');
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Conditional fields
+
+<ConditionalExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="conditional_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="conditional_name">Name</label>
+      <div class="input-wrapper">
+        <input
+          id="conditional_name"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter your name"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="conditional_checkbox"
+          class="checkbox"
+        /><label class="input-label ml-8 pb-0" for="conditional_checkbox"
+          >Name is required</label
+        >
+      </div>
+      <div id="conditional_checkbox-errors-container"></div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#conditional_form');
+
+document
+  .querySelector('#conditional_checkbox')
+  .addEventListener('change', (e) => {
+    if (e.target.checked) {
+      validator.addField('#conditional_name', [
+        {
+          rule: 'required',
+        },
+      ]);
+    } else {
+      validator.removeField('#conditional_name');
+    }
+  });
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Date validation using text input
+
+<DateTextExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="date-text_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_start_date">Start date</label>
+      <div class="input-wrapper">
+        <input
+          id="date-text_start_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter start date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_between_date"
+        >Between date</label
+      >
+      <div class="input-wrapper">
+        <input
+          id="date-text_between_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter between date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_end_date">End date</label>
+      <div class="input-wrapper">
+        <input
+          id="date-text_end_date"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter end date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="date-text_format"
+        >Check for dd MMM yyyy format</label
+      >
+      <div class="input-wrapper">
+        <input
+          id="date-text_format"
+          class="input"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter a valid date"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#date-text_form');
+
+validator
+  .addField('#date-text_start_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+  ])
+  .addField('#date-text_between_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+    {
+      plugin: JustValidatePluginDate((fields) => {
+        return {
+          format: 'dd/MM/yyyy',
+          isAfter: fields['#date-text_start_date'].elem.value,
+          isBefore: fields['#date-text_end_date'].elem.value,
+        };
+      }),
+      errorMessage: 'Date should be between start and end dates',
+    },
+  ])
+  .addField('#date-text_end_date', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd/MM/yyyy',
+      })),
+      errorMessage: 'Date should be in dd/MM/yyyy format (e.g. 20/12/2021)',
+    },
+  ])
+  .addField('#date-text_format', [
+    {
+      rule: 'required',
+    },
+    {
+      plugin: JustValidatePluginDate(() => ({
+        format: 'dd MMM yyyy',
+      })),
+      errorMessage: 'Date should be in dd MMM yyyy format (e.g. 20 Dec 2021)',
+    },
+  ]);
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Files validation
+
+<FilesExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="files_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="files_minmax">Upload 1-3 files</label>
+      <div class="input-wrapper">
+        <input
+          id="files_minmax"
+          class="input"
+          autocomplete="off"
+          type="file"
+          multiple=""
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="files_png">Upload 1 png file</label>
+      <div class="input-wrapper">
+        <input id="files_png" class="input" autocomplete="off" type="file" />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <label class="input-label" for="files_attr"
+        >Upload several png/jpg/jpeg files with min size 10kb and max size
+        25kb</label
+      >
+      <div class="input-wrapper">
+        <input
+          id="files_attr"
+          class="input"
+          autocomplete="off"
+          type="file"
+          multiple=""
+        />
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#files_form');
+
+validator
+  .addField('#files_minmax', [
+    {
+      rule: 'minFilesCount',
+      value: 1,
+    },
+    {
+      rule: 'maxFilesCount',
+      value: 3,
+    },
+  ])
+  .addField('#files_png', [
+    {
+      rule: 'minFilesCount',
+      value: 1,
+    },
+    {
+      rule: 'maxFilesCount',
+      value: 1,
+    },
+    {
+      rule: 'files',
+      value: {
+        files: {
+          types: ['image/png'],
+          extensions: ['png'],
+        },
+      },
+    },
+  ])
+  .addField('#files_attr', [
+    {
+      rule: 'minFilesCount',
+      value: 1,
+    },
+    {
+      rule: 'files',
+      value: {
+        files: {
+          extensions: ['jpeg', 'jpg', 'png'],
+          maxSize: 20000,
+          minSize: 10000,
+          types: ['image/jpeg', 'image/jpg', 'image/png'],
+        },
+      },
+    },
+  ]);
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Render errors in a custom container
+
+<ErrorsContainerExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="errors-container_form" autocomplete="off" novalidate="novalidate">
+  <div class="row">
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="errors-container_name">Name</label>
+        <div class="input-wrapper">
+          <input
+            id="errors-container_name"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+      <div class="control-wrapper">
+        <span>Custom container for Name field</span>
+        <div id="errors-container_custom-name"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="control-wrapper">
+        <label class="input-label" for="errors-container_email">Email</label>
+        <div class="input-wrapper">
+          <input
+            id="errors-container_email"
+            class="input"
+            autocomplete="off"
+            type="text"
+            placeholder="Enter your email"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="control-wrapper mb-32"
+    id="errors-container_communication_checkbox_group"
+  >
+    <div class="label mb-8">Please select at least 1 option</div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="errors-container_communication_checkbox_group_1"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="errors-container_communication_checkbox_group_1"
+          >I'd like to receive news by email</label
+        >
+      </div>
+      <div
+        id="errors-container_communication_checkbox_group_1-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="errors-container_communication_checkbox_group_2"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="errors-container_communication_checkbox_group_2"
+          >I'd like to receive news by post</label
+        >
+      </div>
+      <div
+        id="errors-container_communication_checkbox_group_2-errors-container"
+      ></div>
+    </div>
+    <div class="control-wrapper">
+      <div class="flex">
+        <input
+          type="checkbox"
+          id="errors-container_communication_checkbox_group_3"
+          class="checkbox"
+          name="communication_checkbox_group"
+        /><label
+          class="input-label ml-8 pb-0"
+          for="errors-container_communication_checkbox_group_3"
+          >I'd like to receive news by text phone</label
+        >
+      </div>
+      <div
+        id="errors-container_communication_checkbox_group_3-errors-container"
+      ></div>
+    </div>
+  </div>
+  <div class="control-wrapper mb-16">
+    <div class="label mb-8">Please select your preferred contact method</div>
+    <div id="errors-container_communication_radio_group">
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="errors-container_communication_radio_group_1"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Email</span></label
+        >
+      </div>
+      <div class="control-wrapper">
+        <label class="input-label flex"
+          ><input
+            type="radio"
+            id="errors-container_communication_radio_group_2"
+            class="radio"
+            name="communication_radio_group"
+          />
+          <span class="ml-8">Text message</span></label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="control-wrapper" id="errors-container_custom-container"></div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#errors-container_form', {
+  errorsContainer: '#errors-container_custom-container',
+});
+
+validator
+  .addField(
+    '#errors-container_name',
+    [
+      {
+        rule: 'required',
+      },
+    ],
+    {
+      errorsContainer: '#errors-container_custom-name',
+    }
+  )
+  .addField('#errors-container_email', [
+    {
+      rule: 'required',
+    },
+    {
+      rule: 'email',
+    },
+  ])
+  .addRequiredGroup(
+    '#errors-container_communication_checkbox_group',
+    'You should select at least one communication channel',
+    {
+      tooltip: {
+        position: 'bottom',
+      },
+    }
+  )
+  .addRequiredGroup('#errors-container_communication_radio_group', undefined, {
+    tooltip: {
+      position: 'bottom',
+    },
+  });
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Manually added errors
+
+<ManualExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="manual_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="manual_name">Name</label>
+    <div class="input-wrapper">
+      <input
+        id="manual_name"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Enter your name"
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="control-wrapper">
+      <button type="button" class="button" data-variant="negative">
+        Show error label
+      </button>
+    </div>
+    <div class="control-wrapper">
+      <button type="button" class="button" data-variant="success">
+        Show success label
+      </button>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+validator.addField('#manual_name', [
+  {
+    rule: 'required',
+  },
+]);
+
+validator.showSuccessLabels({
+  '#manual_name': 'The field looks good!',
+});
+
+validator.showErrors({
+  '#manual_name': 'The field is invalid',
+});
+```
+
+</TabItem>
+</Tabs>
+</details>
+<br />
+<br />
+
+## Validate before submitting
+
+<BeforeSubmitExample />
+
+<br />
+<details>
+<summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="before-submit_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="before-submit_email">Email</label>
+    <div class="input-wrapper">
+      <input
+        id="before-submit_email"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Start typing..."
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#before-submit_form', {
+  validateBeforeSubmitting: true,
+});
+
+validator.addField('#before-submit_email', [
+  {
+    rule: 'required',
+  },
+  {
+    rule: 'email',
+  },
+]);
+```
+
+</TabItem>
+</Tabs>
+</details>

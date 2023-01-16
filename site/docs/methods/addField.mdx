@@ -1,0 +1,137 @@
+---
+sidebar_position: 1
+---
+
+# addField
+
+Defines validation rules for the new field.
+
+The method return a JustValidate instance, so it could be used as a chain (like `.addField().addField()...`).
+
+The method takes 3 arguments:
+
+```js
+addField(field, rules, config);
+```
+
+where:
+
+`field` - a string selector or DOM element of the field
+
+`rules` - array of validation rule objects (described [here](/docs/tutorial/rule-object))
+
+`config` - some specific settings applied to this particular field. Replace settings from default config (described [here](/docs/instance/)):
+
+#### errorFieldCssClass
+
+Overrides [errorFieldCssClass](/docs/instance/errorFieldCssClass)
+
+#### errorFieldStyle
+
+Overrides [errorFieldStyle](/docs/instance/errorFieldStyle)
+
+#### errorLabelCssClass
+
+Overrides [errorLabelCssClass](/docs/instance/errorLabelCssClass)
+
+#### errorLabelStyle
+
+Overrides [errorLabelStyle](/docs/instance/errorLabelStyle)
+
+#### successFieldCssClass
+
+Overrides [successFieldCssClass](/docs/instance/successFieldCssClass)
+
+#### successFieldStyle
+
+Overrides [successFieldStyle](/docs/instance/successFieldStyle)
+
+#### successLabelCssClass
+
+Overrides [successLabelCssClass](/docs/instance/successLabelCssClass)
+
+#### successLabelStyle
+
+Overrides [successLabelStyle](/docs/instance/successLabelStyle)
+
+#### tooltip
+
+Overrides [tooltip](/docs/instance/tooltip)
+
+#### errorsContainer
+
+Overrides [errorsContainer](/docs/instance/errorsContainer)
+
+#### successMessage
+
+Custom text if the field is valid (validation passes for all rules).
+
+Type: `string`
+
+Default value: `undefined` (success messages are not shown)
+
+### Example
+
+```js
+const validation = new JustValidate('#form');
+
+validation
+  .addField('#name', [
+    {
+      rule: 'name',
+    },
+    {
+      rule: 'minLength',
+      value: 3,
+    },
+    {
+      rule: 'maxLength',
+      value: 20,
+    },
+  ])
+  .addField(
+    '#email',
+    [
+      {
+        rule: 'required',
+      },
+      {
+        rule: 'email',
+      },
+      {
+        validator: (value) => () =>
+          new Promise((resolve) => {
+            isEmailExist(value).then((isExist) => {
+              resolve(!isExist);
+            });
+          }),
+        errorMessage: 'Email already exists!',
+      },
+    ],
+    {
+      errorsContainer: '.custom-errors-container',
+      successMessage: 'Everything looks good!',
+    }
+  );
+```
+
+Also, it's possible to do validation based on other fields:
+
+```js
+const validation = new JustValidate('#form');
+
+validation.addField('#repeat-password', [
+  {
+    validator: (value, fields) => {
+      if (fields['#password'] && fields['#password'].elem) {
+        const repeatPasswordValue = fields['#password'].elem.value;
+
+        return value === repeatPasswordValue;
+      }
+
+      return true;
+    },
+    errorMessage: 'Passwords should be the same',
+  },
+]);
+```

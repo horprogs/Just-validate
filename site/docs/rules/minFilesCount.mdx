@@ -1,0 +1,24 @@
+---
+sidebar_position: 12
+---
+
+import MinFilesCount from '../../src/components/Rules/MinFilesCount';
+
+# minFilesCount
+
+Uploaded files count should be more than defined value.
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#files', [
+  {
+    rule: 'minFilesCount',
+    value: 2,
+  },
+]);
+```
+
+### Demo
+
+<MinFilesCount />

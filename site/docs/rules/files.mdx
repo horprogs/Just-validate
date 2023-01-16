@@ -1,0 +1,31 @@
+---
+sidebar_position: 14
+---
+
+import Files from '../../src/components/Rules/Files';
+
+# files
+
+Uploaded files attributes should be valid, based on value config (read more in Files validation section).
+
+```js
+const validator = new JustValidate('#form');
+
+validator.addField('#files', [
+  {
+    rule: 'files',
+    value: {
+      files: {
+        extensions: ['jpeg', 'jpg', 'png'],
+        maxSize: 20000,
+        minSize: 10000,
+        types: ['image/jpeg', 'image/jpg', 'image/png'],
+      },
+    },
+  },
+]);
+```
+
+### Demo
+
+<Files />

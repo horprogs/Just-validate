@@ -1,0 +1,44 @@
+---
+sidebar_position: 2
+---
+
+# Instance setting
+
+The library has a way to specify a default config that will be used for all fields (don't worry you could customize everything for each field as well).
+Also, it contains some specific settings, applied to the whole instance.
+
+For example, the full settings looks like this:
+
+```bash
+new JustValidate(
+  form: string | Element,
+   globalConfig?: {
+     errorFieldStyle: Partial<CSSStyleDeclaration>,
+     errorFieldCssClass: string | string[],
+     errorLabelStyle: Partial<CSSStyleDeclaration>,
+     errorLabelCssClass: string | string[],
+     lockForm: boolean,
+     testingMode: boolean,
+     validateBeforeSubmitting: boolean,
+     focusInvalidField?: boolean,
+     tooltip?: {
+       position: 'left' | 'top' | 'right' | 'bottom',
+     },
+     errorsContainer?: string | Element,
+   },
+   dictLocale?: {
+     key: string;
+     dict: {
+       [localeKey: string]: string,
+     };
+   }[];
+);
+```
+
+Check out all possible settings:
+
+```mdx-code-block
+import DocCardList from '@theme/DocCardList';
+
+<DocCardList />
+```
