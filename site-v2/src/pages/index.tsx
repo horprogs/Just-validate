@@ -1,18 +1,25 @@
 import React from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Intro from '@site/src/components/Main/Intro';
+import Features from '@site/src/components/Main/Features';
+import Why from '@site/src/components/Main/Why';
+import UsedBy from '@site/src/components/Main/UsedBy';
+import Demo from '@site/src/components/Main/Demo';
 
 export default function Home(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
-    ></Layout>
+      title="JustValidate - modern form validation library written in Typescript"
+      description="Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins."
+    >
+      <div className="main">
+        <Intro />
+        <Features />
+        <Why />
+        <UsedBy />
+        <Demo />
+      </div>
+    </Layout>
   );
 }

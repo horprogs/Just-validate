@@ -36,6 +36,7 @@ const TooltipsExample = () => {
             [
               {
                 rule: 'required' as Rules,
+                errorMessage: 'Required',
               },
             ],
             {
@@ -60,13 +61,13 @@ const TooltipsExample = () => {
             'You should select at least one communication channel',
             {
               tooltip: {
-                position: 'bottom',
+                position: 'right',
               },
             }
           )
           .addRequiredGroup('#tooltips_communication_radio_group', undefined, {
             tooltip: {
-              position: 'bottom',
+              position: 'right',
             },
           })
           .onSuccess(onSuccess);
@@ -101,44 +102,47 @@ const TooltipsExample = () => {
           label="I agree to provide the information"
         />
       </div>
-
-      <div
-        className="control-wrapper mb-32"
-        id="tooltips_communication_checkbox_group"
-      >
-        <div className="label mb-8">Please select at least 1 option</div>
-        <Checkbox
-          id="tooltips_communication_checkbox_group_1"
-          label="I'd like to receive news by email"
-          name="communication_checkbox_group"
-        />
-        <Checkbox
-          id="tooltips_communication_checkbox_group_2"
-          label="I'd like to receive news by post"
-          name="communication_checkbox_group"
-        />
-        <Checkbox
-          id="tooltips_communication_checkbox_group_3"
-          label="I'd like to receive news by text phone"
-          name="communication_checkbox_group"
-        />
+      <div>
+        <div
+          className="control-wrapper mb-32 inline-block"
+          id="tooltips_communication_checkbox_group"
+        >
+          <div className="label mb-8">Please select at least 1 option</div>
+          <Checkbox
+            id="tooltips_communication_checkbox_group_1"
+            label="I'd like to receive news by email"
+            name="communication_checkbox_group"
+          />
+          <Checkbox
+            id="tooltips_communication_checkbox_group_2"
+            label="I'd like to receive news by post"
+            name="communication_checkbox_group"
+          />
+          <Checkbox
+            id="tooltips_communication_checkbox_group_3"
+            label="I'd like to receive news by text phone"
+            name="communication_checkbox_group"
+          />
+        </div>
       </div>
 
-      <div className="control-wrapper mb-16">
-        <div className="label mb-8">
-          Please select your preferred contact method
-        </div>
-        <div id="tooltips_communication_radio_group">
-          <Radio
-            id="tooltips_communication_radio_group_1"
-            label="Email"
-            name="communication_radio_group"
-          />
-          <Radio
-            id="tooltips_communication_radio_group_2"
-            label="Text message"
-            name="communication_radio_group"
-          />
+      <div>
+        <div className="control-wrapper mb-16 inline-block">
+          <div className="label mb-8">
+            Please select your preferred contact method
+          </div>
+          <div id="tooltips_communication_radio_group">
+            <Radio
+              id="tooltips_communication_radio_group_1"
+              label="Email"
+              name="communication_radio_group"
+            />
+            <Radio
+              id="tooltips_communication_radio_group_2"
+              label="Text message"
+              name="communication_radio_group"
+            />
+          </div>
         </div>
       </div>
     </Form>
