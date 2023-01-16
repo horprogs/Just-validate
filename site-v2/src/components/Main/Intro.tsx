@@ -10,7 +10,7 @@ const Intro = () => {
           Modern form validation library <br />
           <br />
           Simple, powerful and lightweight (~5kb gzip). Written in Typescript,
-          and has no dependencies (no JQuery!).
+          and has no dependencies (no JQuery!)
         </div>
         <div className="mt-30">
           <Button variant="secondary" use="a" href="/examples">
