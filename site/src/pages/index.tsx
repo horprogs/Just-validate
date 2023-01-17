@@ -11,7 +11,7 @@ import Head from '@docusaurus/Head';
 export default function Home(): JSX.Element {
   return (
     <Layout
-      title="JustValidate - modern form validation library written in Typescript"
+      title="Modern form validation library written in Typescript"
       description="Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies (no JQuery!). Support a wide range of predefined rules, async, files, dates validation, custom error messages and styles, localization. Support writing custom rules and plugins."
     >
       <Head>
