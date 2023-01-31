@@ -1545,6 +1545,85 @@ describe('Validation', () => {
     onSubmit.mockReset();
   });
 
+  it('should revalidate the group', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addRequiredGroup('#read_terms_checkbox_group')
+      .addRequiredGroup(
+        document.querySelector('#communication_radio_group') as HTMLElement
+      )
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    expect(() => {
+      // @ts-ignore
+      validation.revalidateGroup(123);
+    }).toThrow();
+
+    await expect(validation.revalidateGroup('.123')).rejects.toBe(undefined);
+
+    expect(console.error).toHaveBeenCalled();
+    // @ts-ignore
+    console.error.mockReset();
+
+    await clickBySelector('#read_terms_checkbox_group_1');
+    await clickBySelector('#read_terms_checkbox_group_1');
+
+    await expect(
+      validation.revalidateGroup('#read_terms_checkbox_group')
+    ).resolves.toBe(false);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(
+      getElemByKey('error-label', '#read_terms_checkbox_group', validation)
+    ).toBeInTheDocument();
+
+    await clickBySelector('#read_terms_checkbox_group_1');
+
+    await expect(
+      validation.revalidateGroup('#read_terms_checkbox_group')
+    ).resolves.toBe(true);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    await expect(
+      validation.revalidateGroup(
+        document.querySelector('#communication_radio_group') as HTMLElement
+      )
+    ).resolves.toBe(false);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(
+      getElemByKey(
+        'error-label',
+        document.querySelector('#communication_radio_group') as HTMLElement,
+        validation
+      )
+    ).toBeInTheDocument();
+
+    await clickBySelector('#communication_radio_group_1');
+
+    await expect(
+      validation.revalidateGroup(
+        document.querySelector('#communication_radio_group') as HTMLElement
+      )
+    ).resolves.toBe(true);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+  });
+
   it('should revalidate the form', async () => {
     const onSubmit = jest.fn();
     const onFail = jest.fn();
@@ -1821,5 +1900,49 @@ describe('Validation', () => {
     );
     onFail.mockReset();
     validator.mockReset();
+  });
+
+  it('should be able to use addRequiredGroup with a DOM element', async () => {
+    const onSubmit = jest.fn();
+    const onFail = jest.fn();
+
+    const validation = new JustValidate('#form', {
+      testingMode: true,
+    });
+
+    validation
+      .addRequiredGroup(
+        document.querySelector('#communication_radio_group') as HTMLElement
+      )
+      .onSuccess(onSubmit)
+      .onFail(onFail);
+
+    await clickBySelector('#submit-btn');
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(
+      getElemByKey(
+        'error-label',
+        document.querySelector('#communication_radio_group') as HTMLElement,
+        validation
+      )
+    ).toBeInTheDocument();
+
+    await clickBySelector('#communication_radio_group_1');
+
+    await clickBySelector('#submit-btn');
+
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockReset();
+
+    expect(
+      getElemByKey(
+        'error-label',
+        document.querySelector('#communication_radio_group') as HTMLElement,
+        validation
+      )
+    ).not.toBeInTheDocument();
   });
 });

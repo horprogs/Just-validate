@@ -169,4 +169,4 @@ export interface ShowLabelsInterface {
   [field: string]: string;
 }
 
-export type FieldSelectorType = string | HTMLInputElement;
+export type FieldSelectorType = string | HTMLInputElement | HTMLElement;

@@ -16,7 +16,6 @@ import {
   FieldConfigInterface,
   FieldRuleInterface,
   GlobalConfigInterface,
-  GroupFieldInterface,
   GroupFieldsInterface,
   GroupRuleInterface,
   GroupRules,
@@ -817,7 +816,31 @@ class JustValidate {
     });
   }
 
-  validateGroup(key: string, group: GroupFieldInterface): Promise<any> | void {
+  public revalidateGroup(groupSelector: FieldSelectorType): Promise<boolean> {
+    if (typeof groupSelector !== 'string' && !isElement(groupSelector)) {
+      throw Error(
+        `Group selector is not valid. Please specify a string selector or a valid DOM element.`
+      );
+    }
+
+    const key = this.getKeyByFieldSelector(groupSelector);
+
+    if (!key || !this.groupFields[key]) {
+      console.error(`Group not found. Check the group selector.`);
+      return Promise.reject();
+    }
+
+    return new Promise((resolve) => {
+      this.validateGroup(key).finally(() => {
+        this.clearFieldLabel(key);
+        this.renderGroupError(key);
+        resolve(!!this.groupFields[key].isValid);
+      });
+    });
+  }
+
+  validateGroup(key: string): Promise<any> {
+    const group = this.groupFields[key];
     const promises: Promise<any>[] = [];
     [...group.rules].reverse().forEach((rule) => {
       const res = this.validateGroupRule(key, group.elems, rule);
@@ -861,8 +884,7 @@ class JustValidate {
       });
 
       Object.keys(this.groupFields).forEach((key) => {
-        const group = this.groupFields[key];
-        const promise = this.validateGroup(key, group);
+        const promise = this.validateGroup(key);
 
         if (isPromise(promise)) {
           promises.push(promise as Promise<any>);
@@ -944,24 +966,22 @@ class JustValidate {
   };
 
   handleGroupChange = (target: HTMLInputElement): void => {
-    let currentGroup;
     let foundKey;
 
     for (const key in this.groupFields) {
       const group = this.groupFields[key];
 
       if (group.elems.find((elem) => elem === target)) {
-        currentGroup = group;
         foundKey = key;
         break;
       }
     }
 
-    if (!currentGroup || !foundKey) {
+    if (!foundKey) {
       return;
     }
 
-    this.validateGroup(foundKey, currentGroup);
+    this.validateGroup(foundKey);
   };
 
   handlerChange = (ev: Event): void => {
@@ -1011,7 +1031,7 @@ class JustValidate {
     if (typeof fieldSelector === 'string') {
       elem = this.form!.querySelector(fieldSelector) as HTMLInputElement | null;
     } else {
-      elem = fieldSelector;
+      elem = fieldSelector as HTMLInputElement | null;
     }
 
     if (!elem) {
@@ -1112,23 +1132,27 @@ class JustValidate {
   }
 
   public addRequiredGroup(
-    groupField: string,
+    groupField: FieldSelectorType,
     errorMessage?: string,
     config?: FieldConfigInterface,
     successMessage?: string
   ): JustValidate {
-    if (typeof groupField !== 'string') {
+    if (typeof groupField !== 'string' && !isElement(groupField)) {
       throw Error(
-        `Group selector is not valid. Please specify a string selector.`
+        `Group selector is not valid. Please specify a string selector or a valid DOM element.`
       );
     }
 
-    const elem = this.form!.querySelector(groupField) as HTMLElement;
+    let elem;
+
+    if (typeof groupField === 'string') {
+      elem = this.form!.querySelector(groupField) as HTMLElement;
+    } else {
+      elem = groupField;
+    }
 
     if (!elem) {
-      throw Error(
-        `Group with ${groupField} selector not found! Please check the group selector.`
-      );
+      throw Error(`Group selector not found! Please check the group selector.`);
     }
 
     const inputs: NodeListOf<HTMLInputElement> = elem.querySelectorAll('input');

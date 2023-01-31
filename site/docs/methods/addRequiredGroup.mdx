@@ -32,3 +32,11 @@ validation.addRequiredGroup('#radio-group', 'Select at lease one option!', {
   successMessage: 'Everything looks good',
 });
 ```
+
+or
+
+```js
+const validation = new JustValidate('#form');
+
+validation.addRequiredGroup(document.querySelector('#radio-group'));
+```
