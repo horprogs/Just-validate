@@ -1,0 +1,23 @@
+---
+sidebar_position: 13
+---
+
+# onValidate
+
+Callback triggered after every validation run.
+
+:::info
+
+If you use this callback before submitting the form, in some cases `isValid` could be `undefined` as we don't run the whole form validation before submit.
+If you need to use `isValid` state before submitting you should use `validateBeforeSubmitting` config prop ([docs](/docs/instance/validateBeforeSubmitting)).
+
+:::
+
+```js
+.onValidate({
+    isValid,
+    isSubmitted,
+    fields,
+    groups,
+})
+```

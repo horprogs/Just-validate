@@ -116,6 +116,7 @@ export interface FieldInterface {
   config?: FieldConfigInterface;
   // flag to show there are pending async rules we have to perform on form submit
   asyncCheckPending?: boolean;
+  touched: boolean;
 }
 
 export type GroupFieldType = 'radio' | 'checkbox';
@@ -125,7 +126,7 @@ export interface GroupFieldInterface {
   groupElem: HTMLElement;
   elems: HTMLInputElement[];
   isValid?: boolean;
-  isDirty: boolean;
+  touched: boolean;
   errorMessage?: string;
   successMessage?: string;
   config?: FieldConfigInterface;
@@ -170,3 +171,10 @@ export interface ShowLabelsInterface {
 }
 
 export type FieldSelectorType = string | HTMLInputElement | HTMLElement;
+
+export interface OnValidateCallbackInterface {
+  isValid?: boolean;
+  isSubmitted: boolean;
+  fields: FieldsInterface;
+  groups: GroupFieldsInterface;
+}

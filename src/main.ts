@@ -32,6 +32,7 @@ import {
   ShowLabelsInterface,
   FieldRuleValueType,
   FieldSelectorType,
+  OnValidateCallbackInterface,
 } from './modules/interfaces';
 import {
   DEFAULT_ERROR_FIELD_MESSAGE,
@@ -88,6 +89,7 @@ class JustValidate {
     fields: FieldsInterface,
     groups: GroupFieldsInterface
   ) => void;
+  onValidateCallback?: (props: OnValidateCallbackInterface) => void;
   tooltips: TooltipInstance[] = [];
   lastScrollPosition?: number;
   isScrollTick?: boolean;
@@ -767,6 +769,45 @@ class JustValidate {
     }
   }
 
+  isFormValid(): boolean | undefined {
+    let isValid: boolean | undefined = true;
+
+    for (let i = 0, len = Object.values(this.fields).length; i < len; ++i) {
+      const item = Object.values(this.fields)[i];
+
+      if (item.isValid === undefined) {
+        isValid = undefined;
+        break;
+      }
+
+      if (item.isValid === false) {
+        isValid = false;
+        break;
+      }
+    }
+
+    for (
+      let i = 0, len = Object.values(this.groupFields).length;
+      i < len;
+      ++i
+    ) {
+      const item = Object.values(this.groupFields)[i];
+
+      if (item.isValid === undefined) {
+        isValid = undefined;
+        break;
+      }
+
+      if (item.isValid === false) {
+        isValid = false;
+        break;
+      }
+    }
+
+    // if it's undefined, it means not all fields have been validated yet
+    return isValid;
+  }
+
   validateField(key: string, afterInputChanged = false): Promise<any> {
     const field = this.fields[key];
 
@@ -789,7 +830,16 @@ class JustValidate {
       this.setFieldValid(key, field.config?.successMessage);
     }
 
-    return Promise.allSettled(promises);
+    return Promise.allSettled(promises).finally(() => {
+      if (afterInputChanged) {
+        this.onValidateCallback?.({
+          isValid: this.isFormValid(),
+          isSubmitted: this.isSubmitted,
+          fields: this.getCompatibleFields(),
+          groups: { ...this.groupFields },
+        });
+      }
+    });
   }
 
   public revalidateField(fieldSelector: FieldSelectorType): Promise<boolean> {
@@ -810,7 +860,7 @@ class JustValidate {
       this.validateField(key, true).finally(() => {
         this.clearFieldStyle(key);
         this.clearFieldLabel(key);
-        this.renderFieldError(key);
+        this.renderFieldError(key, true);
         resolve(!!this.fields[key].isValid);
       });
     });
@@ -833,13 +883,13 @@ class JustValidate {
     return new Promise((resolve) => {
       this.validateGroup(key).finally(() => {
         this.clearFieldLabel(key);
-        this.renderGroupError(key);
+        this.renderGroupError(key, true);
         resolve(!!this.groupFields[key].isValid);
       });
     });
   }
 
-  validateGroup(key: string): Promise<any> {
+  validateGroup(key: string, afterInputChanged = false): Promise<any> {
     const group = this.groupFields[key];
     const promises: Promise<any>[] = [];
     [...group.rules].reverse().forEach((rule) => {
@@ -850,7 +900,16 @@ class JustValidate {
       }
     });
 
-    return Promise.allSettled(promises);
+    return Promise.allSettled(promises).finally(() => {
+      if (afterInputChanged) {
+        this.onValidateCallback?.({
+          isValid: this.isFormValid(),
+          isSubmitted: this.isSubmitted,
+          fields: this.getCompatibleFields(),
+          groups: { ...this.groupFields },
+        });
+      }
+    });
   }
 
   focusInvalidField(): void {
@@ -891,15 +950,16 @@ class JustValidate {
         }
       });
 
-      if (promises.length) {
-        Promise.allSettled(promises).then(() => {
-          this.afterSubmitValidation(forceRevalidation);
-          resolve(true);
-        });
-      } else {
+      Promise.allSettled(promises).then(() => {
         this.afterSubmitValidation(forceRevalidation);
-        resolve(false);
-      }
+        this.onValidateCallback?.({
+          isValid: this.isFormValid(),
+          isSubmitted: this.isSubmitted,
+          fields: this.getCompatibleFields(),
+          groups: { ...this.groupFields },
+        });
+        resolve(!!promises.length);
+      });
     });
   }
 
@@ -962,6 +1022,7 @@ class JustValidate {
       return;
     }
 
+    this.fields[foundKey].touched = true;
     this.validateField(foundKey, true);
   };
 
@@ -981,7 +1042,8 @@ class JustValidate {
       return;
     }
 
-    this.validateGroup(foundKey);
+    this.groupFields[foundKey].touched = true;
+    this.validateGroup(foundKey, true);
   };
 
   handlerChange = (ev: Event): void => {
@@ -1072,14 +1134,15 @@ class JustValidate {
       elem,
       rules,
       isValid: undefined,
+      touched: false,
       config,
     };
 
     this.setListeners(elem);
 
     // if we add field after submitting the form we should validate again
-    if (this.isSubmitted) {
-      this.validate();
+    if (this.isSubmitted || this.globalConfig.validateBeforeSubmitting) {
+      this.validateField(key);
     }
     return this;
   }
@@ -1179,7 +1242,7 @@ class JustValidate {
       ],
       groupElem: elem,
       elems: childrenInputs,
-      isDirty: false,
+      touched: false,
       isValid: undefined,
       config,
     };
@@ -1562,7 +1625,7 @@ class JustValidate {
       this.clearFieldStyle(key);
       this.clearFieldLabel(key);
 
-      this.renderFieldError(key, error);
+      this.renderFieldError(key, false, error);
 
       if (i === 0 && this.globalConfig.focusInvalidField) {
         setTimeout(() => field.elem.focus(), 0);
@@ -1590,10 +1653,18 @@ class JustValidate {
     this.showLabels(fields, false);
   }
 
-  renderFieldError(key: string, message?: string): void {
+  renderFieldError(key: string, forced = false, message?: string): void {
     const field = this.fields[key];
 
-    if (field.isValid === undefined) {
+    if (field.isValid === false) {
+      this.isValid = false;
+    }
+
+    // do not show if not initialized or not submitted and not touched and not forced message
+    if (
+      field.isValid === undefined ||
+      (!forced && !this.isSubmitted && !field.touched && message === undefined)
+    ) {
       return;
     }
 
@@ -1624,8 +1695,6 @@ class JustValidate {
       return;
     }
 
-    this.isValid = false;
-
     field.elem.classList.add(
       ...getClassList(
         field.config?.errorFieldCssClass || this.globalConfig.errorFieldCssClass
@@ -1654,10 +1723,18 @@ class JustValidate {
     }
   }
 
-  renderGroupError(key: string): void {
+  renderGroupError(key: string, force = true): void {
     const group = this.groupFields[key];
 
-    if (group.isValid === undefined) {
+    if (group.isValid === false) {
+      this.isValid = false;
+    }
+
+    // do not show if not initialized or not submitted and not touched and not forced
+    if (
+      group.isValid === undefined ||
+      (!force && !this.isSubmitted && !group.touched)
+    ) {
       return;
     }
 
@@ -1807,6 +1884,13 @@ class JustValidate {
     callback: (fields: FieldsInterface, groups: GroupFieldsInterface) => void
   ): JustValidate {
     this.onFailCallback = callback;
+    return this;
+  }
+
+  public onValidate(
+    callback: (props: OnValidateCallbackInterface) => void
+  ): JustValidate {
+    this.onValidateCallback = callback;
     return this;
   }
 }

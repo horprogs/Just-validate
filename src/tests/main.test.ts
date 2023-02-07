@@ -1103,6 +1103,7 @@ describe('Validation', () => {
         ).body.childNodes[0],
         isValid: true,
         rules: [{ rule: 'email' }],
+        touched: false,
       },
       '#password': {
         config: undefined,
@@ -1121,6 +1122,7 @@ describe('Validation', () => {
         ).body.childNodes[0],
         isValid: true,
         rules: [{ plugin: plugin }],
+        touched: false,
       },
     });
   });
@@ -1862,6 +1864,7 @@ describe('Validation', () => {
         ).body.childNodes[0],
         isValid: true,
         rules: [{ rule: 'required' }],
+        touched: true,
       },
       '2': {
         config: undefined,
@@ -1872,6 +1875,7 @@ describe('Validation', () => {
         isValid: true,
         rules: [{ validator }],
         errorMessage: 'Value is incorrect',
+        touched: true,
       },
     });
     expect(onFail).toHaveBeenCalledWith(
@@ -1884,6 +1888,7 @@ describe('Validation', () => {
           ).body.childNodes[0],
           isValid: true,
           rules: [{ rule: 'required' }],
+          touched: true,
         },
         '2': {
           config: undefined,
@@ -1894,6 +1899,7 @@ describe('Validation', () => {
           isValid: false,
           rules: [{ validator }],
           errorMessage: 'Value is incorrect',
+          touched: true,
         },
       },
       {}
