@@ -5423,10 +5423,10 @@ just-validate-plugin-date@^1.2.0:
   dependencies:
     date-fns "2.28.0"
 
-just-validate@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/just-validate/-/just-validate-4.0.2.tgz#f9274399b8dfe0e393cac8217946213c641df5f3"
-  integrity sha512-P86DrmiYbPaRDZPsHcQVo4cBqYFYcE1vHWAV34t7IyyRC/kWTXftZ0TVI9dGuJUkf6+jeD9+aBPEdDUjjxdfKQ==
+just-validate@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/just-validate/-/just-validate-4.2.0.tgz#50cea442a85ff3ee63d420bac3eea444b45f5da2"
+  integrity sha512-ot4U9dAvveXlkA5tpiK1Obh+ZwJYBUsiS1sFjfY4RjkHwXLXGoEgOM4N85+9UCAu9JPGt/nfumqRZbruUT9gMA==
 
 keyv@^3.0.0:
   version "3.1.0"
