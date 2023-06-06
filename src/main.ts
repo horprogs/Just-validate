@@ -1384,7 +1384,7 @@ class JustValidate {
     );
     for (let i = 0, len = elems.length; i < len; ++i) {
       if (
-        elems[i].getAttribute('data-just-validate-fallback-disabled') !== 'true'
+        elems[i].getAttribute('data-just-validate-fallback-disabled') === 'true'
       ) {
         elems[i].removeAttribute('disabled');
       }
