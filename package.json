@@ -18,6 +18,7 @@
     "heroku-postbuild": "cd site && yarn run build",
     "prepare": "husky install"
   },
+  "type": "module",
   "main": "./dist/just-validate.production.min.js",
   "module": "./dist/just-validate.es.js",
   "exports": {
