@@ -1,7 +1,9 @@
----
+## import SubmitAutomaticallyExample from "../../components/Demos/SubmitAutomaticallyExample";
+
 title: Examples
 toc_min_heading_level: 2
 toc_max_heading_level: 5
+
 ---
 
 import Tabs from '@theme/Tabs';
@@ -1551,4 +1553,59 @@ validator.addField('#before-submit_email', [
 
 </TabItem>
 </Tabs>
+</details>
+
+## Submit form automatically
+
+<SubmitAutomaticallyExample />
+
+<br />
+<details>
+    <summary>Check out the code</summary>
+
+<Tabs>
+<TabItem value="HTML">
+
+```html
+<form id="submit-automatically_form" autocomplete="off" novalidate="novalidate">
+  <div class="control-wrapper">
+    <label class="input-label" for="submit-automatically_form_email"
+      >Email</label
+    >
+    <div class="input-wrapper">
+      <input
+        id="submit-automatically_form_email"
+        class="input"
+        autocomplete="off"
+        type="text"
+        placeholder="Start typing..."
+      />
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form>
+```
+</TabItem>
+
+<TabItem value="JS">
+
+```js
+const validator = new JustValidate('#submit-automatically_form_form', {
+  submitFormAutomatically: true,
+});
+
+validator.addField('#submit-automatically_form_email', [
+  {
+    rule: 'required',
+  },
+  {
+    rule: 'email',
+  },
+]);
+```
+</TabItem>
+</Tabs>
+
 </details>

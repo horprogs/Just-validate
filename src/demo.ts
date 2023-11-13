@@ -740,6 +740,33 @@ const validateBeforeSubmitting = (): void => {
     });
 };
 
+const submitAutomatically = (): void => {
+  const validation = new JustValidate('#submit-automatically-form', {
+    errorFieldCssClass: 'is-invalid  custom-class',
+    errorLabelStyle: {
+      fontSize: '14px',
+      color: '#dc3545',
+    },
+    focusInvalidField: true,
+    lockForm: true,
+    submitFormAutomatically: true,
+  });
+
+  validation
+    .addField('#example14_email', [
+      {
+        rule: 'required' as Rules,
+      },
+      {
+        rule: 'email' as Rules,
+      },
+    ])
+    .onSuccess((ev) => {
+      ev?.preventDefault();
+      window.showNotification();
+    });
+};
+
 basic();
 advanced();
 async();
@@ -753,3 +780,4 @@ successLabel();
 errorsContainer();
 showMessages();
 validateBeforeSubmitting();
+submitAutomatically();

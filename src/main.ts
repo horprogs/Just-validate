@@ -64,6 +64,7 @@ const defaultGlobalConfig: GlobalConfigInterface = {
   lockForm: true,
   testingMode: false,
   validateBeforeSubmitting: false,
+  submitFormAutomatically: false,
 };
 
 class JustValidate {
@@ -986,6 +987,10 @@ class JustValidate {
 
       if (this.isValid) {
         this.onSuccessCallback?.(ev);
+
+        if (this.globalConfig.submitFormAutomatically) {
+          (ev?.currentTarget as HTMLFormElement)?.submit();
+        }
       } else {
         this.onFailCallback?.(this.getCompatibleFields(), this.groupFields);
       }

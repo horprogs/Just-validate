@@ -15,6 +15,7 @@ export interface GlobalConfigInterface {
   tooltip?: TooltipConfigInterface;
   errorsContainer?: string | Element | null;
   validateBeforeSubmitting: boolean;
+  submitFormAutomatically: boolean;
 }
 
 export enum Rules {
