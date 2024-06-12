@@ -19,9 +19,9 @@ export default function Home(): JSX.Element {
       </Head>
       <div className="main">
         <Intro />
+        <UsedBy />
         <Features />
         <Why />
-        <UsedBy />
         <Demo />
       </div>
     </Layout>
