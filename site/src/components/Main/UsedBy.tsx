@@ -5,7 +5,7 @@ const UsedBy = () => {
     <div className="center mt-80">
       <div className="used-by-title">Used by</div>
       <div className="used-by-count">
-        1900+ <span className="used-by-text">developers</span>
+        4100+ <span className="used-by-text">developers</span>
       </div>
     </div>
   );
