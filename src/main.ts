@@ -1012,43 +1012,47 @@ class JustValidate {
   }
 
   handleFieldChange = (target: HTMLInputElement): void => {
-    let foundKey;
+    const foundKeys: string[] = [];
 
     for (const key in this.fields) {
       const field = this.fields[key];
 
       if (field.elem === target) {
-        foundKey = key;
-        break;
+        foundKeys.push(key);
       }
     }
 
-    if (!foundKey) {
+    if (foundKeys.length === 0) {
       return;
     }
 
-    this.fields[foundKey].touched = true;
-    this.validateField(foundKey, true);
+    // Process each found key
+    foundKeys.forEach((key) => {
+      this.fields[key].touched = true;
+      this.validateField(key, true);
+    });
   };
 
   handleGroupChange = (target: HTMLInputElement): void => {
-    let foundKey;
+    const foundKeys: string[] = [];
 
     for (const key in this.groupFields) {
       const group = this.groupFields[key];
 
       if (group.elems.find((elem) => elem === target)) {
-        foundKey = key;
-        break;
+        foundKeys.push(key);
       }
     }
 
-    if (!foundKey) {
+    if (foundKeys.length === 0) {
       return;
     }
 
-    this.groupFields[foundKey].touched = true;
-    this.validateGroup(foundKey, true);
+    // Process each found key
+    foundKeys.forEach((key) => {
+      this.groupFields[key].touched = true;
+      this.validateGroup(key, true);
+    });
   };
 
   handlerChange = (ev: Event): void => {
