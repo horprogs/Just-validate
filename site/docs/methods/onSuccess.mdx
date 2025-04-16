@@ -11,3 +11,15 @@ Callback if validation passed.
 ```
 
 where `event` is a form submit event.
+
+:::info
+
+Please note that this callback does not submit your form. You should trigger it manually, or use [submitFormAutomatically](/docs/instance/submitFormAutomatically) setting.
+
+:::
+
+```js
+.onSuccess(( event ) => {
+    event.currentTarget.submit();
+});
+```
