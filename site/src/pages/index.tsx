@@ -16,6 +16,7 @@ export default function Home(): JSX.Element {
     >
       <Head>
         <meta property="og:image" content="/img/share.png" />
+        <meta name="google-adsense-account" content="ca-pub-8626975577700086" />
       </Head>
       <div className="main">
         <Intro />
