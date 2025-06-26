@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 22
-          cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Run lint
