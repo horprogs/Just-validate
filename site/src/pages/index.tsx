@@ -12,7 +12,9 @@ export default function Home(): JSX.Element {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   return (
