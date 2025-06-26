@@ -23,6 +23,13 @@ const config = {
     locales: ['en'],
   },
   themes: ['@docusaurus/theme-live-codeblock'],
+  scripts: [
+    {
+      src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+      async: true,
+      crossorigin: 'anonymous',
+    },
+  ],
   presets: [
     [
       'classic',

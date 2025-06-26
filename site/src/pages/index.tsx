@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '@theme/Layout';
 import 'react-toastify/dist/ReactToastify.css';
 import Intro from '@site/src/components/Main/Intro';
@@ -9,6 +9,12 @@ import Demo from '@site/src/components/Main/Demo';
 import Head from '@docusaurus/Head';
 
 export default function Home(): JSX.Element {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {}
+  }, []);
+
   return (
     <Layout
       title="Modern form validation library written in Typescript"
@@ -24,6 +30,15 @@ export default function Home(): JSX.Element {
         <Features />
         <Why />
         <Demo />
+
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block', marginTop: '16px', marginBottom: '16px' }}
+          data-ad-client="ca-pub-8626975577700086"
+          data-ad-slot="9477879624"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
       </div>
     </Layout>
   );
