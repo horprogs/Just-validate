@@ -926,7 +926,7 @@ class JustValidate {
   afterSubmitValidation(forceRevalidation = false): void {
     this.renderErrors(forceRevalidation);
 
-    if (this.globalConfig.focusInvalidField) {
+    if (this.globalConfig.focusInvalidField && !forceRevalidation) {
       this.focusInvalidField();
     }
   }
@@ -1822,11 +1822,11 @@ class JustValidate {
     this.isValid = true;
 
     for (const key in this.groupFields) {
-      this.renderGroupError(key);
+      this.renderGroupError(key, forceRevalidation);
     }
 
     for (const key in this.fields) {
-      this.renderFieldError(key);
+      this.renderFieldError(key, forceRevalidation);
     }
   }
 
