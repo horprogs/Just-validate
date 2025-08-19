@@ -814,7 +814,11 @@ class JustValidate {
 
     field.isValid = true;
     const promises: Promise<any>[] = [];
-    [...field.rules].reverse().forEach((rule) => {
+    [...field.rules].forEach((rule) => {
+      if (!field.isValid) {
+        return;
+      }
+
       const res = this.validateFieldRule(
         key,
         field.elem,
